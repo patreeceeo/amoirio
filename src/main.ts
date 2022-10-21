@@ -44,40 +44,6 @@ async function startGame(canvas: HTMLCanvasElement) {
   const inputRouter = setupKeyboard(window)
   inputRouter.addReceiver(mario)
 
-  async function runLevel(name: string) {
-    const loadScreen = new Scene()
-    loadScreen.comp.layers.push(createColorLayer('black'))
-    loadScreen.comp.layers.push(createTextLayer(font, `LOADING ${name}...`))
-    sceneRunner.addScene(loadScreen)
-    sceneRunner.runNext()
-
-    await new Promise((resolve) => setTimeout(resolve, 500))
-
-    const level = await loadLevel(name)
-
-    const playerProgressLayer = createPlayerProgressLayer(font, level)
-    const dashboardLayer = createDashboardLayer(font, level)
-
-    mario.pos.set(0, 0)
-    mario.vel.set(0, 0)
-    level.entities.add(mario)
-
-    const playerEnv = createPlayerEnv(mario)
-    level.entities.add(playerEnv)
-
-    const waitScreen = new TimedScene()
-    waitScreen.comp.layers.push(createColorLayer('black'))
-    waitScreen.comp.layers.push(dashboardLayer)
-    waitScreen.comp.layers.push(playerProgressLayer)
-    sceneRunner.addScene(waitScreen)
-
-    level.comp.layers.push(createCollisionLayer(level))
-    level.comp.layers.push(dashboardLayer)
-    sceneRunner.addScene(level)
-
-    sceneRunner.runNext()
-  }
-
   const timer = new Timer()
 
   timer.update = function update(deltaTime) {
@@ -94,7 +60,38 @@ async function startGame(canvas: HTMLCanvasElement) {
   }
 
   timer.start()
-  runLevel('1-1')
+
+  const loadScreen = new Scene()
+  loadScreen.comp.layers.push(createColorLayer('black'))
+  loadScreen.comp.layers.push(createTextLayer(font, `LOADING ${name}...`))
+  sceneRunner.addScene(loadScreen)
+  sceneRunner.runNext()
+
+  await new Promise((resolve) => setTimeout(resolve, 500))
+
+  const level = await loadLevel('1-1')
+
+  const playerProgressLayer = createPlayerProgressLayer(font, level)
+  const dashboardLayer = createDashboardLayer(font, level)
+
+  mario.pos.set(0, 0)
+  mario.vel.set(0, 0)
+  level.entities.add(mario)
+
+  const playerEnv = createPlayerEnv(mario)
+  level.entities.add(playerEnv)
+
+  const waitScreen = new TimedScene()
+  waitScreen.comp.layers.push(createColorLayer('black'))
+  waitScreen.comp.layers.push(dashboardLayer)
+  waitScreen.comp.layers.push(playerProgressLayer)
+  sceneRunner.addScene(waitScreen)
+
+  level.comp.layers.push(createCollisionLayer(level))
+  level.comp.layers.push(dashboardLayer)
+  sceneRunner.addScene(level)
+
+  sceneRunner.runNext()
 }
 
 async function startEditor(canvas: HTMLCanvasElement) {
@@ -120,33 +117,6 @@ async function startEditor(canvas: HTMLCanvasElement) {
   const inputRouter = setupKeyboard(window)
   inputRouter.addReceiver(mario)
 
-  async function editLevel(name: string) {
-    const loadScreen = new Scene()
-    loadScreen.comp.layers.push(createColorLayer('black'))
-    loadScreen.comp.layers.push(createTextLayer(font, `LOADING ${name}...`))
-
-    const level = await loadLevel(name)
-
-    const editor = new Editor(level)
-    inputRouter.addReceiver(editor)
-
-    const editorLayer = createEditorLayer(font, level)
-
-    mario.pos.set(0, 0)
-    mario.vel.set(0, 0)
-    level.entities.add(mario)
-
-    const playerEnv = createPlayerEnv(mario)
-    level.entities.add(playerEnv)
-
-    level.comp.layers.push(createCollisionLayer(level))
-    level.comp.layers.push(editorLayer)
-    sceneRunner.addScene(level)
-    level.pause()
-
-    sceneRunner.runNext()
-  }
-
   const timer = new Timer()
 
   timer.update = function update(deltaTime) {
@@ -163,7 +133,31 @@ async function startEditor(canvas: HTMLCanvasElement) {
   }
 
   timer.start()
-  editLevel('debug-progression')
+
+  const loadScreen = new Scene()
+  loadScreen.comp.layers.push(createColorLayer('black'))
+  loadScreen.comp.layers.push(createTextLayer(font, `LOADING ${name}...`))
+
+  const level = await loadLevel('1-1')
+
+  const editor = new Editor(level)
+  inputRouter.addReceiver(editor)
+
+  const editorLayer = createEditorLayer(font, level)
+
+  mario.pos.set(0, 0)
+  mario.vel.set(0, 0)
+  level.entities.add(mario)
+
+  const playerEnv = createPlayerEnv(mario)
+  level.entities.add(playerEnv)
+
+  level.comp.layers.push(createCollisionLayer(level))
+  level.comp.layers.push(editorLayer)
+  sceneRunner.addScene(level)
+  level.pause()
+
+  sceneRunner.runNext()
 }
 
 const canvas = document.getElementById('screen')
