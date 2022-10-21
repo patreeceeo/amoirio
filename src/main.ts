@@ -55,20 +55,6 @@ async function startGame(canvas: HTMLCanvasElement) {
 
     const level = await loadLevel(name)
 
-    level.events.listen(
-      Level.EVENT_TRIGGER,
-      (spec: LevelSpecTrigger, trigger: Entity, touches: Set<Entity>) => {
-        if (spec.type === 'goto') {
-          for (const entity of touches) {
-            if (entity.getTrait(Player)) {
-              runLevel(spec.name)
-              return
-            }
-          }
-        }
-      },
-    )
-
     const playerProgressLayer = createPlayerProgressLayer(font, level)
     const dashboardLayer = createDashboardLayer(font, level)
 
@@ -108,7 +94,7 @@ async function startGame(canvas: HTMLCanvasElement) {
   }
 
   timer.start()
-  runLevel('debug-progression')
+  runLevel('1-1')
 }
 
 async function startEditor(canvas: HTMLCanvasElement) {
@@ -143,20 +129,6 @@ async function startEditor(canvas: HTMLCanvasElement) {
 
     const editor = new Editor(level)
     inputRouter.addReceiver(editor)
-
-    level.events.listen(
-      Level.EVENT_TRIGGER,
-      (spec: LevelSpecTrigger, trigger: Entity, touches: Set<Entity>) => {
-        if (spec.type === 'goto') {
-          for (const entity of touches) {
-            if (entity.getTrait(Player)) {
-              editLevel(spec.name)
-              return
-            }
-          }
-        }
-      },
-    )
 
     const editorLayer = createEditorLayer(font, level)
 
