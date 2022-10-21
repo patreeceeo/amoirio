@@ -14,7 +14,7 @@ export enum Side {
   right,
 }
 
-type TraitConstructor<T extends Trait> = new (...args: unknown[]) => T
+type TraitConstructor<T extends Trait> = new (...args: any[]) => T
 
 export class Entity {
   // audio = new AudioBoard()

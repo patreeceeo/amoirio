@@ -18,8 +18,10 @@ import { SceneRunner } from './SceneRunner'
 import { TimedScene } from './TimedScene'
 import { Timer } from './Timer'
 import { Player } from './traits/Player'
+import {Editor} from './entities/Editor'
+import {createEditorLayer} from './layers/editor'
 
-async function main(canvas: HTMLCanvasElement) {
+async function startGame(canvas: HTMLCanvasElement) {
   const videoContext = canvas.getContext('2d') || raise('Canvas not supported')
 
   // turning this off lets us save a lot of Math.floor calls when rendering
@@ -109,9 +111,99 @@ async function main(canvas: HTMLCanvasElement) {
   runLevel('debug-progression')
 }
 
+async function startEditor(canvas: HTMLCanvasElement) {
+  const videoContext = canvas.getContext('2d') || raise('Canvas not supported')
+
+  // turning this off lets us save a lot of Math.floor calls when rendering
+  videoContext.imageSmoothingEnabled = false
+
+  const audioContext = new AudioContext()
+
+  const [entityFactory, font] = await Promise.all([
+    loadEntities(audioContext),
+    loadFont(),
+  ])
+
+  const loadLevel = createLevelLoader(entityFactory)
+
+  const sceneRunner = new SceneRunner()
+
+  const mario = entityFactory.mario?.() || raise('where mario tho')
+  makePlayer(mario, 'MARIO')
+
+  const inputRouter = setupKeyboard(window)
+  inputRouter.addReceiver(mario)
+
+  async function runLevel(name: string) {
+    const loadScreen = new Scene()
+    loadScreen.comp.layers.push(createColorLayer('black'))
+    loadScreen.comp.layers.push(createTextLayer(font, `LOADING ${name}...`))
+
+    await new Promise((resolve) => setTimeout(resolve, 500))
+
+    const level = await loadLevel(name)
+
+    const editor = new Editor(level)
+    inputRouter.addReceiver(editor)
+
+    level.events.listen(
+      Level.EVENT_TRIGGER,
+      (spec: LevelSpecTrigger, trigger: Entity, touches: Set<Entity>) => {
+        if (spec.type === 'goto') {
+          for (const entity of touches) {
+            if (entity.getTrait(Player)) {
+              runLevel(spec.name)
+              return
+            }
+          }
+        }
+      },
+    )
+
+    const editorLayer = createEditorLayer(font, level)
+
+    mario.pos.set(0, 0)
+    mario.vel.set(0, 0)
+    level.entities.add(mario)
+
+    const playerEnv = createPlayerEnv(mario)
+    level.entities.add(playerEnv)
+
+    level.comp.layers.push(createCollisionLayer(level))
+    level.comp.layers.push(editorLayer)
+    sceneRunner.addScene(level)
+    level.pause()
+
+    sceneRunner.runNext()
+  }
+
+  const timer = new Timer()
+
+  timer.update = function update(deltaTime) {
+    if (!document.hasFocus()) return
+
+    const gameContext: GameContext = {
+      deltaTime,
+      audioContext,
+      entityFactory,
+      videoContext,
+    }
+
+    sceneRunner.update(gameContext)
+  }
+
+  timer.start()
+  runLevel('debug-progression')
+}
+
 const canvas = document.getElementById('screen')
 if (canvas instanceof HTMLCanvasElement) {
-  main(canvas).catch(console.error)
+  const path = location.pathname
+  if(path === '/editor') {
+    startEditor(canvas).catch(console.error)
+  } else {
+    startGame(canvas).catch(console.error)
+  }
 } else {
   console.warn('Canvas not found')
 }

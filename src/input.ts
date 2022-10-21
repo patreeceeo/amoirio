@@ -4,6 +4,7 @@ import { InputRouter } from './InputRouter'
 import { Keyboard } from './Keyboard'
 import { Go } from './traits/Go'
 import { Jump } from './traits/Jump'
+import { LevelEditor } from './traits/LevelEditor'
 
 export function setupKeyboard(target: EventTarget) {
   const input = new Keyboard()
@@ -51,6 +52,16 @@ export function setupKeyboard(target: EventTarget) {
         entity.setTurboState(keyState === 1)
       }
     })
+  })
+
+  input.addListener('Space', (pressed) => {
+    if (pressed) {
+      router.route((entity) => {
+        entity.useTrait(LevelEditor, (editor) => {
+          editor.isLevelPlaying() ? editor.pauseLevel() : editor.playLevel()
+        })
+      })
+    }
   })
 
   return router

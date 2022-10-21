@@ -21,7 +21,11 @@ export class Level extends Scene {
   gravity = 1500
   totalTime = 0
 
+  isPlaying = true
+
   update(gameContext: GameContext) {
+    if(!this.isPlaying) return
+
     this.entities.forEach((entity) => {
       entity.update(gameContext, this)
     })
@@ -44,7 +48,11 @@ export class Level extends Scene {
   }
 
   pause() {
+    this.isPlaying = false
     this.music.pause()
+  }
+  play() {
+    this.isPlaying = true
   }
 }
 
