@@ -134,12 +134,10 @@ async function startEditor(canvas: HTMLCanvasElement) {
   const inputRouter = setupKeyboard(window)
   inputRouter.addReceiver(mario)
 
-  async function runLevel(name: string) {
+  async function editLevel(name: string) {
     const loadScreen = new Scene()
     loadScreen.comp.layers.push(createColorLayer('black'))
     loadScreen.comp.layers.push(createTextLayer(font, `LOADING ${name}...`))
-
-    await new Promise((resolve) => setTimeout(resolve, 500))
 
     const level = await loadLevel(name)
 
@@ -152,7 +150,7 @@ async function startEditor(canvas: HTMLCanvasElement) {
         if (spec.type === 'goto') {
           for (const entity of touches) {
             if (entity.getTrait(Player)) {
-              runLevel(spec.name)
+              editLevel(spec.name)
               return
             }
           }
@@ -193,7 +191,7 @@ async function startEditor(canvas: HTMLCanvasElement) {
   }
 
   timer.start()
-  runLevel('debug-progression')
+  editLevel('debug-progression')
 }
 
 const canvas = document.getElementById('screen')
