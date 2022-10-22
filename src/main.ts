@@ -1,5 +1,4 @@
 import { loadEntities } from './entities'
-import { Entity } from './Entity'
 import { GameContext } from './GameContext'
 import { setupKeyboard } from './input'
 import { createCollisionLayer } from './layers/collision'
@@ -7,10 +6,8 @@ import { createColorLayer } from './layers/color'
 import { createDashboardLayer } from './layers/dashboard'
 import { createPlayerProgressLayer } from './layers/player-progress'
 import { createTextLayer } from './layers/text'
-import { Level } from './Level'
 import { loadFont } from './loaders/font'
 import { createLevelLoader } from './loaders/level'
-import { LevelSpecTrigger } from './loaders/types'
 import { createPlayerEnv, makePlayer } from './player'
 import { raise } from './raise'
 import { Scene } from './Scene'
@@ -86,7 +83,6 @@ async function startGame(canvas: HTMLCanvasElement) {
   waitScreen.comp.layers.push(playerProgressLayer)
   sceneRunner.addScene(waitScreen)
 
-  level.comp.layers.push(createCollisionLayer(level))
   level.comp.layers.push(dashboardLayer)
   sceneRunner.addScene(level)
 
@@ -110,12 +106,6 @@ async function startEditor(canvas: HTMLCanvasElement) {
 
   const sceneRunner = new SceneRunner()
 
-  const mario = entityFactory.mario?.() || raise('where mario tho')
-  makePlayer(mario, 'MARIO')
-
-  const inputRouter = setupKeyboard(window)
-  inputRouter.addReceiver(mario)
-
   const timer = new Timer()
 
   timer.update = function update(deltaTime) {
@@ -133,13 +123,16 @@ async function startEditor(canvas: HTMLCanvasElement) {
 
   timer.start()
 
-  const loadScreen = new Scene()
-  loadScreen.comp.layers.push(createColorLayer('black'))
-  loadScreen.comp.layers.push(createTextLayer(font, `LOADING ${name}...`))
-
   const level = await loadLevel('1-1')
 
   const editor = new Editor(level)
+
+  const mario = entityFactory.mario?.() || raise('where mario tho')
+  makePlayer(mario, 'MARIO')
+
+  const inputRouter = setupKeyboard(window)
+
+  inputRouter.addReceiver(mario)
   inputRouter.addReceiver(editor)
 
   const editorLayer = createEditorLayer(font, level)
@@ -151,7 +144,9 @@ async function startEditor(canvas: HTMLCanvasElement) {
   const playerEnv = createPlayerEnv(mario)
   level.entities.add(playerEnv)
 
-  level.comp.layers.push(createCollisionLayer(level))
+  // TODO add hot key to toggle this
+  // level.comp.layers.push(createCollisionLayer(level))
+
   level.comp.layers.push(editorLayer)
   sceneRunner.addScene(level)
   level.pause()
