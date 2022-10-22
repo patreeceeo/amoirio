@@ -1,7 +1,6 @@
-import { loadEntities } from './entities'
+import { loadEntities, EntityFactory } from './entities'
 import { GameContext } from './GameContext'
 import { setupKeyboard } from './input'
-import { createCollisionLayer } from './layers/collision'
 import { createColorLayer } from './layers/color'
 import { createDashboardLayer } from './layers/dashboard'
 import { createPlayerProgressLayer } from './layers/player-progress'
@@ -14,14 +13,53 @@ import { Scene } from './Scene'
 import { SceneRunner } from './SceneRunner'
 import { TimedScene } from './TimedScene'
 import { Timer } from './Timer'
-import {Editor} from './entities/Editor'
-import {createEditorLayer} from './layers/editor'
+import { Editor } from './entities/Editor'
+import { createEditorLayer } from './layers/editor'
+import { Entity } from './Entity'
+import { Level } from './Level'
+import { Dict } from './types'
 
-async function startGame(canvas: HTMLCanvasElement) {
+function getVideoContext(canvas: HTMLCanvasElement): CanvasRenderingContext2D {
   const videoContext = canvas.getContext('2d') || raise('Canvas not supported')
 
   // turning this off lets us save a lot of Math.floor calls when rendering
   videoContext.imageSmoothingEnabled = false
+
+  return videoContext
+}
+
+function spawnMario(mario: Entity, level: Level) {
+  mario.pos.set(0, 0)
+  mario.vel.set(0, 0)
+  level.entities.add(mario)
+}
+
+function createLoop(
+  videoContext: CanvasRenderingContext2D,
+  audioContext: AudioContext,
+  entityFactory: Dict<EntityFactory>,
+  sceneRunner: SceneRunner,
+): Timer {
+  const timer = new Timer()
+
+  timer.update = function update(deltaTime) {
+    if (!document.hasFocus()) return
+
+    const gameContext: GameContext = {
+      deltaTime,
+      audioContext,
+      entityFactory,
+      videoContext,
+    }
+
+    sceneRunner.update(gameContext)
+  }
+
+  return timer
+}
+
+async function startGame(canvas: HTMLCanvasElement) {
+  const videoContext = getVideoContext(canvas)
 
   const audioContext = new AudioContext()
 
@@ -40,23 +78,6 @@ async function startGame(canvas: HTMLCanvasElement) {
   const inputRouter = setupKeyboard(window)
   inputRouter.addReceiver(mario)
 
-  const timer = new Timer()
-
-  timer.update = function update(deltaTime) {
-    if (!document.hasFocus()) return
-
-    const gameContext: GameContext = {
-      deltaTime,
-      audioContext,
-      entityFactory,
-      videoContext,
-    }
-
-    sceneRunner.update(gameContext)
-  }
-
-  timer.start()
-
   const loadScreen = new Scene()
   loadScreen.comp.layers.push(createColorLayer('black'))
   loadScreen.comp.layers.push(createTextLayer(font, `LOADING ${name}...`))
@@ -70,9 +91,7 @@ async function startGame(canvas: HTMLCanvasElement) {
   const playerProgressLayer = createPlayerProgressLayer(font, level)
   const dashboardLayer = createDashboardLayer(font, level)
 
-  mario.pos.set(0, 0)
-  mario.vel.set(0, 0)
-  level.entities.add(mario)
+  spawnMario(mario, level)
 
   const playerEnv = createPlayerEnv(mario)
   level.entities.add(playerEnv)
@@ -87,13 +106,12 @@ async function startGame(canvas: HTMLCanvasElement) {
   sceneRunner.addScene(level)
 
   sceneRunner.runNext()
+
+  createLoop(videoContext, audioContext, entityFactory, sceneRunner).start()
 }
 
 async function startEditor(canvas: HTMLCanvasElement) {
-  const videoContext = canvas.getContext('2d') || raise('Canvas not supported')
-
-  // turning this off lets us save a lot of Math.floor calls when rendering
-  videoContext.imageSmoothingEnabled = false
+  const videoContext = getVideoContext(canvas)
 
   const audioContext = new AudioContext()
 
@@ -105,23 +123,6 @@ async function startEditor(canvas: HTMLCanvasElement) {
   const loadLevel = createLevelLoader(entityFactory)
 
   const sceneRunner = new SceneRunner()
-
-  const timer = new Timer()
-
-  timer.update = function update(deltaTime) {
-    if (!document.hasFocus()) return
-
-    const gameContext: GameContext = {
-      deltaTime,
-      audioContext,
-      entityFactory,
-      videoContext,
-    }
-
-    sceneRunner.update(gameContext)
-  }
-
-  timer.start()
 
   const level = await loadLevel('1-1')
 
@@ -137,9 +138,7 @@ async function startEditor(canvas: HTMLCanvasElement) {
 
   const editorLayer = createEditorLayer(font, level)
 
-  mario.pos.set(0, 0)
-  mario.vel.set(0, 0)
-  level.entities.add(mario)
+  spawnMario(mario, level)
 
   const playerEnv = createPlayerEnv(mario)
   level.entities.add(playerEnv)
@@ -152,12 +151,14 @@ async function startEditor(canvas: HTMLCanvasElement) {
   level.pause()
 
   sceneRunner.runNext()
+
+  createLoop(videoContext, audioContext, entityFactory, sceneRunner).start()
 }
 
 const canvas = document.getElementById('screen')
 if (canvas instanceof HTMLCanvasElement) {
   const path = location.pathname
-  if(path === '/editor') {
+  if (path === '/editor') {
     startEditor(canvas).catch(console.error)
   } else {
     startGame(canvas).catch(console.error)
