@@ -1,5 +1,5 @@
 import { loadJSON } from '../loaders'
-import { MusicPlayer } from '../MusicPlayer'
+import { MusicPlayer } from './MusicPlayer'
 
 type MusicSheetSpec = {
   [_ in string]: {

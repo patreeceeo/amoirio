@@ -9,7 +9,7 @@ import { SpriteSheet } from '../SpriteSheet'
 import { TileResolverMatrix } from '../TileResolver'
 import { LevelTimer } from '../traits/LevelTimer'
 import { Trigger } from '../traits/Trigger'
-import { loadMusicSheet } from './music'
+import { loadMusicSheet } from '../audio/AudioFunctions'
 import { loadSpriteSheet } from './sprite'
 import { LevelSpec, LevelSpecPatterns, LevelSpecTile, TileRange } from './types'
 
@@ -26,14 +26,6 @@ function loadPattern(name: string) {
 function setupBehavior(level: Level) {
   const timer = createTimer()
   level.entities.add(timer)
-
-  level.events.listen(LevelTimer.EVENT_TIMER_OK, () => {
-    level.music.playTheme()
-  })
-
-  level.events.listen(LevelTimer.EVENT_TIMER_HURRY, () => {
-    level.music.playHurryTheme()
-  })
 }
 
 function setupBackground(

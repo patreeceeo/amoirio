@@ -12,16 +12,16 @@ export class LevelTimer extends Trait {
   hurryTime = 100
   hurryEmitted?: boolean
 
-  update(entity: Entity, { deltaTime }: GameContext, level: Level) {
+  update(entity: Entity, { deltaTime, world }: GameContext, level: Level) {
     this.currentTime -= deltaTime * 2
 
     if (this.hurryEmitted !== true && this.currentTime < this.hurryTime) {
-      level.events.emit(LevelTimer.EVENT_TIMER_HURRY)
+      world.events.emit(LevelTimer.EVENT_TIMER_HURRY)
       this.hurryEmitted = true
     }
 
     if (this.hurryEmitted !== false && this.currentTime > this.hurryTime) {
-      level.events.emit(LevelTimer.EVENT_TIMER_OK)
+      world.events.emit(LevelTimer.EVENT_TIMER_OK)
       this.hurryEmitted = false
     }
   }

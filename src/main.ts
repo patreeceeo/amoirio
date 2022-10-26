@@ -18,6 +18,8 @@ import { createEditorLayer } from './layers/editor'
 import { Entity } from './Entity'
 import { Level } from './Level'
 import { Dict } from './types'
+import {World} from './World'
+import {AudioSystem} from './audio/AudioSystem'
 
 function getVideoContext(canvas: HTMLCanvasElement): CanvasRenderingContext2D {
   const videoContext = canvas.getContext('2d') || raise('Canvas not supported')
@@ -34,15 +36,18 @@ function spawnMario(mario: Entity, level: Level) {
   level.entities.add(mario)
 }
 
-function createLoop(
+async function createLoop(
   videoContext: CanvasRenderingContext2D,
   audioContext: AudioContext,
   entityFactory: Dict<EntityFactory>,
   sceneRunner: SceneRunner,
-): Timer {
+  world: World
+): Promise<Timer> {
   const timer = new Timer()
 
-  timer.update = function update(deltaTime) {
+  await AudioSystem(world)
+
+  timer.onFixedStep = function update(deltaTime) {
     if (!document.hasFocus()) return
 
     const gameContext: GameContext = {
@@ -50,15 +55,18 @@ function createLoop(
       audioContext,
       entityFactory,
       videoContext,
+      world
     }
 
     sceneRunner.update(gameContext)
+    // world.events.emit(world.WORLD_FIXED_STEP_EVENT)
   }
 
   return timer
 }
 
 async function startGame(canvas: HTMLCanvasElement) {
+  const world = new World()
   const videoContext = getVideoContext(canvas)
 
   const audioContext = new AudioContext()
@@ -107,10 +115,12 @@ async function startGame(canvas: HTMLCanvasElement) {
 
   sceneRunner.runNext()
 
-  createLoop(videoContext, audioContext, entityFactory, sceneRunner).start()
+  const loop = await createLoop(videoContext, audioContext, entityFactory, sceneRunner, world)
+  loop.start()
 }
 
 async function startEditor(canvas: HTMLCanvasElement) {
+  const world = new World()
   const videoContext = getVideoContext(canvas)
 
   const audioContext = new AudioContext()
@@ -126,7 +136,7 @@ async function startEditor(canvas: HTMLCanvasElement) {
 
   const level = await loadLevel('1-1')
 
-  const editor = new Editor(level)
+  const editor = new Editor(level, world)
 
   const mario = entityFactory.mario?.() || raise('where mario tho')
   makePlayer(mario, 'MARIO')
@@ -152,7 +162,8 @@ async function startEditor(canvas: HTMLCanvasElement) {
 
   sceneRunner.runNext()
 
-  createLoop(videoContext, audioContext, entityFactory, sceneRunner).start()
+  const loop = await createLoop(videoContext, audioContext, entityFactory, sceneRunner, world)
+  loop.start()
 }
 
 const canvas = document.getElementById('screen')
