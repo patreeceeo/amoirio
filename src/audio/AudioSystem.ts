@@ -20,7 +20,6 @@ export const AudioSystem: CreateSystemFunctionType = async (world) => {
   })
 
   world.events.listen(EventTypes.WORLD_PAUSE_EVENT, () => {
-    debugger
     controller.pause()
   })
 
