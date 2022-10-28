@@ -1,7 +1,7 @@
 import { Trait } from '../Trait'
 import { Level } from '../Level'
 import { World } from '../World'
-import { EventTypes } from '../EventEmitter'
+import { EventName } from '../EventEmitter'
 
 export class LevelEditor extends Trait {
   constructor(private level: Level, private world: World) {
@@ -9,11 +9,11 @@ export class LevelEditor extends Trait {
   }
   pauseLevel() {
     this.level.pause()
-    this.world.events.emit(EventTypes.WORLD_PAUSE_EVENT)
+    this.world.events.emit(EventName.WORLD_PAUSE)
   }
   playLevel() {
     this.level.play()
-    this.world.events.emit(EventTypes.WORLD_PLAY_EVENT)
+    this.world.events.emit(EventName.WORLD_PLAY)
   }
   isLevelPlaying() {
     return this.level.isPlaying

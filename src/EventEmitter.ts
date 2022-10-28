@@ -1,17 +1,18 @@
 type Callback = (...args: any[]) => void
 type Listener = { name: string | symbol; callback: Callback }
 
-export enum EventTypes {
-  WORLD_FIXED_STEP_EVENT = 'world/fixed_step',
-  WORLD_PAUSE_EVENT = 'world/pause',
-  WORLD_PLAY_EVENT = 'world/play',
+export enum EventName {
+  WORLD_FIXED_STEP = 'world/fixed_step',
+  WORLD_PAUSE = 'world/pause',
+  WORLD_PLAY = 'world/play',
+  TIMER_HURRY = 'timer/hurry',
+  TIMER_OK = 'timer/ok',
 }
 
 export class EventEmitter {
   private listeners: Listener[] = []
 
-  // TODO use an enum instead of a string?
-  listen(name: string | symbol, callback: Callback) {
+  listen(name: EventName, callback: Callback) {
     this.listeners.push({ name, callback })
   }
 

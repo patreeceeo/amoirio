@@ -1,9 +1,8 @@
 import { CreateSystemFunctionType } from '../types'
 import { loadMusicSheet } from './AudioFunctions'
 import { MusicController } from './MusicController'
-import { LevelTimer } from '../traits/LevelTimer'
 import { World } from '../World'
-import { EventTypes } from '../EventEmitter'
+import { EventName } from '../EventEmitter'
 
 export const AudioSystem: CreateSystemFunctionType = async (world) => {
   const player = await loadMusicSheet('overworld')
@@ -11,19 +10,19 @@ export const AudioSystem: CreateSystemFunctionType = async (world) => {
 
   controller.setPlayer(player)
 
-  world.events.listen(LevelTimer.EVENT_TIMER_OK, () => {
+  world.events.listen(EventName.TIMER_OK, () => {
     controller.playTheme()
   })
 
-  world.events.listen(LevelTimer.EVENT_TIMER_HURRY, () => {
+  world.events.listen(EventName.TIMER_HURRY, () => {
     controller.playHurryTheme()
   })
 
-  world.events.listen(EventTypes.WORLD_PAUSE_EVENT, () => {
+  world.events.listen(EventName.WORLD_PAUSE, () => {
     controller.pause()
   })
 
-  world.events.listen(EventTypes.WORLD_PLAY_EVENT, () => {
+  world.events.listen(EventName.WORLD_PLAY, () => {
     // TODO play whatever was playing before
     controller.playTheme()
   })
