@@ -1,7 +1,6 @@
 import { CreateSystemFunctionType } from '../types'
 import { loadMusicSheet } from './AudioFunctions'
 import { MusicController } from './MusicController'
-import { World } from '../World'
 import { EventName } from '../EventEmitter'
 
 export const AudioSystem: CreateSystemFunctionType = async (world) => {
