@@ -1,4 +1,4 @@
-import {EventEmitter} from "./EventEmitter"
+import { EventEmitter } from './EventEmitter'
 
 export class World {
   fixedDeltaSeconds = 0

@@ -6,7 +6,7 @@ export function loadImage(url: string) {
       resolve(image)
     })
 
-    image.addEventListener('error', event => {
+    image.addEventListener('error', (event) => {
       reject(`Could not load image from ${url}`)
     })
 
@@ -15,5 +15,5 @@ export function loadImage(url: string) {
 }
 
 export function loadJSON<T>(url: string): Promise<T> {
-  return fetch(url).then(res => res.json())
+  return fetch(url).then((res) => res.json())
 }

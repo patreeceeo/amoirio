@@ -18,8 +18,8 @@ import { createEditorLayer } from './layers/editor'
 import { Entity } from './Entity'
 import { Level } from './Level'
 import { Dict } from './types'
-import {World} from './World'
-import {AudioSystem} from './audio/AudioSystem'
+import { World } from './World'
+import { AudioSystem } from './audio/AudioSystem'
 
 function getVideoContext(canvas: HTMLCanvasElement): CanvasRenderingContext2D {
   const videoContext = canvas.getContext('2d') || raise('Canvas not supported')
@@ -41,7 +41,7 @@ async function createLoop(
   audioContext: AudioContext,
   entityFactory: Dict<EntityFactory>,
   sceneRunner: SceneRunner,
-  world: World
+  world: World,
 ): Promise<Timer> {
   const timer = new Timer()
 
@@ -55,7 +55,7 @@ async function createLoop(
       audioContext,
       entityFactory,
       videoContext,
-      world
+      world,
     }
 
     sceneRunner.update(gameContext)
@@ -115,7 +115,13 @@ async function startGame(canvas: HTMLCanvasElement) {
 
   sceneRunner.runNext()
 
-  const loop = await createLoop(videoContext, audioContext, entityFactory, sceneRunner, world)
+  const loop = await createLoop(
+    videoContext,
+    audioContext,
+    entityFactory,
+    sceneRunner,
+    world,
+  )
   loop.start()
 }
 
@@ -162,7 +168,13 @@ async function startEditor(canvas: HTMLCanvasElement) {
 
   sceneRunner.runNext()
 
-  const loop = await createLoop(videoContext, audioContext, entityFactory, sceneRunner, world)
+  const loop = await createLoop(
+    videoContext,
+    audioContext,
+    entityFactory,
+    sceneRunner,
+    world,
+  )
   loop.start()
 }
 

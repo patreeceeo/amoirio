@@ -21,7 +21,7 @@ export async function loadAudioBoard(name: string, audioContext: AudioContext) {
   const audioLoadingTasks = Object.entries(audioSheet.fx).map(
     ([name, { url }]) =>
       loadAudio(url)
-        .then(buffer => audioBoard.add(name, buffer))
+        .then((buffer) => audioBoard.add(name, buffer))
         .catch(() => console.error(`failed to load ${url}`)),
   )
 

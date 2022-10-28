@@ -24,7 +24,7 @@ export class Level extends Scene {
   isPlaying = true
 
   update(gameContext: GameContext) {
-    if(!this.isPlaying) return
+    if (!this.isPlaying) return
 
     this.entities.forEach((entity) => {
       entity.update(gameContext, this)

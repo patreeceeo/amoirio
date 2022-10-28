@@ -10,8 +10,8 @@ export function setupMouseControl(
 ) {
   let lastEvent: MouseEvent | void
 
-  mouseEvents.forEach(eventName => {
-    canvas.addEventListener(eventName, event => {
+  mouseEvents.forEach((eventName) => {
+    canvas.addEventListener(eventName, (event) => {
       if (event instanceof MouseEvent) {
         if (event.buttons === 1) {
           entity.vel.set(0, 0)
@@ -33,7 +33,7 @@ export function setupMouseControl(
     })
   })
 
-  canvas.addEventListener('contextmenu', event => {
+  canvas.addEventListener('contextmenu', (event) => {
     event.preventDefault()
   })
 }

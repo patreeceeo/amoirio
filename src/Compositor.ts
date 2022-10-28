@@ -9,7 +9,7 @@ export class Compositor {
   layers = [] as LayerFunction[]
 
   draw(context: CanvasRenderingContext2D, camera: Camera) {
-    this.layers.forEach(layer => {
+    this.layers.forEach((layer) => {
       layer(context, camera)
     })
   }

@@ -1,12 +1,12 @@
-import {CreateSystemFunctionType} from "../types"
-import {loadMusicSheet} from "./AudioFunctions"
-import {MusicController} from "./MusicController"
-import {LevelTimer} from "../traits/LevelTimer"
-import {World} from "../World"
-import {EventTypes} from "../EventEmitter"
+import { CreateSystemFunctionType } from '../types'
+import { loadMusicSheet } from './AudioFunctions'
+import { MusicController } from './MusicController'
+import { LevelTimer } from '../traits/LevelTimer'
+import { World } from '../World'
+import { EventTypes } from '../EventEmitter'
 
 export const AudioSystem: CreateSystemFunctionType = async (world) => {
-  const player = await loadMusicSheet("overworld")
+  const player = await loadMusicSheet('overworld')
   const controller = new MusicController()
 
   controller.setPlayer(player)

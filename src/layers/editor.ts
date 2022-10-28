@@ -1,6 +1,6 @@
-import {Level} from "../Level"
-import {LevelTimer} from "../traits/LevelTimer"
-import {Font} from "../loaders/font"
+import { Level } from '../Level'
+import { LevelTimer } from '../traits/LevelTimer'
+import { Font } from '../loaders/font'
 
 function getTimerTrait(level: Level) {
   for (const entity of level.entities) {
@@ -14,7 +14,6 @@ export function createEditorLayer(font: Font, level: Level) {
   const line2 = font.size * 2
 
   return function drawDashboard(context: CanvasRenderingContext2D) {
-
     font.print(`EDITOR`, context, 0, line1)
     font.print(level.name, context, 0, line2)
 
