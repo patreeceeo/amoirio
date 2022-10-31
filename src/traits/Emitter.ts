@@ -1,10 +1,10 @@
-import { Entity } from '../Entity'
+import { DeprecatedEntity } from '../Entity'
 import { GameContext } from '../GameContext'
 import { Level } from '../Level'
 import { Trait } from '../Trait'
 
 type EmitterFn = (
-  entity: Entity,
+  entity: DeprecatedEntity,
   gameContext: GameContext,
   level: Level,
 ) => void
@@ -14,7 +14,7 @@ export class Emitter extends Trait {
   coolDown = this.interval
   emitters: EmitterFn[] = []
 
-  update(entity: Entity, gameContext: GameContext, level: Level) {
+  update(entity: DeprecatedEntity, gameContext: GameContext, level: Level) {
     this.coolDown -= gameContext.deltaTime
     if (this.coolDown <= 0) {
       this.emit(entity, gameContext, level)
@@ -22,7 +22,7 @@ export class Emitter extends Trait {
     }
   }
 
-  emit(entity: Entity, gameContext: GameContext, level: Level) {
+  emit(entity: DeprecatedEntity, gameContext: GameContext, level: Level) {
     for (const emitter of this.emitters) {
       emitter(entity, gameContext, level)
     }

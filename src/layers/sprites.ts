@@ -1,9 +1,9 @@
 import { Camera } from '../Camera'
-import { Entity } from '../Entity'
+import { DeprecatedEntity } from '../Entity'
 import { raise } from '../raise'
 
 export function createSpriteLayer(
-  entities: Set<Entity>,
+  entities: Set<DeprecatedEntity>,
   width = 64,
   height = 64,
 ) {

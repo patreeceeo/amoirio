@@ -1,9 +1,9 @@
-import { Entity } from './Entity'
+import { DeprecatedEntity } from './Entity'
 
 export class EntityCollider {
-  constructor(public entities: Set<Entity>) {}
+  constructor(public entities: Set<DeprecatedEntity>) {}
 
-  check(subject: Entity) {
+  check(subject: DeprecatedEntity) {
     for (const candidate of this.entities) {
       if (subject === candidate) continue
 

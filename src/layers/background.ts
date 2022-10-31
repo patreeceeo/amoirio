@@ -1,11 +1,11 @@
-import { Camera } from '../Camera'
-import { Level } from '../Level'
+import { Camera } from '../video/Camera'
 import { raise } from '../raise'
 import { SpriteSheet } from '../SpriteSheet'
 import { TileResolver, TileResolverMatrix } from '../TileResolver'
+import { World } from '../World'
 
 export function createBackgroundLayer(
-  level: Level,
+  world: World,
   tiles: TileResolverMatrix,
   sprites: SpriteSheet,
 ) {
@@ -28,6 +28,7 @@ export function createBackgroundLayer(
     )
 
     for (const [tile, x, y] of items) {
+      console.log('Drawing ', x, y)
       if (!tile.name) continue
       if (sprites.animations.has(tile.name)) {
         sprites.drawAnimation(
@@ -35,7 +36,7 @@ export function createBackgroundLayer(
           context,
           x - startIndex,
           y,
-          level.totalTime,
+          world.fixedElapsedSeconds,
         )
       } else {
         sprites.drawTile(tile.name, context, x - startIndex, y)

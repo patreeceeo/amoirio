@@ -1,5 +1,5 @@
-import { Camera } from './Camera'
-import { Entity } from './Entity'
+import { Camera } from './video/Camera'
+import { DeprecatedEntity } from './Entity'
 import { EntityCollider } from './EntityCollider'
 import { GameContext } from './GameContext'
 import { MusicController } from './audio/MusicController'
@@ -12,9 +12,10 @@ export class Level extends Scene {
 
   name = ''
 
-  entities = new Set<Entity>()
+  entities = new Set<DeprecatedEntity>()
   entityCollider = new EntityCollider(this.entities)
   tileCollider = new TileCollider()
+  /** @deprecated in favor of AudioSystem */
   music = new MusicController()
   camera = new Camera()
 
@@ -44,7 +45,7 @@ export class Level extends Scene {
   }
 
   draw(gameContext: GameContext) {
-    this.comp.draw(gameContext.videoContext, this.camera)
+    this.compositor.draw(gameContext.videoContext, this.camera)
   }
 
   pause() {

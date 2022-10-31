@@ -1,4 +1,4 @@
-import { Entity } from '../Entity'
+import { DeprecatedEntity } from '../Entity'
 import { GameContext } from '../GameContext'
 import { Level } from '../Level'
 import { Trait } from '../Trait'
@@ -10,7 +10,11 @@ export class LevelTimer extends Trait {
   hurryTime = 100
   hurryEmitted?: boolean
 
-  update(entity: Entity, { deltaTime, world }: GameContext, level: Level) {
+  update(
+    entity: DeprecatedEntity,
+    { deltaTime, world }: GameContext,
+    level: Level,
+  ) {
     this.currentTime -= deltaTime * 2
 
     if (this.hurryEmitted !== true && this.currentTime < this.hurryTime) {

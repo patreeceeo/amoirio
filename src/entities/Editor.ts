@@ -1,9 +1,9 @@
 import { LevelEditor } from '../traits/LevelEditor'
-import { Entity } from '../Entity'
+import { DeprecatedEntity } from '../Entity'
 import { Level } from '../Level'
 import { World } from '../World'
 
-export class Editor extends Entity {
+export class Editor extends DeprecatedEntity {
   levelEditor: LevelEditor
 
   constructor(level: Level, world: World) {

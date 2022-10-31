@@ -16,7 +16,7 @@ export enum Side {
 
 type TraitConstructor<T extends Trait> = new (...args: any[]) => T
 
-export class Entity {
+export class DeprecatedEntity {
   // audio = new AudioBoard()
   audio?: AudioBoard
   pos = new Vec2()
@@ -77,7 +77,7 @@ export class Entity {
     })
   }
 
-  collides(candidate: Entity) {
+  collides(candidate: DeprecatedEntity) {
     this.traits.forEach((trait) => {
       trait.collides(this, candidate)
     })

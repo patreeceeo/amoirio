@@ -1,4 +1,4 @@
-import { Entity } from '../Entity'
+import { DeprecatedEntity } from '../Entity'
 import { GameContext } from '../GameContext'
 import { loadSpriteSheet } from '../loaders/sprite'
 import { SpriteSheet } from '../SpriteSheet'
@@ -8,6 +8,7 @@ import { PendulumMove } from '../traits/PendulumMove'
 import { Physics } from '../traits/Physics'
 import { Solid } from '../traits/Solid'
 import { Stomper } from '../traits/Stomper'
+import { Entity } from '../EntityFunctions'
 
 enum KoopaState {
   walking,
@@ -22,7 +23,7 @@ class KoopaBehavior extends Trait {
   panicSpeed = 300
   walkSpeed?: number
 
-  collides(us: Entity, them: Entity) {
+  collides(us: DeprecatedEntity, them: DeprecatedEntity) {
     if (us.getTrait(Killable)?.dead) {
       return
     }
@@ -37,7 +38,7 @@ class KoopaBehavior extends Trait {
     }
   }
 
-  handleStomp(us: Entity, them: Entity) {
+  handleStomp(us: DeprecatedEntity, them: DeprecatedEntity) {
     if (this.state === KoopaState.walking) {
       this.hide(us)
     } else if (this.state === KoopaState.hiding) {
@@ -49,7 +50,7 @@ class KoopaBehavior extends Trait {
     }
   }
 
-  handleNudge(us: Entity, them: Entity) {
+  handleNudge(us: DeprecatedEntity, them: DeprecatedEntity) {
     const kill = () => {
       const killable = them.getTrait(Killable)
       if (killable) {
@@ -70,7 +71,7 @@ class KoopaBehavior extends Trait {
     }
   }
 
-  hide(us: Entity) {
+  hide(us: DeprecatedEntity) {
     us.useTrait(PendulumMove, (walk) => {
       us.vel.x = 0
       walk.enabled = false
@@ -84,7 +85,7 @@ class KoopaBehavior extends Trait {
     })
   }
 
-  unhide(us: Entity) {
+  unhide(us: DeprecatedEntity) {
     us.useTrait(PendulumMove, (walk) => {
       walk.enabled = true
       if (this.walkSpeed != null) walk.speed = this.walkSpeed
@@ -92,7 +93,7 @@ class KoopaBehavior extends Trait {
     })
   }
 
-  panic(us: Entity, them: Entity) {
+  panic(us: DeprecatedEntity, them: DeprecatedEntity) {
     us.useTrait(PendulumMove, (pm) => {
       pm.speed = this.panicSpeed * Math.sign(them.vel.x)
       pm.enabled = true
@@ -100,7 +101,7 @@ class KoopaBehavior extends Trait {
     this.state = KoopaState.panic
   }
 
-  update(us: Entity, { deltaTime }: GameContext) {
+  update(us: DeprecatedEntity, { deltaTime }: GameContext) {
     if (this.state === KoopaState.hiding) {
       this.hideTime += deltaTime
 
@@ -111,7 +112,7 @@ class KoopaBehavior extends Trait {
   }
 }
 
-export class Koopa extends Entity {
+export class Koopa extends DeprecatedEntity {
   walk = this.addTrait(new PendulumMove())
   behavior = this.addTrait(new KoopaBehavior())
   killable = this.addTrait(new Killable())
@@ -150,7 +151,7 @@ export class Koopa extends Entity {
 export async function loadKoopa() {
   const sprites = await loadSpriteSheet('koopa')
 
-  return function createKoopa() {
-    return new Koopa(sprites)
+  return function createKoopa(): [Entity, DeprecatedEntity] {
+    return [-1, new Koopa(sprites)]
   }
 }

@@ -1,4 +1,4 @@
-import { Entity } from '../Entity'
+import { DeprecatedEntity } from '../Entity'
 import { Trait } from '../Trait'
 import { Killable } from './Killable'
 
@@ -7,12 +7,12 @@ export class Stomper extends Trait {
 
   bounceSpeed = 400
 
-  bounce(us: Entity, them: Entity) {
+  bounce(us: DeprecatedEntity, them: DeprecatedEntity) {
     us.bounds.bottom = them.bounds.top
     us.vel.y = -this.bounceSpeed
   }
 
-  collides(us: Entity, them: Entity) {
+  collides(us: DeprecatedEntity, them: DeprecatedEntity) {
     const killable = them.getTrait(Killable)
     if (!killable || killable.dead) {
       return

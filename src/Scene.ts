@@ -1,12 +1,12 @@
-import { Camera } from './Camera'
-import { Compositor } from './Compositor'
+import { Camera } from './video/Camera'
+import { Compositor } from './video/Compositor'
 import { EventEmitter } from './EventEmitter'
 import { GameContext } from './GameContext'
 
 export class Scene {
   static EVENT_COMPLETE = Symbol('scene complete')
 
-  comp = new Compositor()
+  compositor = new Compositor()
   events = new EventEmitter()
 
   draw(gameContext: GameContext) {
@@ -15,7 +15,7 @@ export class Scene {
     // with the assumption that it'll always receive a camera.
     // hopefully this doesn't cause issues
     // (if anything this'll keep things from breaking)
-    this.comp.draw(gameContext.videoContext, new Camera())
+    this.compositor.draw(gameContext.videoContext, new Camera())
   }
 
   update(gameContext: GameContext) {}

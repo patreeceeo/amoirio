@@ -1,11 +1,11 @@
 import { Camera } from './Camera'
-import { Entity } from './Entity'
+import { DeprecatedEntity } from './Entity'
 
 const mouseEvents = ['mousedown', 'mousemove']
 
 export function setupMouseControl(
   canvas: HTMLCanvasElement,
-  entity: Entity,
+  entity: DeprecatedEntity,
   camera: Camera,
 ) {
   let lastEvent: MouseEvent | void

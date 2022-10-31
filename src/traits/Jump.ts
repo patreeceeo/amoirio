@@ -1,4 +1,4 @@
-import { Entity, Side } from '../Entity'
+import { DeprecatedEntity, Side } from '../Entity'
 import { GameContext } from '../GameContext'
 import { Trait } from '../Trait'
 
@@ -20,7 +20,7 @@ export class Jump extends Trait {
     this.requestTime = 0
   }
 
-  update(entity: Entity, { deltaTime }: GameContext) {
+  update(entity: DeprecatedEntity, { deltaTime }: GameContext) {
     if (this.requestTime > 0) {
       if (this.ready > 0) {
         entity.sounds.add('jump')
@@ -39,7 +39,7 @@ export class Jump extends Trait {
     this.ready -= 1
   }
 
-  obstruct(entity: Entity, side: Side) {
+  obstruct(entity: DeprecatedEntity, side: Side) {
     if (side === Side.bottom) {
       this.ready = 1
     } else if (side === Side.top) {

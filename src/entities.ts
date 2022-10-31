@@ -3,10 +3,11 @@ import { loadCannon } from './entities/Cannon'
 import { loadGoomba } from './entities/Goomba'
 import { loadKoopa } from './entities/Koopa'
 import { loadMario } from './entities/Mario'
-import { Entity } from './Entity'
+import { DeprecatedEntity } from './Entity'
 import { Dict } from './types'
+import { Entity } from './EntityFunctions'
 
-export type EntityFactory = () => Entity
+export type EntityFactory = () => [Entity, DeprecatedEntity]
 
 export type EntityFactoryDict = Dict<EntityFactory>
 

@@ -1,4 +1,4 @@
-import { Entity } from '../Entity'
+import { DeprecatedEntity } from '../Entity'
 import { GameContext } from '../GameContext'
 import { Trait } from '../Trait'
 import { Jump } from './Jump'
@@ -11,7 +11,7 @@ export class Go extends Trait {
   dragFactor = 1 / 5000
   deceleration = 300
 
-  update(entity: Entity, { deltaTime }: GameContext) {
+  update(entity: DeprecatedEntity, { deltaTime }: GameContext) {
     const absX = Math.abs(entity.vel.x)
 
     if (this.dir !== 0) {

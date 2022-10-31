@@ -1,10 +1,10 @@
-import { Entity } from '../Entity'
+import { DeprecatedEntity } from '../Entity'
 import { GameContext } from '../GameContext'
 import { Level } from '../Level'
 import { Trait } from '../Trait'
 
 export class Physics extends Trait {
-  update(entity: Entity, gameContext: GameContext, level: Level) {
+  update(entity: DeprecatedEntity, gameContext: GameContext, level: Level) {
     entity.pos.x += entity.vel.x * gameContext.deltaTime
 
     level.tileCollider.checkX(entity, gameContext, level)

@@ -1,4 +1,4 @@
-import { Entity } from '../Entity'
+import { DeprecatedEntity } from '../Entity'
 import { Trait } from '../Trait'
 import { Stomper } from './Stomper'
 
@@ -25,7 +25,7 @@ export class Player extends Trait {
       this.coins -= COIN_LIFE_THRESHOLD
     }
 
-    this.queue((entity: Entity) => entity.sounds.add('coin'))
+    this.queue((entity: DeprecatedEntity) => entity.sounds.add('coin'))
   }
 
   addLives(count: number) {

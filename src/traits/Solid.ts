@@ -1,11 +1,11 @@
-import { Entity, Side } from '../Entity'
+import { DeprecatedEntity, Side } from '../Entity'
 import { TileResolverMatch } from '../TileResolver'
 import { Trait } from '../Trait'
 
 export class Solid extends Trait {
   obstructs = true
 
-  obstruct(entity: Entity, side: Side, match: TileResolverMatch) {
+  obstruct(entity: DeprecatedEntity, side: Side, match: TileResolverMatch) {
     if (!this.obstructs) return
 
     if (side === Side.bottom) {

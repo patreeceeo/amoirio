@@ -1,5 +1,5 @@
 import { Animation } from '../animation'
-import { Entity } from '../Entity'
+import { DeprecatedEntity } from '../Entity'
 import { loadSpriteSheet } from '../loaders/sprite'
 import { SpriteSheet } from '../SpriteSheet'
 import { Trait } from '../Trait'
@@ -8,9 +8,10 @@ import { PendulumMove } from '../traits/PendulumMove'
 import { Physics } from '../traits/Physics'
 import { Solid } from '../traits/Solid'
 import { Stomper } from '../traits/Stomper'
+import { Entity } from '../EntityFunctions'
 
 class GoombaBehavior extends Trait {
-  collides(us: Entity, them: Entity) {
+  collides(us: DeprecatedEntity, them: DeprecatedEntity) {
     if (us.getTrait(Killable)?.dead) {
       return
     }
@@ -27,7 +28,7 @@ class GoombaBehavior extends Trait {
   }
 }
 
-export class Goomba extends Entity {
+export class Goomba extends DeprecatedEntity {
   walk = this.addTrait(new PendulumMove())
   behavior = this.addTrait(new GoombaBehavior())
   killable = this.addTrait(new Killable())
@@ -55,7 +56,7 @@ export async function loadGoomba() {
   const sprites = await loadSpriteSheet('goomba')
   const walkAnim = sprites.getAnimation('walk')
 
-  return function createGoomba() {
-    return new Goomba(sprites, walkAnim)
+  return function createGoomba(): [Entity, DeprecatedEntity] {
+    return [-1, new Goomba(sprites, walkAnim)]
   }
 }

@@ -1,19 +1,25 @@
-import { Entity } from '../Entity'
+import { DeprecatedEntity } from '../Entity'
 import { GameContext } from '../GameContext'
 import { Level } from '../Level'
 import { loadAudioBoard } from '../loaders/audio'
 import { findPlayers } from '../player'
 import { Emitter } from '../traits/Emitter'
+import { createEntity, Entity } from '../EntityFunctions'
 
 const HOLD_FIRE_THRESHOLD = 30
 
 export async function loadCannon(audioContext: AudioContext) {
   const audio = await loadAudioBoard('cannon', audioContext)
 
-  const getDiffX = (e1: Entity, e2: Entity) => Math.abs(e1.pos.x - e2.pos.x)
+  const getDiffX = (e1: DeprecatedEntity, e2: DeprecatedEntity) =>
+    Math.abs(e1.pos.x - e2.pos.x)
 
-  function emitBullet(cannon: Entity, gameContext: GameContext, level: Level) {
-    const bullet = gameContext.entityFactory.bullet?.()
+  function emitBullet(
+    cannon: DeprecatedEntity,
+    gameContext: GameContext,
+    level: Level,
+  ) {
+    const [_, bullet] = gameContext.entityFactory.bullet!()
     if (!bullet) return
 
     const players = [...findPlayers(level.entities)]
@@ -39,16 +45,28 @@ export async function loadCannon(audioContext: AudioContext) {
     cannon.sounds.add('shoot')
   }
 
-  return function createCannon() {
-    const cannon = new Entity()
-    cannon.audio = audio
+  // return function createCannon() {
+  //   const cannon = new DeprecatedEntity()
+  //   cannon.audio = audio
+
+  //   const emitter = new Emitter()
+  //   emitter.interval = 4
+  //   emitter.emitters.push(emitBullet)
+
+  //   cannon.addTrait(emitter)
+
+  //   return cannon
+  // }
+  return function createCannon(): [Entity, DeprecatedEntity] {
+    const de = new DeprecatedEntity()
+    de.audio = audio
 
     const emitter = new Emitter()
     emitter.interval = 4
     emitter.emitters.push(emitBullet)
 
-    cannon.addTrait(emitter)
+    de.addTrait(emitter)
 
-    return cannon
+    return [-1, de]
   }
 }

@@ -1,4 +1,4 @@
-import { Entity } from './Entity'
+import { DeprecatedEntity } from './Entity'
 import { GameContext } from './GameContext'
 import { Level } from './Level'
 import {
@@ -12,7 +12,7 @@ import { ground } from './tiles/ground'
 import { Dict } from './types'
 
 export type TileColliderContext = {
-  entity: Entity
+  entity: DeprecatedEntity
   match: TileResolverMatch
   resolver: TileResolver
   gameContext: GameContext
@@ -35,7 +35,7 @@ export class TileCollider {
     this.resolvers.push(new TileResolver(tileMatrix))
   }
 
-  checkX(entity: Entity, gameContext: GameContext, level: Level) {
+  checkX(entity: DeprecatedEntity, gameContext: GameContext, level: Level) {
     let x
     if (entity.vel.x > 0) {
       x = entity.bounds.right
@@ -59,7 +59,7 @@ export class TileCollider {
     }
   }
 
-  checkY(entity: Entity, gameContext: GameContext, level: Level) {
+  checkY(entity: DeprecatedEntity, gameContext: GameContext, level: Level) {
     let y
     if (entity.vel.y > 0) {
       y = entity.bounds.bottom
@@ -85,7 +85,7 @@ export class TileCollider {
 
   private handle(
     index: number,
-    entity: Entity,
+    entity: DeprecatedEntity,
     match: TileResolverMatch,
     resolver: TileResolver,
     gameContext: GameContext,

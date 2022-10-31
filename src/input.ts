@@ -1,5 +1,5 @@
 import { Mario } from './entities/Mario'
-import { Entity } from './Entity'
+import { DeprecatedEntity } from './Entity'
 import { InputRouter } from './InputRouter'
 import { Keyboard } from './Keyboard'
 import { Go } from './traits/Go'
@@ -8,7 +8,7 @@ import { LevelEditor } from './traits/LevelEditor'
 
 export function setupKeyboard(target: EventTarget) {
   const input = new Keyboard()
-  const router = new InputRouter<Entity>()
+  const router = new InputRouter<DeprecatedEntity>()
 
   let leftState = 0
   let rightState = 0

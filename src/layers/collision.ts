@@ -1,9 +1,9 @@
 import { Camera } from '../Camera'
-import { Entity } from '../Entity'
+import { DeprecatedEntity } from '../Entity'
 import { Level } from '../Level'
 import { TileResolver } from '../TileResolver'
 
-function createEntityLayer(entities: Set<Entity>) {
+function createEntityLayer(entities: Set<DeprecatedEntity>) {
   return function drawBoundingBox(
     context: CanvasRenderingContext2D,
     camera: Camera,

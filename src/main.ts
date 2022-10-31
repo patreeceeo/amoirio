@@ -15,12 +15,17 @@ import { TimedScene } from './TimedScene'
 import { Timer } from './Timer'
 import { Editor } from './entities/Editor'
 import { createEditorLayer } from './layers/editor'
-import { Entity } from './Entity'
+import { DeprecatedEntity } from './Entity'
 import { Level } from './Level'
 import { Dict } from './types'
 import { World } from './World'
 import { AudioSystem } from './audio/AudioSystem'
+import { runTests } from './test'
+import { EventName } from './EventEmitter'
+import { VidoeSystem } from './video/VideoSystem'
+import { clearFlags } from './EntityFunctions'
 
+/** @deprecated */
 function getVideoContext(canvas: HTMLCanvasElement): CanvasRenderingContext2D {
   const videoContext = canvas.getContext('2d') || raise('Canvas not supported')
 
@@ -30,7 +35,7 @@ function getVideoContext(canvas: HTMLCanvasElement): CanvasRenderingContext2D {
   return videoContext
 }
 
-function spawnMario(mario: Entity, level: Level) {
+function spawnMario(mario: DeprecatedEntity, level: Level) {
   mario.pos.set(0, 0)
   mario.vel.set(0, 0)
   level.entities.add(mario)
@@ -46,6 +51,7 @@ async function createLoop(
   const timer = new Timer()
 
   await AudioSystem(world)
+  await VidoeSystem(world)
 
   timer.onFixedStep = function update(deltaTime) {
     if (!document.hasFocus()) return
@@ -59,7 +65,8 @@ async function createLoop(
     }
 
     sceneRunner.update(gameContext)
-    // world.events.emit(world.WORLD_FIXED_STEP_EVENT)
+    world.events.emit(EventName.WORLD_FIXED_STEP)
+    clearFlags()
   }
 
   return timer
@@ -80,15 +87,15 @@ async function startGame(canvas: HTMLCanvasElement) {
 
   const sceneRunner = new SceneRunner()
 
-  const mario = entityFactory.mario?.() || raise('where mario tho')
+  const [_, mario] = entityFactory.mario?.() || raise('where mario tho')
   makePlayer(mario, 'MARIO')
 
   const inputRouter = setupKeyboard(window)
   inputRouter.addReceiver(mario)
 
   const loadScreen = new Scene()
-  loadScreen.comp.layers.push(createColorLayer('black'))
-  loadScreen.comp.layers.push(createTextLayer(font, `LOADING ${name}...`))
+  loadScreen.compositor.layers.push(createColorLayer('black'))
+  loadScreen.compositor.layers.push(createTextLayer(font, `LOADING ${name}...`))
   sceneRunner.addScene(loadScreen)
   sceneRunner.runNext()
 
@@ -105,12 +112,12 @@ async function startGame(canvas: HTMLCanvasElement) {
   level.entities.add(playerEnv)
 
   const waitScreen = new TimedScene()
-  waitScreen.comp.layers.push(createColorLayer('black'))
-  waitScreen.comp.layers.push(dashboardLayer)
-  waitScreen.comp.layers.push(playerProgressLayer)
+  waitScreen.compositor.layers.push(createColorLayer('black'))
+  waitScreen.compositor.layers.push(dashboardLayer)
+  waitScreen.compositor.layers.push(playerProgressLayer)
   sceneRunner.addScene(waitScreen)
 
-  level.comp.layers.push(dashboardLayer)
+  level.compositor.layers.push(dashboardLayer)
   sceneRunner.addScene(level)
 
   sceneRunner.runNext()
@@ -129,6 +136,7 @@ async function startEditor(canvas: HTMLCanvasElement) {
   const world = new World()
   const videoContext = getVideoContext(canvas)
 
+  // TODO should audioContext be instantiate in AudioSystem?
   const audioContext = new AudioContext()
 
   const [entityFactory, font] = await Promise.all([
@@ -144,7 +152,7 @@ async function startEditor(canvas: HTMLCanvasElement) {
 
   const editor = new Editor(level, world)
 
-  const mario = entityFactory.mario?.() || raise('where mario tho')
+  const [_, mario] = entityFactory.mario?.() || raise('where mario tho')
   makePlayer(mario, 'MARIO')
 
   const inputRouter = setupKeyboard(window)
@@ -162,7 +170,7 @@ async function startEditor(canvas: HTMLCanvasElement) {
   // TODO add hot key to toggle this
   // level.comp.layers.push(createCollisionLayer(level))
 
-  level.comp.layers.push(editorLayer)
+  level.compositor.layers.push(editorLayer)
   sceneRunner.addScene(level)
   level.pause()
 
@@ -181,7 +189,10 @@ async function startEditor(canvas: HTMLCanvasElement) {
 const canvas = document.getElementById('screen')
 if (canvas instanceof HTMLCanvasElement) {
   const path = location.pathname
-  if (path === '/editor') {
+  if (path === '/test') {
+    runTests()
+  } else if (path === '/editor') {
+    runTests()
     startEditor(canvas).catch(console.error)
   } else {
     startGame(canvas).catch(console.error)

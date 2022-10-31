@@ -1,4 +1,4 @@
-import { Entity, Side } from './Entity'
+import { DeprecatedEntity, Side } from './Entity'
 import { GameContext } from './GameContext'
 import { Level } from './Level'
 import { TileResolverMatch } from './TileResolver'
@@ -28,7 +28,7 @@ export abstract class Trait {
     this.listen(Trait.EVENT_TASK, task, 1)
   }
 
-  finalize(entity: Entity) {
+  finalize(entity: DeprecatedEntity) {
     for (const listener of this.listeners) {
       entity.events.process(listener.name, listener.callback)
       listener.count -= 1
@@ -37,7 +37,7 @@ export abstract class Trait {
     this.listeners = this.listeners.filter((listener) => listener.count > 0)
   }
 
-  update(entity: Entity, gameContext: GameContext, level: Level) {}
-  obstruct(entity: Entity, side: Side, match: TileResolverMatch) {}
-  collides(us: Entity, them: Entity) {}
+  update(entity: DeprecatedEntity, gameContext: GameContext, level: Level) {}
+  obstruct(entity: DeprecatedEntity, side: Side, match: TileResolverMatch) {}
+  collides(us: DeprecatedEntity, them: DeprecatedEntity) {}
 }

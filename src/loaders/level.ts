@@ -1,10 +1,10 @@
 import { EntityFactoryDict } from '../entities'
-import { Entity } from '../Entity'
+import { DeprecatedEntity } from '../Entity'
 import { createBackgroundLayer } from '../layers/background'
 import { createSpriteLayer } from '../layers/sprites'
 import { Level } from '../Level'
 import { loadJSON } from '../loaders'
-import { Matrix } from '../math'
+import { Matrix, Vec2 } from '../math'
 import { SpriteSheet } from '../SpriteSheet'
 import { TileResolverMatrix } from '../TileResolver'
 import { LevelTimer } from '../traits/LevelTimer'
@@ -12,9 +12,15 @@ import { Trigger } from '../traits/Trigger'
 import { loadMusicSheet } from '../audio/AudioFunctions'
 import { loadSpriteSheet } from './sprite'
 import { LevelSpec, LevelSpecPatterns, LevelSpecTile, TileRange } from './types'
+import {
+  Entity,
+  updateEntity,
+  ComponentName,
+  createEntity,
+} from '../EntityFunctions'
 
 function createTimer() {
-  const timer = new Entity()
+  const timer = new DeprecatedEntity()
   timer.addTrait(new LevelTimer())
   return timer
 }
@@ -28,23 +34,63 @@ function setupBehavior(level: Level) {
   level.entities.add(timer)
 }
 
+// function setupBackground(
+//   levelSpec: LevelSpec,
+//   level: Level,
+//   backgroundSprites: SpriteSheet,
+//   patterns: LevelSpecPatterns,
+// ) {
+//   for (const layer of levelSpec.layers) {
+//     const grid = createGrid(layer.tiles, patterns)
+//     const backgroundLayer = createBackgroundLayer(
+//       level,
+//       grid,
+//       backgroundSprites,
+//     )
+//     level.compositor.layers.push(backgroundLayer)
+//     level.tileCollider.addGrid(grid)
+//   }
+// }
 function setupBackground(
   levelSpec: LevelSpec,
-  level: Level,
+  /** @deprecated */
+  level: Level, // TODO delete
   backgroundSprites: SpriteSheet,
   patterns: LevelSpecPatterns,
 ) {
   for (const layer of levelSpec.layers) {
     const grid = createGrid(layer.tiles, patterns)
-    const backgroundLayer = createBackgroundLayer(
-      level,
-      grid,
-      backgroundSprites,
-    )
-    level.comp.layers.push(backgroundLayer)
+    ;(grid as any).isBg = true
+    ;(backgroundSprites as any).isBg = true
+    const layerEntity = createEntity()
+    updateEntity(layerEntity, {
+      [ComponentName.TILE_MATRIX]: grid,
+      [ComponentName.SPRITE_SHEET]: backgroundSprites,
+    })
+
     level.tileCollider.addGrid(grid)
   }
 }
+
+// function setupEntities(
+//   levelSpec: LevelSpec,
+//   level: Level,
+//   entityFactory: EntityFactoryDict,
+// ) {
+//   levelSpec.entities.forEach(({ name, pos: [x, y] }) => {
+//     const createEntity = entityFactory[name]
+//     if (!createEntity) {
+//       throw new Error(`Could not find factory function for entity "${name}"`)
+//     }
+
+//     const entity = createEntity()
+//     entity.pos.set(x, y)
+//     level.entities.add(entity)
+//   })
+
+//   const spriteLayer = createSpriteLayer(level.entities)
+//   level.compositor.layers.push(spriteLayer)
+// }
 
 function setupEntities(
   levelSpec: LevelSpec,
@@ -52,18 +98,21 @@ function setupEntities(
   entityFactory: EntityFactoryDict,
 ) {
   levelSpec.entities.forEach(({ name, pos: [x, y] }) => {
-    const createEntity = entityFactory[name]
-    if (!createEntity) {
+    const createEntityPrefab = entityFactory[name]
+    if (!createEntityPrefab) {
       throw new Error(`Could not find factory function for entity "${name}"`)
     }
 
-    const entity = createEntity()
-    entity.pos.set(x, y)
-    level.entities.add(entity)
+    const [entity, deprecatedEntity] = createEntityPrefab()
+    deprecatedEntity.pos.set(x, y)
+    updateEntity(entity, {
+      [ComponentName.POSITION]: deprecatedEntity.pos,
+    })
+    level.entities.add(deprecatedEntity)
   })
 
-  const spriteLayer = createSpriteLayer(level.entities)
-  level.comp.layers.push(spriteLayer)
+  // const spriteLayer = createSpriteLayer(level.entities)
+  // level.compositor.layers.push(spriteLayer)
 }
 
 export function setupTriggers(levelSpec: LevelSpec, level: Level) {
@@ -76,7 +125,7 @@ export function setupTriggers(levelSpec: LevelSpec, level: Level) {
       level.events.emit(Level.EVENT_TRIGGER, triggerSpec, entity, touches)
     })
 
-    const entity = new Entity()
+    const entity = new DeprecatedEntity()
     entity.addTrait(trigger)
     entity.pos.set(...triggerSpec.pos)
     entity.size.set(64, 64)
@@ -96,8 +145,9 @@ export function createLevelLoader(entityFactory: EntityFactoryDict) {
     ])
 
     const level = new Level()
+    const levelEntity = createEntity()
     level.name = name
-    level.music.setPlayer(musicPlayer)
+    level.music.setPlayer(musicPlayer) // TODO remove
 
     setupBackground(levelSpec, level, backgroundSprites, patterns)
     setupEntities(levelSpec, level, entityFactory)

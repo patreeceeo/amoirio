@@ -1,4 +1,4 @@
-import { Entity } from '../Entity'
+import { DeprecatedEntity } from '../Entity'
 import { GameContext } from '../GameContext'
 import { Level } from '../Level'
 import { Trait } from '../Trait'
@@ -19,7 +19,7 @@ export class Killable extends Trait {
     this.deadTime = 0
   }
 
-  update(entity: Entity, { deltaTime }: GameContext, level: Level) {
+  update(entity: DeprecatedEntity, { deltaTime }: GameContext, level: Level) {
     if (this.dead) {
       this.deadTime += deltaTime
       if (this.deadTime > this.removeAfter) {

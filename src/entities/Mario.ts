@@ -1,6 +1,6 @@
 import { Animation } from '../animation'
 import { AudioBoard } from '../AudioBoard'
-import { Entity } from '../Entity'
+import { DeprecatedEntity } from '../Entity'
 import { loadAudioBoard } from '../loaders/audio'
 import { loadSpriteSheet } from '../loaders/sprite'
 import { SpriteSheet } from '../SpriteSheet'
@@ -10,11 +10,12 @@ import { Killable } from '../traits/Killable'
 import { Physics } from '../traits/Physics'
 import { Solid } from '../traits/Solid'
 import { Stomper } from '../traits/Stomper'
+import { Entity } from '../EntityFunctions'
 
 const FAST_DRAG = 1 / 5000
 const SLOW_DRAG = 1 / 1000
 
-export class Mario extends Entity {
+export class Mario extends DeprecatedEntity {
   jump = this.addTrait(new Jump())
   go = this.addTrait(new Go())
   stomper = this.addTrait(new Stomper())
@@ -78,7 +79,7 @@ export async function loadMario(audioContext: AudioContext) {
 
   const runAnimation = marioSprites.getAnimation('run')
 
-  return function createMario() {
-    return new Mario(marioSprites, audioBoard, runAnimation)
+  return function createMario(): [Entity, DeprecatedEntity] {
+    return [-1, new Mario(marioSprites, audioBoard, runAnimation)]
   }
 }
