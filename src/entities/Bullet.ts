@@ -13,7 +13,7 @@ import {
   ComponentName,
   Entity,
 } from '../EntityFunctions'
-import { Vec2 } from '../math'
+import { SpriteName } from '../SpriteSheet'
 
 // All traits can be replaced by components
 class BulletBehavior extends Trait {
@@ -80,11 +80,12 @@ export async function loadBullet() {
       [ComponentName.SIZE]: de.size,
       [ComponentName.VELOCITY]: de.vel,
       [ComponentName.SPRITE_SHEET]: sprites,
+      [ComponentName.ANIMATION]: {
+        frames: [SpriteName.BULLET],
+        frameLength: Infinity,
+      },
+      [ComponentName.POSITION]: de.pos,
     })
-
-    // de.draw = (context) => {
-    //   sprites.draw('bullet', context, 0, 0, de.vel.x < 0)
-    // }
 
     return [entity, de]
   }

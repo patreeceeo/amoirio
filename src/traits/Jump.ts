@@ -12,39 +12,36 @@ export class Jump extends Trait {
   speedBoost = 0.3
 
   start() {
-    this.requestTime = this.gracePeriod
+    // this.requestTime = this.gracePeriod
   }
 
   cancel() {
-    this.engageTime = 0
-    this.requestTime = 0
+    // this.engageTime = 0
+    // this.requestTime = 0
   }
 
   update(entity: DeprecatedEntity, { deltaTime }: GameContext) {
-    if (this.requestTime > 0) {
-      if (this.ready > 0) {
-        entity.sounds.add('jump')
-        this.engageTime = this.duration
-        this.requestTime = 0
-      }
-
-      this.requestTime -= deltaTime
-    }
-
-    if (this.engageTime > 0) {
-      entity.vel.y = -(this.velocity + Math.abs(entity.vel.x) * this.speedBoost)
-      this.engageTime -= deltaTime
-    }
-
-    this.ready -= 1
+    // if (this.requestTime > 0) {
+    //   if (this.ready > 0) {
+    //     entity.sounds.add('jump')
+    //     this.engageTime = this.duration
+    //     this.requestTime = 0
+    //   }
+    //   this.requestTime -= deltaTime
+    // }
+    // if (this.engageTime > 0) {
+    //   entity.vel.y = -(this.velocity + Math.abs(entity.vel.x) * this.speedBoost)
+    //   this.engageTime -= deltaTime
+    // }
+    // this.ready -= 1
   }
 
   obstruct(entity: DeprecatedEntity, side: Side) {
-    if (side === Side.bottom) {
-      this.ready = 1
-    } else if (side === Side.top) {
-      this.cancel()
-    }
+    // if (side === Side.bottom) {
+    //   this.ready = 1
+    // } else if (side === Side.top) {
+    //   this.cancel()
+    // }
   }
 
   get falling() {

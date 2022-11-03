@@ -1,5 +1,27 @@
-import { Animation } from './animation'
+import { Animation } from './AnimationFunctions'
 import { raise } from './raise'
+
+export enum SpriteName {
+  BULLET = 'bullet',
+  MARIO_RUN_1 = 'run-1',
+  MARIO_RUN_2 = 'run-2',
+  MARIO_RUN_3 = 'run-3',
+  MARIO_BRAKE = 'brake',
+  MARIO_JUMP = 'jump',
+  MARIO_IDLE = 'idle',
+  GOOMBA_WALK_1 = 'walk-1',
+  GOOMBA_WALK_2 = 'walk-2',
+  KOOPA_WALK_1 = 'walk-1',
+  KOOPA_WALK_2 = 'walk-2',
+  KOOPA_HIDING = 'hiding',
+  KOOPA_HIDING_WITH_LEGS = 'hiding-with-legs',
+  OVERWORLD_CHANCE_1 = 'chance-1',
+  OVERWORLD_CHANCE_2 = 'chance-2',
+  OVERWORLD_CHANCE_3 = 'chance-3',
+  OVERWORLD_COIN_1 = 'coin-1',
+  OVERWORLD_COIN_2 = 'coin-2',
+  OVERWORLD_COIN_3 = 'coin-3',
+}
 
 export class SpriteSheet {
   tiles = new Map<string, HTMLCanvasElement[]>()
@@ -76,11 +98,12 @@ export class SpriteSheet {
     y: number,
     distance: number,
   ) {
-    const animation = this.animations.get(name)
-    if (!animation) {
-      throw new Error(`Animation not found: ${name}`)
-    }
-    this.drawTile(animation(distance), context, x, y)
+    // const animation = this.animations.get(name)
+    // if (!animation) {
+    //   throw new Error(`Animation not found: ${name}`)
+    // }
+    // const sprite = resolveFrame(animation, distance)
+    // this.drawTile(sprite, context, x, y)
   }
 
   getAnimation(name: string) {

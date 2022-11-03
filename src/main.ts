@@ -155,6 +155,9 @@ async function startEditor(canvas: HTMLCanvasElement) {
   const [_, mario] = entityFactory.mario?.() || raise('where mario tho')
   makePlayer(mario, 'MARIO')
 
+  const [__, bullet] = entityFactory.goomba?.() || raise('where bullet tho')
+  bullet.pos.set(24, 12)
+
   const inputRouter = setupKeyboard(window)
 
   inputRouter.addReceiver(mario)

@@ -11,6 +11,8 @@ export class Vec2 {
   }
 }
 
+export const V2_0 = Object.freeze(new Vec2())
+
 export class Matrix<T> {
   // TODO: implement iterator
 

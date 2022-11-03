@@ -1,4 +1,4 @@
-import { Animation } from '../animation'
+import { Animation } from '../AnimationFunctions'
 import { DeprecatedEntity } from '../Entity'
 import { loadSpriteSheet } from '../loaders/sprite'
 import { SpriteSheet } from '../SpriteSheet'
@@ -8,7 +8,12 @@ import { PendulumMove } from '../traits/PendulumMove'
 import { Physics } from '../traits/Physics'
 import { Solid } from '../traits/Solid'
 import { Stomper } from '../traits/Stomper'
-import { Entity } from '../EntityFunctions'
+import {
+  Entity,
+  createEntity,
+  updateEntity,
+  ComponentName,
+} from '../EntityFunctions'
 
 class GoombaBehavior extends Trait {
   collides(us: DeprecatedEntity, them: DeprecatedEntity) {
@@ -41,14 +46,14 @@ export class Goomba extends DeprecatedEntity {
   }
 
   draw(context: CanvasRenderingContext2D) {
-    this.sprites.draw(this.routeAnim(), context, 0, 0)
+    // this.sprites.draw(this.routeAnim(), context, 0, 0)
   }
 
   private routeAnim() {
-    if (this.killable.dead) {
-      return 'flat'
-    }
-    return this.walkAnim(this.lifetime)
+    // if (this.killable.dead) {
+    //   return 'flat'
+    // }
+    // return this.walkAnim(this.lifetime)
   }
 }
 
@@ -57,6 +62,15 @@ export async function loadGoomba() {
   const walkAnim = sprites.getAnimation('walk')
 
   return function createGoomba(): [Entity, DeprecatedEntity] {
-    return [-1, new Goomba(sprites, walkAnim)]
+    const de = new Goomba(sprites, walkAnim)
+    const entity = createEntity()
+    updateEntity(entity, {
+      [ComponentName.SIZE]: de.size,
+      [ComponentName.VELOCITY]: de.vel,
+      [ComponentName.SPRITE_SHEET]: sprites,
+      [ComponentName.ANIMATION]: walkAnim,
+      [ComponentName.POSITION]: de.pos,
+    })
+    return [entity, de]
   }
 }

@@ -3,6 +3,9 @@ import { raise } from './raise'
 import { SpriteSheet } from './SpriteSheet'
 import { Vec2 } from './math'
 import { Dict } from './types'
+import { Animation } from './AnimationFunctions'
+import { Jump } from './traits/Jump'
+import { Go } from './traits/Go'
 
 export type Entity = number
 
@@ -12,8 +15,9 @@ export enum ComponentName {
   POSITION = 'position',
   VELOCITY = 'velocity',
   SIZE = 'size',
-  IS_KILLABLE = 'is_killable',
-  IS_BULLET = 'is_bullet',
+  ANIMATION = 'animation',
+  JUMP = 'jump',
+  GO = 'go',
 }
 
 type ComponentType<
@@ -28,7 +32,13 @@ type ComponentType<
   ? Vec2
   : Name extends ComponentName.VELOCITY
   ? Vec2
-  : true
+  : Name extends ComponentName.ANIMATION
+  ? Animation
+  : Name extends ComponentName.JUMP
+  ? Jump
+  : Name extends ComponentName.GO
+  ? Go
+  : void
 
 type ComponentData<
   EntityPlurality extends 'plural' | 'single',
@@ -55,14 +65,12 @@ interface ComponentDict<EntityPlurality extends 'plural' | 'single'> {
     ComponentName.VELOCITY
   >
   [ComponentName.SIZE]?: ComponentData<EntityPlurality, ComponentName.SIZE>
-  [ComponentName.IS_KILLABLE]?: ComponentData<
+  [ComponentName.ANIMATION]?: ComponentData<
     EntityPlurality,
-    ComponentName.IS_KILLABLE
+    ComponentName.ANIMATION
   >
-  [ComponentName.IS_BULLET]?: ComponentData<
-    EntityPlurality,
-    ComponentName.IS_BULLET
-  >
+  [ComponentName.JUMP]?: ComponentData<EntityPlurality, ComponentName.JUMP>
+  [ComponentName.GO]?: ComponentData<EntityPlurality, ComponentName.GO>
 }
 
 type SetOfArrays = ComponentDict<'plural'>
@@ -103,6 +111,7 @@ function addComponent<Name extends ComponentName>(
   _flags[name]![entity] = { isNew: true }
 }
 
+// TODO wait until end of loop to actually remove?
 function removeComponent(entity: Entity, name: ComponentName) {
   const typeData = _entitySoA[name]
   if (typeData !== undefined) {
@@ -142,13 +151,25 @@ export function hasComponent(entity: Entity, name: ComponentName) {
   return soa[name] !== undefined && soa[name]![entity] !== undefined
 }
 
+export function checkComponent(entity: Entity, name: ComponentName) {
+  if (!hasComponent(entity, name)) {
+    raise(
+      'CHECK FAILED: entity ' +
+        entity +
+        ' does not have a ' +
+        name +
+        ' component',
+    )
+  }
+}
+
 export function getComponent<Name extends ComponentName>(
   entity: Entity,
   name: Name,
 ): ComponentType<Name> {
   const soa = _entitySoA
   if (soa[name] === undefined || soa[name]![entity] === undefined) {
-    raise('No ' + name + ' component for entity ' + entity)
+    checkComponent(entity, name)
   }
   return soa[name]![entity]! as any
 }

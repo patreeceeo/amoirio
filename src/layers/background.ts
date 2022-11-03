@@ -28,7 +28,6 @@ export function createBackgroundLayer(
     )
 
     for (const [tile, x, y] of items) {
-      console.log('Drawing ', x, y)
       if (!tile.name) continue
       if (sprites.animations.has(tile.name)) {
         sprites.drawAnimation(

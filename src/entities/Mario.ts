@@ -1,4 +1,4 @@
-import { Animation } from '../animation'
+// import { Animation } from '../animation'
 import { AudioBoard } from '../AudioBoard'
 import { DeprecatedEntity } from '../Entity'
 import { loadAudioBoard } from '../loaders/audio'
@@ -10,7 +10,12 @@ import { Killable } from '../traits/Killable'
 import { Physics } from '../traits/Physics'
 import { Solid } from '../traits/Solid'
 import { Stomper } from '../traits/Stomper'
-import { Entity } from '../EntityFunctions'
+import {
+  Entity,
+  createEntity,
+  updateEntity,
+  ComponentName,
+} from '../EntityFunctions'
 
 const FAST_DRAG = 1 / 5000
 const SLOW_DRAG = 1 / 1000
@@ -26,8 +31,8 @@ export class Mario extends DeprecatedEntity {
   constructor(
     private sprites: SpriteSheet,
     public audio: AudioBoard,
-    private runAnimation: Animation,
-  ) {
+  ) // private runAnimation: Animation,
+  {
     super()
 
     this.size.set(14, 16)
@@ -38,6 +43,7 @@ export class Mario extends DeprecatedEntity {
     this.setTurboState(false)
   }
 
+  // TODO
   resolveAnimationFrame() {
     if (this.jump.falling) {
       return 'jump'
@@ -51,7 +57,7 @@ export class Mario extends DeprecatedEntity {
         return 'brake'
       }
 
-      return this.runAnimation(this.go.distance)
+      // return this.runAnimation(this.go.distance)
     }
     return 'idle'
   }
@@ -72,14 +78,26 @@ export class Mario extends DeprecatedEntity {
 }
 
 export async function loadMario(audioContext: AudioContext) {
-  const [marioSprites, audioBoard] = await Promise.all([
+  const [sprites, audioBoard] = await Promise.all([
     loadSpriteSheet('mario'),
     loadAudioBoard('mario', audioContext),
   ])
 
-  const runAnimation = marioSprites.getAnimation('run')
+  const runAnimation = sprites.getAnimation('run')
 
   return function createMario(): [Entity, DeprecatedEntity] {
-    return [-1, new Mario(marioSprites, audioBoard, runAnimation)]
+    const de = new Mario(sprites, audioBoard) //, runAnimation)
+    const entity = createEntity()
+
+    updateEntity(entity, {
+      [ComponentName.SIZE]: de.size,
+      [ComponentName.VELOCITY]: de.vel,
+      [ComponentName.SPRITE_SHEET]: sprites,
+      [ComponentName.ANIMATION]: runAnimation,
+      [ComponentName.POSITION]: de.pos,
+      [ComponentName.JUMP]: de.jump,
+    })
+
+    return [entity, de]
   }
 }

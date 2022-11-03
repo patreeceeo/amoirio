@@ -7,29 +7,23 @@ Original: https://github.com/meth-meth-method/super-mario
 You'll need the following installed:
 
 - [Node.JS](https://nodejs.org)
-- [Yarn](https://classic.yarnpkg.com/en/docs/install)
 
 As well as an editor with support for TypeScript, such as [VSCode](https://code.visualstudio.com)
 
 ## Setup
 
-Run these commands on the command line. Clone the repository:
-
-```bash
-git clone https://github.com/kingdaro/super-mario-typescript
-cd super-mario-typescript
-```
+Run these commands on the command line. Clone this repo and change directories to the root.
 
 Install project dependencies:
 
 ```bash
-yarn
+npm i
 ```
 
 Start the dev server:
 
 ```bash
-yarn dev
+npm run dev
 ```
 
 Then open up `http://localhost:4000` in the browser to see it running

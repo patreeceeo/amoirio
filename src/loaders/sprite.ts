@@ -1,4 +1,4 @@
-import { createAnimation } from '../animation'
+import { createAnimation } from '../AnimationFunctions'
 import { loadImage, loadJSON } from '../loaders'
 import { SpriteSheet } from '../SpriteSheet'
 import { SpriteSheetSpec } from './types'
@@ -26,7 +26,7 @@ export async function loadSpriteSheet(name: string) {
 
   if (sheetSpec.animations) {
     sheetSpec.animations.forEach((animSpec) => {
-      const animation = createAnimation(animSpec.frames, animSpec.frameLength)
+      const animation = createAnimation(animSpec)
       sprites.defineAnimation(animSpec.name, animation)
     })
   }
