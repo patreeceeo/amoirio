@@ -22,7 +22,7 @@ import { World } from './World'
 import { AudioSystem } from './audio/AudioSystem'
 import { runTests } from './test'
 import { EventName } from './EventEmitter'
-import { VidoeSystem } from './video/VideoSystem'
+import { VidoeSystem as VideoSystem } from './video/VideoSystem'
 import { clearFlags } from './EntityFunctions'
 
 /** @deprecated */
@@ -51,7 +51,7 @@ async function createLoop(
   const timer = new Timer()
 
   await AudioSystem(world)
-  await VidoeSystem(world)
+  await VideoSystem(world)
 
   timer.onFixedStep = function update(deltaTime) {
     if (!document.hasFocus()) return
