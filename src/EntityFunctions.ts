@@ -20,57 +20,26 @@ export enum ComponentName {
   GO = 'go',
 }
 
-type ComponentType<
-  Name extends ComponentName
-> = Name extends ComponentName.TILE_MATRIX
-  ? TileResolverMatrix
-  : Name extends ComponentName.SPRITE_SHEET
-  ? SpriteSheet
-  : Name extends ComponentName.SIZE
-  ? Vec2
-  : Name extends ComponentName.POSITION
-  ? Vec2
-  : Name extends ComponentName.VELOCITY
-  ? Vec2
-  : Name extends ComponentName.ANIMATION
-  ? Animation
-  : Name extends ComponentName.JUMP
-  ? Jump
-  : Name extends ComponentName.GO
-  ? Go
-  : void
+type ComponentType = {
+  [ComponentName.TILE_MATRIX]: TileResolverMatrix
+  [ComponentName.SPRITE_SHEET]: SpriteSheet
+  [ComponentName.SIZE]: Vec2
+  [ComponentName.POSITION]: Vec2
+  [ComponentName.VELOCITY]: Vec2
+  [ComponentName.ANIMATION]: Animation
+  [ComponentName.JUMP]: Jump
+  [ComponentName.GO]: Go
+}
 
 type ComponentData<
   EntityPlurality extends 'plural' | 'single',
   Name extends ComponentName
 > = EntityPlurality extends 'plural'
-  ? Array<ComponentType<Name>>
-  : ComponentType<Name>
+  ? Array<ComponentType[Name]>
+  : ComponentType[Name]
 
-interface ComponentDict<EntityPlurality extends 'plural' | 'single'> {
-  [ComponentName.TILE_MATRIX]?: ComponentData<
-    EntityPlurality,
-    ComponentName.TILE_MATRIX
-  >
-  [ComponentName.SPRITE_SHEET]?: ComponentData<
-    EntityPlurality,
-    ComponentName.SPRITE_SHEET
-  >
-  [ComponentName.POSITION]?: ComponentData<
-    EntityPlurality,
-    ComponentName.POSITION
-  >
-  [ComponentName.VELOCITY]?: ComponentData<
-    EntityPlurality,
-    ComponentName.VELOCITY
-  >
-  [ComponentName.SIZE]?: ComponentData<EntityPlurality, ComponentName.SIZE>
-  [ComponentName.ANIMATION]?: ComponentData<
-    EntityPlurality,
-    ComponentName.ANIMATION
-  >
-  [ComponentName.JUMP]?: ComponentData<EntityPlurality, ComponentName.JUMP>
-  [ComponentName.GO]?: ComponentData<EntityPlurality, ComponentName.GO>
+type ComponentDict<EntityPlurality extends 'plural' | 'single'> = {
+  [key in ComponentName]?: ComponentData<EntityPlurality, key>
 }
 
 type SetOfArrays = ComponentDict<'plural'>
@@ -94,7 +63,7 @@ export function createEntity() {
 function addComponent<Name extends ComponentName>(
   entity: Entity,
   name: Name,
-  data: ComponentType<Name>,
+  data: ComponentType[Name],
 ) {
   if (entity < 0) {
     return
@@ -166,7 +135,7 @@ export function checkComponent(entity: Entity, name: ComponentName) {
 export function getComponent<Name extends ComponentName>(
   entity: Entity,
   name: Name,
-): ComponentType<Name> {
+): ComponentType[Name] {
   const soa = _entitySoA
   if (soa[name] === undefined || soa[name]![entity] === undefined) {
     checkComponent(entity, name)
