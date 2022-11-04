@@ -22,7 +22,7 @@ import { World } from './World'
 import { AudioSystem } from './audio/AudioSystem'
 import { runTests } from './test'
 import { EventName } from './EventEmitter'
-import { VidoeSystem as VideoSystem } from './video/VideoSystem'
+import { VideoSystem } from './video/VideoSystem'
 import { clearFlags } from './EntityFunctions'
 
 /** @deprecated */

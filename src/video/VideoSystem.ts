@@ -15,7 +15,7 @@ import { raise } from '../raise'
 import { V2_0 } from '../math'
 import { getCurrentSpriteNameForEntity } from '../EntityAnimationFunctions'
 
-export const VidoeSystem: CreateSystemFunctionType = async (world) => {
+export const VideoSystem: CreateSystemFunctionType = async (world) => {
   const context = getVideoContext()!
   const compositor = new Compositor()
   const camera = new Camera()
