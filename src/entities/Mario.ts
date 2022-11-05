@@ -30,9 +30,8 @@ export class Mario extends DeprecatedEntity {
 
   constructor(
     private sprites: SpriteSheet,
-    public audio: AudioBoard,
-  ) // private runAnimation: Animation,
-  {
+    public audio: AudioBoard, // private runAnimation: Animation,
+  ) {
     super()
 
     this.size.set(14, 16)
@@ -96,6 +95,7 @@ export async function loadMario(audioContext: AudioContext) {
       [ComponentName.ANIMATION]: runAnimation,
       [ComponentName.POSITION]: de.pos,
       [ComponentName.JUMP]: de.jump,
+      [ComponentName.GO]: de.go,
     })
 
     return [entity, de]

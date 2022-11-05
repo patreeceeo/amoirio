@@ -16,7 +16,7 @@ export interface Animation extends AnimationSpec {
   frames: Array<SpriteName>
 }
 
-function resolveFrame(
+export function resolveFrame(
   animation: Animation,
   timeOrDistance: number,
 ): SpriteName {

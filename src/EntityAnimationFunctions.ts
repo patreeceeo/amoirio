@@ -1,13 +1,11 @@
-import { Animation, AnimationName, resolveFrame } from './AnimationFunctions'
+import { AnimationName, resolveFrame } from './AnimationFunctions'
 import {
   Entity,
-  hasComponent,
   ComponentName,
   getComponent,
   checkComponent,
 } from './EntityFunctions'
 import { SpriteName } from './SpriteSheet'
-import { raise } from './raise'
 import { Dict } from './types'
 
 type Animator = (entity: Entity, elapsedTime: number) => SpriteName
@@ -18,20 +16,23 @@ const _animators: AnimatorDict = Object.freeze({
   [AnimationName.MARIO_RUN]: (entity, _time) => {
     checkComponent(entity, ComponentName.JUMP)
     const jump = getComponent(entity, ComponentName.JUMP)
+
+    checkComponent(entity, ComponentName.GO)
+    const go = getComponent(entity, ComponentName.GO)
+
+    checkComponent(entity, ComponentName.VELOCITY)
+    const vel = getComponent(entity, ComponentName.VELOCITY)
+
     if (jump.falling) {
       return SpriteName.MARIO_JUMP
     }
 
-    ///
-    if (this.go.distance > 0) {
-      if (
-        (this.vel.x > 0 && this.go.dir < 0) ||
-        (this.vel.x < 0 && this.go.dir > 0)
-      ) {
+    if (go.distance > 0) {
+      if ((vel.x > 0 && go.dir < 0) || (vel.x < 0 && go.dir > 0)) {
         return SpriteName.MARIO_BRAKE
       }
 
-      return defaultAnimator(entity, this.go.distance)
+      return defaultAnimator(entity, go.distance)
     }
     return SpriteName.MARIO_IDLE
   },

@@ -11,7 +11,6 @@ import {
   hasComponent,
 } from '../EntityFunctions'
 import { createBackgroundLayer } from '../layers/background'
-import { raise } from '../raise'
 import { V2_0 } from '../math'
 import { getCurrentSpriteNameForEntity } from '../EntityAnimationFunctions'
 
@@ -19,19 +18,12 @@ export const VideoSystem: CreateSystemFunctionType = async (world) => {
   const context = getVideoContext()!
   const compositor = new Compositor()
   const camera = new Camera()
-  const spriteBuffer = document.createElement('canvas')
-  spriteBuffer.width = 64
-  spriteBuffer.height = 64
-
-  // TODO combine with getVideoContext?
-  const spriteBufferContext =
-    spriteBuffer.getContext('2d') || raise('Canvas not supported')
 
   world.events.listen(EventName.WORLD_FIXED_STEP, () => {
     for (const entity of queryAll()) {
       // TODO Instead of using hasNewComponent, do this in an init event handler
       // or, don't use compositor layers and just draw on the canvas directly in this
-      // loop
+      // loop <- This TBH
       if (
         hasNewComponent(entity, ComponentName.SPRITE_SHEET) &&
         hasNewComponent(entity, ComponentName.TILE_MATRIX)
@@ -58,25 +50,18 @@ export const VideoSystem: CreateSystemFunctionType = async (world) => {
           world.fixedDeltaSeconds,
         )
         const sprites = getComponent(entity, ComponentName.SPRITE_SHEET)
-        const size = getComponent(entity, ComponentName.SIZE)
-        const width = size.x
-        const height = size.y
         const hasVelocity = hasComponent(entity, ComponentName.VELOCITY)
         const velocity = hasVelocity
           ? getComponent(entity, ComponentName.VELOCITY)
           : V2_0
         const position = getComponent(entity, ComponentName.POSITION)
 
-        // TODO maybe there should be some global lookup for sprite sheets that take a sprite name and return the corresponding sheet
-        spriteBufferContext.clearRect(0, 0, width, height)
-
-        // TODO can we just draw directly on the canvas here?
-        sprites.draw(spriteName, spriteBufferContext, 0, 0, velocity.x < 0)
-
-        context.drawImage(
-          spriteBuffer,
+        sprites.draw(
+          spriteName,
+          context,
           position.x - camera.pos.x,
           position.y - camera.pos.y,
+          velocity.x < 0,
         )
       }
     }

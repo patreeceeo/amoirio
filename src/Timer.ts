@@ -1,8 +1,8 @@
 export class Timer {
-  private accumulatedTime = 0
+  public accumulatedTime = 0
   private lastTime?: number
 
-  constructor(private deltaTimeTarget = 1 / 60) {}
+  constructor(public deltaTimeTarget = 1 / 60) {}
 
   onFixedStep = (dt: number) => {}
 

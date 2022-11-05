@@ -24,6 +24,7 @@ import { runTests } from './test'
 import { EventName } from './EventEmitter'
 import { VideoSystem } from './video/VideoSystem'
 import { clearFlags } from './EntityFunctions'
+import { TraitSystem } from './traits/TraitSystem'
 
 /** @deprecated */
 function getVideoContext(canvas: HTMLCanvasElement): CanvasRenderingContext2D {
@@ -52,7 +53,9 @@ async function createLoop(
 
   await AudioSystem(world)
   await VideoSystem(world)
+  await TraitSystem(world)
 
+  world.fixedDeltaSeconds = timer.deltaTimeTarget
   timer.onFixedStep = function update(deltaTime) {
     if (!document.hasFocus()) return
 
@@ -64,6 +67,7 @@ async function createLoop(
       world,
     }
 
+    world.fixedElapsedSeconds = timer.accumulatedTime
     sceneRunner.update(gameContext)
     world.events.emit(EventName.WORLD_FIXED_STEP)
     clearFlags()
