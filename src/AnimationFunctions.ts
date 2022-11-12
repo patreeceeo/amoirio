@@ -9,6 +9,7 @@ export enum AnimationName {
   MARIO_RUN = 'run',
   OVERWORLD_CHANCE = 'chance',
   OVERWORLD_COIN = 'coin',
+  BULLET = 'bullet',
 }
 
 export interface Animation extends AnimationSpec {

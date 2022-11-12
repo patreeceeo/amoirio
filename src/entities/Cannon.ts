@@ -67,6 +67,7 @@ export async function loadCannon(audioContext: AudioContext) {
 
     de.addTrait(emitter)
 
+    // TODO
     return [-1, de]
   }
 }

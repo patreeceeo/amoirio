@@ -14,6 +14,7 @@ import {
   Entity,
 } from '../EntityFunctions'
 import { SpriteName } from '../SpriteSheet'
+import { AnimationName } from '../AnimationFunctions'
 
 // All traits can be replaced by components
 class BulletBehavior extends Trait {
@@ -81,10 +82,12 @@ export async function loadBullet() {
       [ComponentName.VELOCITY]: de.vel,
       [ComponentName.SPRITE_SHEET]: sprites,
       [ComponentName.ANIMATION]: {
+        name: AnimationName.BULLET,
         frames: [SpriteName.BULLET],
         frameLength: Infinity,
       },
       [ComponentName.POSITION]: de.pos,
+      [ComponentName.BOUNDING_BOX]: de.bounds,
     })
 
     return [entity, de]

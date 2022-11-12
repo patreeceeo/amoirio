@@ -23,8 +23,14 @@ export type LevelSpecPatterns = {
   }
 }
 
+export enum TileType {
+  BRICK = 'brick',
+  COIN = 'coin',
+  GROUND = 'ground',
+}
+
 export type LevelSpecTile = {
-  type: string
+  type: TileType
   name?: string
   pattern?: string
   ranges: TileRange[]

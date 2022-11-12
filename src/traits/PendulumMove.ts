@@ -6,16 +6,16 @@ export class PendulumMove extends Trait {
   enabled = true
 
   update(ent: DeprecatedEntity) {
-    if (this.enabled) {
-      ent.vel.x = this.speed
-    }
+    // if (this.enabled) {
+    //   ent.vel.x = this.speed
+    // }
   }
 
   obstruct(ent: DeprecatedEntity, side: Side) {
-    if (side === Side.left) {
-      this.speed = Math.abs(this.speed)
-    } else if (side === Side.right) {
-      this.speed = -Math.abs(this.speed)
-    }
+    // if (side === Side.left) {
+    //   this.speed = Math.abs(this.speed)
+    // } else if (side === Side.right) {
+    //   this.speed = -Math.abs(this.speed)
+    // }
   }
 }

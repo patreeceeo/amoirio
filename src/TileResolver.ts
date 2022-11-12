@@ -9,6 +9,7 @@ export type TileResolverMatch = {
   y2: number
   indexX: number
   indexY: number
+  resolver: TileResolver
 }
 
 export type TileResolverMatrix = Matrix<LevelSpecTile>
@@ -35,7 +36,7 @@ export class TileResolver {
       const x2 = (indexX + 1) * this.tileSize
       const y1 = indexY * this.tileSize
       const y2 = (indexY + 1) * this.tileSize
-      return { tile, x1, x2, y1, y2, indexX, indexY }
+      return { tile, x1, x2, y1, y2, indexX, indexY, resolver: this }
     }
   }
 

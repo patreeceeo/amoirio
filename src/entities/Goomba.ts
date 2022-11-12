@@ -70,6 +70,7 @@ export async function loadGoomba() {
       [ComponentName.SPRITE_SHEET]: sprites,
       [ComponentName.ANIMATION]: walkAnim,
       [ComponentName.POSITION]: de.pos,
+      [ComponentName.BOUNDING_BOX]: de.bounds,
     })
     return [entity, de]
   }

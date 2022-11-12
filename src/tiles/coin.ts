@@ -1,10 +1,10 @@
 import { TileColliderHandler } from '../TileCollider'
-import { Player } from '../traits/Player'
+import { getComponent, ComponentName, hasComponent } from '../EntityFunctions'
 
-const handle: TileColliderHandler = ({ entity, match, resolver }) => {
-  const player = entity.getTrait(Player)
-  if (player) {
-    resolver.matrix.delete(match.indexX, match.indexY)
+const handle: TileColliderHandler = (entity, match) => {
+  if (hasComponent(entity, ComponentName.PLAYER)) {
+    const player = getComponent(entity, ComponentName.PLAYER)
+    match.resolver.matrix.delete(match.indexX, match.indexY)
     player.addCoins(1)
   }
 }

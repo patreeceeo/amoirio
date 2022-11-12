@@ -60,8 +60,6 @@ function setupBackground(
 ) {
   for (const layer of levelSpec.layers) {
     const grid = createGrid(layer.tiles, patterns)
-    ;(grid as any).isBg = true
-    ;(backgroundSprites as any).isBg = true
     const layerEntity = createEntity()
     updateEntity(layerEntity, {
       [ComponentName.TILE_MATRIX]: grid,

@@ -7,6 +7,7 @@ export enum EventName {
   WORLD_PLAY = 'world/play',
   TIMER_HURRY = 'timer/hurry',
   TIMER_OK = 'timer/ok',
+  OBSTRUCT = 'obstruct',
 }
 
 export class EventEmitter {

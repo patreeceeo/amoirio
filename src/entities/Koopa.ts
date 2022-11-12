@@ -152,6 +152,7 @@ export async function loadKoopa() {
   const sprites = await loadSpriteSheet('koopa')
 
   return function createKoopa(): [Entity, DeprecatedEntity] {
+    // TODO
     return [-1, new Koopa(sprites)]
   }
 }

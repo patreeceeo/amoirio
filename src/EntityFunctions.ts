@@ -6,6 +6,10 @@ import { Dict } from './types'
 import { Animation } from './AnimationFunctions'
 import { Jump } from './traits/Jump'
 import { Go } from './traits/Go'
+import { BoundingBox } from './BoundingBox'
+import { Player } from './traits/Player'
+import { Solid } from './traits/Solid'
+import { PendulumMove } from './traits/PendulumMove'
 
 export type Entity = number
 
@@ -18,6 +22,11 @@ export enum ComponentName {
   ANIMATION = 'animation',
   JUMP = 'jump',
   GO = 'go',
+  BOUNDING_BOX = 'bounding_box',
+  PLAYER = 'player',
+  PHYSICS = 'physics',
+  SOLID = 'solid',
+  PENDULUM_MOVE = 'pendulum_move',
 }
 
 type ComponentType = {
@@ -29,6 +38,11 @@ type ComponentType = {
   [ComponentName.ANIMATION]: Animation
   [ComponentName.JUMP]: Jump
   [ComponentName.GO]: Go
+  [ComponentName.BOUNDING_BOX]: BoundingBox
+  [ComponentName.PLAYER]: Player
+  [ComponentName.PHYSICS]: true
+  [ComponentName.SOLID]: Solid
+  [ComponentName.PENDULUM_MOVE]: PendulumMove
 }
 
 type ComponentData<

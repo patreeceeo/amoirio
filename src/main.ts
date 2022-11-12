@@ -87,6 +87,8 @@ async function startGame(canvas: HTMLCanvasElement) {
     loadFont(),
   ])
 
+  world.prefabs = entityFactory
+
   const loadLevel = createLevelLoader(entityFactory)
 
   const sceneRunner = new SceneRunner()
@@ -147,6 +149,7 @@ async function startEditor(canvas: HTMLCanvasElement) {
     loadEntities(audioContext),
     loadFont(),
   ])
+  world.prefabs = entityFactory
 
   const loadLevel = createLevelLoader(entityFactory)
 

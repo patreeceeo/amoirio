@@ -96,6 +96,9 @@ export async function loadMario(audioContext: AudioContext) {
       [ComponentName.POSITION]: de.pos,
       [ComponentName.JUMP]: de.jump,
       [ComponentName.GO]: de.go,
+      [ComponentName.PHYSICS]: true,
+      [ComponentName.BOUNDING_BOX]: de.bounds,
+      [ComponentName.SOLID]: new Solid(),
     })
 
     return [entity, de]
