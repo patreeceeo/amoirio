@@ -24,6 +24,8 @@ export const VideoSystem: CreateSystemFunctionType = async (world) => {
   const editorLayer = createEditorLayer(font, '1-1')
 
   world.events.listen(EventName.WORLD_INIT, () => {
+    // Shift camera to the right one tile to facilitate donut-shaped world
+    camera.pos.x = 16
     for (const entity of queryAll()) {
       // TODO don't use compositor and just draw on the canvas here directly?
       if (

@@ -36,7 +36,7 @@ function getVideoContext(canvas: HTMLCanvasElement): CanvasRenderingContext2D {
 }
 
 function spawnMario(mario: DeprecatedEntity, level: Level) {
-  mario.pos.set(0, 0)
+  mario.pos.set(16, 0)
   mario.vel.set(0, 0)
   level.entities.add(mario)
 }
@@ -156,7 +156,7 @@ async function startEditor(canvas: HTMLCanvasElement) {
 
   const sceneRunner = new SceneRunner()
 
-  const level = await loadLevel('1-1')
+  const level = await loadLevel('antario-1')
 
   // const editor = new Editor(level, world)
 

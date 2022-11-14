@@ -111,7 +111,6 @@ function addComponent<Name extends ComponentName>(
   soa[name] = soa[name] || ([] as any)
   soa[name]![entity] = data as any
 
-  console.log('Adding ' + name + ' component to ' + entity)
   _flags[name] = _flags[name] || []
   _flags[name]![entity] = { isNew: true }
 }

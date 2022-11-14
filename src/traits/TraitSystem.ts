@@ -18,13 +18,14 @@ import { TileType } from '../loaders/types'
 import { Side } from '../Entity'
 import { TileResolverMatch } from '../TileResolver'
 import { ControlSignalState, ControlSignalType } from '../input/InputSystem'
-import { WorldState } from '../World'
 
 // TODO this should probably broken up into multiple more focused systems
 
 const tileCollider = new TileCollider()
 
 const GRAVITY = 1500
+
+const SCREEN_WIDTH = 256
 
 let leftState = 0
 let rightState = 0
@@ -55,6 +56,9 @@ export const TraitSystem: CreateSystemFunctionType = async (world) => {
         checkComponent(entity, ComponentName.VELOCITY)
         const vel = getComponent(entity, ComponentName.VELOCITY)
 
+        checkComponent(entity, ComponentName.BOUNDING_BOX)
+        const bounds = getComponent(entity, ComponentName.BOUNDING_BOX)
+
         pos.x += vel.x * world.fixedDeltaSeconds
 
         for (const match of tileCollider.checkX(entity)) {
@@ -74,6 +78,15 @@ export const TraitSystem: CreateSystemFunctionType = async (world) => {
         }
 
         vel.y += GRAVITY * world.fixedDeltaSeconds
+
+        // Wrap around donut-shaped world
+        if (pos.x > SCREEN_WIDTH + bounds.size.x && vel.x > 0) {
+          pos.x = -bounds.size.x
+        }
+
+        if (pos.x < -bounds.size.x && vel.x < 0) {
+          pos.x = SCREEN_WIDTH + bounds.size.x
+        }
       }
 
       if (hasComponent(entity, ComponentName.GO)) {

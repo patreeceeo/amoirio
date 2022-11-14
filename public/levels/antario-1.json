@@ -1,0 +1,96 @@
+{
+  "spriteSheet": "overworld",
+  "musicSheet": "overworld",
+  "patternSheet": "overworld-pattern",
+
+  "layers": [
+    {
+      "tiles": [
+        {
+          "name": "sky",
+          "ranges": [[0, 18, 0, 13]]
+        },
+        {
+          "name": "ground",
+          "type": "ground",
+          "ranges": [[0, 18, 13, 2]]
+        },
+        {
+          "name": "sky",
+          "ranges": [
+            [75, 2, 13, 2],
+            [92, 2, 13, 2],
+            [157, 2, 13, 2]
+          ]
+        },
+        {
+          "name": "ground",
+          "type": "ground",
+          "ranges": [
+            [5, 3, 9, 1],
+            [5, 7, 9],
+            [12, 6, 11, 1],
+            [2, 1, 11, 1],
+            [10, 2, 10, 1],
+            [10, 2, 10],
+            [9, 1, 0, 7]
+          ]
+        }
+      ]
+    },
+    {
+      "tiles": [
+        {
+          "name": "chance",
+          "type": "ground",
+          "ranges": [
+            [2, 2]
+          ]
+        },
+        {
+          "pattern": "pipe-2h",
+          "ranges": [
+            [12, 11]
+          ]
+        },
+        {
+          "pattern": "cloud-single",
+          "ranges": [
+            [2, 2]
+          ]
+        }
+      ]
+    },
+    {
+      "tiles": [
+        {
+          "pattern": "cannon-2h",
+          "ranges": [[6, 7]]
+        }
+      ]
+    }
+  ],
+
+  "entities": [
+    {
+      "name": "koopa",
+      "pos": [14, 0]
+    },
+    {
+      "name": "goomba",
+      "pos": [180, 0]
+    },
+    {
+      "name": "cannon",
+      "pos": [96, 112]
+    }
+  ],
+
+  "triggers": [
+    {
+      "type": "goto",
+      "name": "1-2",
+      "pos": [64, 64]
+    }
+  ]
+}
