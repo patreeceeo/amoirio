@@ -14,6 +14,8 @@ import { PendulumMove } from './traits/PendulumMove'
 export type Entity = number
 
 export enum ComponentName {
+  NAME = 'name',
+  INPUT_RECEIVER = 'input_receiver',
   TILE_MATRIX = 'tile_matrix',
   SPRITE_SHEET = 'sprite_sheet',
   POSITION = 'position',
@@ -30,6 +32,8 @@ export enum ComponentName {
 }
 
 type ComponentType = {
+  [ComponentName.NAME]: string
+  [ComponentName.INPUT_RECEIVER]: true
   [ComponentName.TILE_MATRIX]: TileResolverMatrix
   [ComponentName.SPRITE_SHEET]: SpriteSheet
   [ComponentName.SIZE]: Vec2
@@ -72,6 +76,24 @@ export function createEntity() {
   _allEntities.push(created)
   _nextEntity++
   return created
+}
+
+function clearObject(o: object) {
+  for (const key of Object.getOwnPropertyNames(o)) {
+    delete (o as any)[key]
+  }
+}
+export function reset() {
+  _allEntities.length = 0
+  _nextEntity = 0
+  clearObject(_entitySoA)
+  clearFlags()
+}
+
+export function createNamedEntity(name: string) {
+  const e = createEntity()
+  addComponent(e, ComponentName.NAME, name)
+  return e
 }
 
 function addComponent<Name extends ComponentName>(
@@ -136,9 +158,10 @@ export function hasComponent(entity: Entity, name: ComponentName) {
 
 export function checkComponent(entity: Entity, name: ComponentName) {
   if (!hasComponent(entity, name)) {
+    const entityName = getComponent(entity, ComponentName.NAME) || entity
     raise(
       'CHECK FAILED: entity ' +
-        entity +
+        entityName +
         ' does not have a ' +
         name +
         ' component',
@@ -151,14 +174,22 @@ export function getComponent<Name extends ComponentName>(
   name: Name,
 ): ComponentType[Name] {
   const soa = _entitySoA
-  if (soa[name] === undefined || soa[name]![entity] === undefined) {
-    checkComponent(entity, name)
-  }
   return soa[name]![entity]! as any
 }
 
 export function queryAll(): ReadonlyArray<Entity> {
   return _allEntities
+}
+
+export function query(names: Array<ComponentName>) {
+  const [set1, ...rest] = names.map((name) =>
+    _allEntities.filter((e) => hasComponent(e, name)),
+  )
+  let intersection = set1
+  for (let set of rest) {
+    intersection = intersection.filter((e) => set.includes(e))
+  }
+  return intersection
 }
 
 export function clearFlags() {

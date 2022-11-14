@@ -6,6 +6,8 @@ import {
   getComponent,
   clearFlags,
   hasNewComponent,
+  query,
+  reset,
 } from './EntityFunctions'
 import { Vec2 } from './math'
 import assert from 'assert'
@@ -36,5 +38,30 @@ export function runTests() {
   // Negative numbers are "null" entities
   assert(!hasComponent(-1, ComponentName.POSITION))
 
+  const entity1 = createEntity()
+  const entity2 = createEntity()
+  const entity3 = createEntity()
+
+  updateEntity(entity1, {
+    [ComponentName.SIZE]: new Vec2(),
+    [ComponentName.PHYSICS]: true,
+  })
+
+  updateEntity(entity2, {
+    [ComponentName.SIZE]: new Vec2(),
+    [ComponentName.VELOCITY]: new Vec2(),
+  })
+
+  updateEntity(entity3, {
+    [ComponentName.SIZE]: new Vec2(),
+    [ComponentName.PHYSICS]: true,
+  })
+
+  assert.deepEqual(query([ComponentName.SIZE, ComponentName.PHYSICS]), [
+    entity1,
+    entity3,
+  ])
+
+  reset()
   console.log('PASSED!')
 }

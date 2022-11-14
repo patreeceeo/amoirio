@@ -10,16 +10,24 @@ import {
   Entity,
 } from '../EntityFunctions'
 import { TileCollider, TileColliderHandler } from '../TileCollider'
+// TODO reorganize/refactor handlers
 import { coin as coinHandlers } from '../tiles/coin'
 import { brick as brickHandlers } from '../tiles/brick'
 import { ground as groundHandlers } from '../tiles/ground'
 import { TileType } from '../loaders/types'
 import { Side } from '../Entity'
 import { TileResolverMatch } from '../TileResolver'
+import { ControlSignalState, ControlSignalType } from '../input/InputSystem'
+import { WorldState } from '../World'
+
+// TODO this should probably broken up into multiple more focused systems
 
 const tileCollider = new TileCollider()
 
 const GRAVITY = 1500
+
+let leftState = 0
+let rightState = 0
 
 const xCollisionHandlersByTileType: Dict<TileColliderHandler> = {
   [TileType.BRICK]: brickHandlers[0],
@@ -102,6 +110,28 @@ export const TraitSystem: CreateSystemFunctionType = async (world) => {
         go.distance += absX * world.fixedDeltaSeconds
       }
 
+      if (hasComponent(entity, ComponentName.JUMP)) {
+        const jump = getComponent(entity, ComponentName.JUMP)
+
+        checkComponent(entity, ComponentName.VELOCITY)
+        const vel = getComponent(entity, ComponentName.VELOCITY)
+
+        if (jump.requestTime > 0) {
+          if (jump.ready > 0) {
+            // TODO queue sounds, maybe using events? world.soundfx?
+            // entity.sounds.add('jump')
+            jump.engageTime = jump.duration
+            jump.requestTime = 0
+          }
+          jump.requestTime -= world.fixedDeltaSeconds
+        }
+        if (jump.engageTime > 0) {
+          vel.y = -(jump.velocity + Math.abs(vel.x) * jump.speedBoost)
+          jump.engageTime -= world.fixedDeltaSeconds
+        }
+        jump.ready -= 1
+      }
+
       if (hasComponent(entity, ComponentName.PENDULUM_MOVE)) {
         const move = getComponent(entity, ComponentName.PENDULUM_MOVE)
 
@@ -160,6 +190,41 @@ export const TraitSystem: CreateSystemFunctionType = async (world) => {
           move.speed = Math.abs(move.speed)
         } else if (side === Side.right) {
           move.speed = -Math.abs(move.speed)
+        }
+      }
+    },
+  )
+
+  // handle input
+
+  world.events.listen(
+    EventName.INPUT,
+    (
+      receivers: Array<Entity>,
+      signalType: ControlSignalType,
+      signalState: ControlSignalState,
+    ) => {
+      for (let entity of receivers) {
+        const go = getComponent(entity, ComponentName.GO)
+        switch (signalType) {
+          case ControlSignalType.GO_LEFT:
+            leftState = signalState === ControlSignalState.STARTED ? 1 : 0
+            go.dir = rightState - leftState
+            break
+          case ControlSignalType.GO_RIGHT:
+            rightState = signalState === ControlSignalState.STARTED ? 1 : 0
+            go.dir = rightState - leftState
+            break
+          case ControlSignalType.JUMP:
+            const jump = getComponent(entity, ComponentName.JUMP)
+            if (signalState === ControlSignalState.STARTED) {
+              jump.requestTime = jump.gracePeriod
+            } else {
+              jump.engageTime = 0
+              jump.requestTime = 0
+            }
+            break
+          // case ControlSignalType.TURBO: TODO?
         }
       }
     },

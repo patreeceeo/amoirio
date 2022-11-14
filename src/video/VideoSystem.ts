@@ -6,27 +6,29 @@ import { Camera } from './Camera'
 import {
   queryAll,
   ComponentName,
-  hasNewComponent,
   getComponent,
   hasComponent,
 } from '../EntityFunctions'
 import { createBackgroundLayer } from '../layers/background'
 import { V2_0 } from '../math'
 import { getCurrentSpriteNameForEntity } from '../EntityAnimationFunctions'
+import { createEditorLayer } from '../layers/editor'
+import { loadFont } from '../loaders/font'
 
 export const VideoSystem: CreateSystemFunctionType = async (world) => {
   const context = getVideoContext()!
   const compositor = new Compositor()
   const camera = new Camera()
 
-  world.events.listen(EventName.WORLD_FIXED_STEP, () => {
+  const font = await loadFont()
+  const editorLayer = createEditorLayer(font, '1-1')
+
+  world.events.listen(EventName.WORLD_INIT, () => {
     for (const entity of queryAll()) {
-      // TODO Instead of using hasNewComponent, do this in an init event handler
-      // or, don't use compositor layers and just draw on the canvas directly in this
-      // loop <- This TBH
+      // TODO don't use compositor and just draw on the canvas here directly?
       if (
-        hasNewComponent(entity, ComponentName.SPRITE_SHEET) &&
-        hasNewComponent(entity, ComponentName.TILE_MATRIX)
+        hasComponent(entity, ComponentName.SPRITE_SHEET) &&
+        hasComponent(entity, ComponentName.TILE_MATRIX)
       ) {
         const sprites = getComponent(entity, ComponentName.SPRITE_SHEET)
         const tiles = getComponent(entity, ComponentName.TILE_MATRIX)
@@ -34,10 +36,19 @@ export const VideoSystem: CreateSystemFunctionType = async (world) => {
         compositor.layers.push(layer)
       }
     }
+    compositor.layers.push(drawSpriteLayer)
+    compositor.layers.push(editorLayer)
 
     // Actually draw the layers added to the compositor
     compositor.draw(context, camera)
+  })
 
+  world.events.listen(EventName.WORLD_FIXED_STEP, () => {
+    // Actually draw the layers added to the compositor
+    compositor.draw(context, camera)
+  })
+
+  function drawSpriteLayer() {
     for (const entity of queryAll()) {
       if (
         hasComponent(entity, ComponentName.SPRITE_SHEET) &&
@@ -65,5 +76,5 @@ export const VideoSystem: CreateSystemFunctionType = async (world) => {
         )
       }
     }
-  })
+  }
 }

@@ -8,10 +8,10 @@ import { Killable } from '../traits/Killable'
 import { Stomper } from '../traits/Stomper'
 import { Velocity } from '../traits/Velocity'
 import {
-  createEntity,
   updateEntity,
   ComponentName,
   Entity,
+  createNamedEntity,
 } from '../EntityFunctions'
 import { SpriteName } from '../SpriteSheet'
 import { AnimationName } from '../AnimationFunctions'
@@ -68,7 +68,7 @@ export async function loadBullet() {
 
   return function createBullet(): [Entity, DeprecatedEntity] {
     const de = new DeprecatedEntity()
-    const entity = createEntity()
+    const entity = createNamedEntity('BULLET')
 
     de.size.set(16, 14)
     de.vel.set(80, 0)

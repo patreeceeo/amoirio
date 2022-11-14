@@ -1,11 +1,9 @@
 import { loadEntities, EntityFactory } from './entities'
 import { GameContext } from './GameContext'
-import { setupKeyboard } from './input'
 import { createColorLayer } from './layers/color'
 import { createDashboardLayer } from './layers/dashboard'
 import { createPlayerProgressLayer } from './layers/player-progress'
 import { createTextLayer } from './layers/text'
-import { loadFont } from './loaders/font'
 import { createLevelLoader } from './loaders/level'
 import { createPlayerEnv, makePlayer } from './player'
 import { raise } from './raise'
@@ -13,18 +11,19 @@ import { Scene } from './Scene'
 import { SceneRunner } from './SceneRunner'
 import { TimedScene } from './TimedScene'
 import { Timer } from './Timer'
-import { Editor } from './entities/Editor'
-import { createEditorLayer } from './layers/editor'
 import { DeprecatedEntity } from './Entity'
 import { Level } from './Level'
 import { Dict } from './types'
-import { World } from './World'
+import { World, WorldState } from './World'
 import { AudioSystem } from './audio/AudioSystem'
 import { runTests } from './test'
 import { EventName } from './EventEmitter'
 import { VideoSystem } from './video/VideoSystem'
 import { clearFlags } from './EntityFunctions'
 import { TraitSystem } from './traits/TraitSystem'
+import { InputSystem } from './input/InputSystem'
+import { TimerSystem } from './TimerSystem'
+import { loadFont } from './loaders/font'
 
 /** @deprecated */
 function getVideoContext(canvas: HTMLCanvasElement): CanvasRenderingContext2D {
@@ -51,13 +50,18 @@ async function createLoop(
 ): Promise<Timer> {
   const timer = new Timer()
 
+  await TimerSystem(world)
   await AudioSystem(world)
   await VideoSystem(world)
   await TraitSystem(world)
+  await InputSystem(world)
 
   world.fixedDeltaSeconds = timer.deltaTimeTarget
+
+  world.events.emit(EventName.WORLD_INIT)
+
   timer.onFixedStep = function update(deltaTime) {
-    if (!document.hasFocus()) return
+    if (!document.hasFocus() || world.state === WorldState.PAUSE) return
 
     const gameContext: GameContext = {
       deltaTime,
@@ -96,8 +100,8 @@ async function startGame(canvas: HTMLCanvasElement) {
   const [_, mario] = entityFactory.mario?.() || raise('where mario tho')
   makePlayer(mario, 'MARIO')
 
-  const inputRouter = setupKeyboard(window)
-  inputRouter.addReceiver(mario)
+  // const inputRouter = setupKeyboard(window)
+  // inputRouter.addReceiver(mario)
 
   const loadScreen = new Scene()
   loadScreen.compositor.layers.push(createColorLayer('black'))
@@ -145,10 +149,7 @@ async function startEditor(canvas: HTMLCanvasElement) {
   // TODO should audioContext be instantiate in AudioSystem?
   const audioContext = new AudioContext()
 
-  const [entityFactory, font] = await Promise.all([
-    loadEntities(audioContext),
-    loadFont(),
-  ])
+  const entityFactory = await loadEntities(audioContext)
   world.prefabs = entityFactory
 
   const loadLevel = createLevelLoader(entityFactory)
@@ -157,20 +158,18 @@ async function startEditor(canvas: HTMLCanvasElement) {
 
   const level = await loadLevel('1-1')
 
-  const editor = new Editor(level, world)
+  // const editor = new Editor(level, world)
 
   const [_, mario] = entityFactory.mario?.() || raise('where mario tho')
   makePlayer(mario, 'MARIO')
 
-  const [__, bullet] = entityFactory.goomba?.() || raise('where bullet tho')
-  bullet.pos.set(24, 12)
+  // const [__, bullet] = entityFactory.goomba?.() || raise('where bullet tho')
+  // bullet.pos.set(24, 12)
 
-  const inputRouter = setupKeyboard(window)
+  // const inputRouter = setupKeyboard(window)
 
-  inputRouter.addReceiver(mario)
-  inputRouter.addReceiver(editor)
-
-  const editorLayer = createEditorLayer(font, level)
+  // inputRouter.addReceiver(mario)
+  // inputRouter.addReceiver(editor)
 
   spawnMario(mario, level)
 
@@ -180,7 +179,7 @@ async function startEditor(canvas: HTMLCanvasElement) {
   // TODO add hot key to toggle this
   // level.comp.layers.push(createCollisionLayer(level))
 
-  level.compositor.layers.push(editorLayer)
+  // level.compositor.layers.push(editorLayer)
   sceneRunner.addScene(level)
   level.pause()
 

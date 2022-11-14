@@ -4,7 +4,7 @@ import { Level } from '../Level'
 import { loadAudioBoard } from '../loaders/audio'
 import { findPlayers } from '../player'
 import { Emitter } from '../traits/Emitter'
-import { createEntity, Entity } from '../EntityFunctions'
+import { Entity } from '../EntityFunctions'
 
 const HOLD_FIRE_THRESHOLD = 30
 

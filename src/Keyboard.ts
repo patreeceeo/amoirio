@@ -1,35 +1,34 @@
-export type KeyListener = (keyState: number) => void
+export type KeyListener = (keyCode: string, keyState: number) => void
 
 export class Keyboard {
-  /** current pressed state per key */
-  keyStates = new Map<string, number>()
-
-  /** callback functions per keycode */
-  keyListeners = new Map<string, KeyListener>()
-
-  addListener(code: string, callback: KeyListener) {
-    this.keyListeners.set(code, callback)
-    this.keyStates.set(code, 0)
-  }
-
-  listenTo(target: EventTarget) {
+  private constructor(private target: EventTarget) {
     const keyEvents = ['keydown', 'keyup']
     keyEvents.forEach((eventName) => {
-      target.addEventListener(eventName, (event) => {
+      this.target.addEventListener(eventName, (event) => {
         this.handleEvent(event as KeyboardEvent)
       })
     })
+  }
+  /** current pressed state per key */
+  private keyStates = new Map<string, number>()
+  private listeners: Array<KeyListener> = []
+
+  addListener(callback: KeyListener) {
+    this.listeners.push(callback)
+  }
+
+  static listenTo(target: EventTarget) {
+    return new Keyboard(target)
   }
 
   private handleEvent(event: KeyboardEvent) {
     if (event.repeat) return
 
-    const listener = this.keyListeners.get(event.code)
-    const keyState = event.type === 'keydown' ? 1 : 0
-    if (listener) {
+    for (const listener of this.listeners) {
+      const keyState = event.type === 'keydown' ? 1 : 0
       this.keyStates.set(event.code, keyState)
-      listener(keyState)
       event.preventDefault()
+      listener(event.code, keyState)
     }
   }
 }

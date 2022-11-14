@@ -10,9 +10,9 @@ import { Solid } from '../traits/Solid'
 import { Stomper } from '../traits/Stomper'
 import {
   Entity,
-  createEntity,
   updateEntity,
   ComponentName,
+  createNamedEntity,
 } from '../EntityFunctions'
 
 class GoombaBehavior extends Trait {
@@ -63,7 +63,7 @@ export async function loadGoomba() {
 
   return function createGoomba(): [Entity, DeprecatedEntity] {
     const de = new Goomba(sprites, walkAnim)
-    const entity = createEntity()
+    const entity = createNamedEntity('GOOMBA')
     updateEntity(entity, {
       [ComponentName.SIZE]: de.size,
       [ComponentName.VELOCITY]: de.vel,

@@ -12,9 +12,9 @@ import { Solid } from '../traits/Solid'
 import { Stomper } from '../traits/Stomper'
 import {
   Entity,
-  createEntity,
   updateEntity,
   ComponentName,
+  createNamedEntity,
 } from '../EntityFunctions'
 
 const FAST_DRAG = 1 / 5000
@@ -86,9 +86,10 @@ export async function loadMario(audioContext: AudioContext) {
 
   return function createMario(): [Entity, DeprecatedEntity] {
     const de = new Mario(sprites, audioBoard) //, runAnimation)
-    const entity = createEntity()
+    const entity = createNamedEntity('MARIO')
 
     updateEntity(entity, {
+      [ComponentName.INPUT_RECEIVER]: true,
       [ComponentName.SIZE]: de.size,
       [ComponentName.VELOCITY]: de.vel,
       [ComponentName.SPRITE_SHEET]: sprites,
