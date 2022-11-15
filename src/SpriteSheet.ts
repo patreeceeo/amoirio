@@ -1,4 +1,9 @@
-import { Animation } from './AnimationFunctions'
+import {
+  Animation,
+  AnimationCollectionName,
+  AnimationCollection,
+  getAnimationNames,
+} from './AnimationFunctions'
 import { raise } from './raise'
 
 export enum SpriteName {
@@ -112,5 +117,20 @@ export class SpriteSheet {
       throw new Error(`Animation not found: ${name}`)
     }
     return anim
+  }
+
+  getAnimationCollection(
+    collectionName: AnimationCollectionName,
+  ): AnimationCollection {
+    const names = getAnimationNames(collectionName)
+    const animations = new Map(
+      names.map((name) => [name, this.getAnimation(name)]),
+    )
+
+    return {
+      name: collectionName,
+      default: animations.get(names[0])!,
+      animations,
+    }
   }
 }

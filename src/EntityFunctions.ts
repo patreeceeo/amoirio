@@ -3,7 +3,7 @@ import { raise } from './raise'
 import { SpriteSheet } from './SpriteSheet'
 import { Vec2 } from './math'
 import { Dict } from './types'
-import { Animation } from './AnimationFunctions'
+import { AnimationCollection } from './AnimationFunctions'
 import { Jump } from './traits/Jump'
 import { Go } from './traits/Go'
 import { BoundingBox } from './BoundingBox'
@@ -39,7 +39,7 @@ type ComponentType = {
   [ComponentName.SIZE]: Vec2
   [ComponentName.POSITION]: Vec2
   [ComponentName.VELOCITY]: Vec2
-  [ComponentName.ANIMATION]: Animation
+  [ComponentName.ANIMATION]: AnimationCollection
   [ComponentName.JUMP]: Jump
   [ComponentName.GO]: Go
   [ComponentName.BOUNDING_BOX]: BoundingBox

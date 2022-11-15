@@ -1,4 +1,4 @@
-import { AnimationName, resolveFrame } from './AnimationFunctions'
+import { resolveFrame, AnimationCollectionName } from './AnimationFunctions'
 import {
   Entity,
   ComponentName,
@@ -13,7 +13,7 @@ type Animator = (entity: Entity, elapsedTime: number) => SpriteName
 type AnimatorDict = Dict<Animator>
 
 const _animators: AnimatorDict = Object.freeze({
-  [AnimationName.MARIO_RUN]: (entity, _time) => {
+  [AnimationCollectionName.MARIO]: (entity, _time) => {
     checkComponent(entity, ComponentName.JUMP)
     const jump = getComponent(entity, ComponentName.JUMP)
 
@@ -40,7 +40,7 @@ const _animators: AnimatorDict = Object.freeze({
 
 const defaultAnimator: Animator = (entity: Entity, timeOrDistance: number) => {
   const animation = getComponent(entity, ComponentName.ANIMATION)
-  return resolveFrame(animation, timeOrDistance)
+  return resolveFrame(animation.default, timeOrDistance)
 }
 export function getCurrentSpriteNameForEntity(
   entity: Entity,
@@ -48,7 +48,7 @@ export function getCurrentSpriteNameForEntity(
 ): SpriteName {
   checkComponent(entity, ComponentName.ANIMATION)
 
-  const animation = getComponent(entity, ComponentName.ANIMATION)
-  const animator = _animators[animation.name] || defaultAnimator
+  const animations = getComponent(entity, ComponentName.ANIMATION)
+  const animator = _animators[animations.name] || defaultAnimator
   return animator(entity, elapsedTime)
 }

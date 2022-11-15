@@ -8,7 +8,13 @@ import { PendulumMove } from '../traits/PendulumMove'
 import { Physics } from '../traits/Physics'
 import { Solid } from '../traits/Solid'
 import { Stomper } from '../traits/Stomper'
-import { Entity } from '../EntityFunctions'
+import {
+  Entity,
+  createNamedEntity,
+  updateEntity,
+  ComponentName,
+} from '../EntityFunctions'
+import { AnimationCollectionName } from '../AnimationFunctions'
 
 enum KoopaState {
   walking,
@@ -151,8 +157,25 @@ export class Koopa extends DeprecatedEntity {
 export async function loadKoopa() {
   const sprites = await loadSpriteSheet('koopa')
 
+  const animations = sprites.getAnimationCollection(
+    AnimationCollectionName.KOOPA,
+  )
+
   return function createKoopa(): [Entity, DeprecatedEntity] {
-    // TODO
-    return [-1, new Koopa(sprites)]
+    const de = new Koopa(sprites)
+    const entity = createNamedEntity('KOOPA')
+
+    updateEntity(entity, {
+      [ComponentName.SIZE]: de.size,
+      [ComponentName.VELOCITY]: de.vel,
+      [ComponentName.SPRITE_SHEET]: sprites,
+      [ComponentName.ANIMATION]: animations,
+      [ComponentName.POSITION]: de.pos,
+      [ComponentName.PHYSICS]: true,
+      [ComponentName.BOUNDING_BOX]: de.bounds,
+      [ComponentName.SOLID]: new Solid(),
+    })
+
+    return [entity, de]
   }
 }

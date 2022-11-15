@@ -71,7 +71,7 @@ async function createLoop(
       world,
     }
 
-    world.fixedElapsedSeconds = timer.accumulatedTime
+    world.fixedElapsedSeconds += deltaTime
     sceneRunner.update(gameContext)
     world.events.emit(EventName.WORLD_FIXED_STEP)
     clearFlags()

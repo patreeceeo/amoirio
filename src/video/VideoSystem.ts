@@ -60,7 +60,7 @@ export const VideoSystem: CreateSystemFunctionType = async (world) => {
       ) {
         const spriteName = getCurrentSpriteNameForEntity(
           entity,
-          world.fixedDeltaSeconds,
+          world.fixedElapsedSeconds,
         )
         const sprites = getComponent(entity, ComponentName.SPRITE_SHEET)
         const hasVelocity = hasComponent(entity, ComponentName.VELOCITY)

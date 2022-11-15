@@ -12,9 +12,41 @@ export enum AnimationName {
   BULLET = 'bullet',
 }
 
+export enum AnimationCollectionName {
+  MARIO = 'mario',
+  KOOPA = 'koopa',
+  GOOMBA = 'goomba',
+  BULLET = 'bullet',
+  CHANCE = 'chance',
+  COIN = 'coin',
+}
+
 export interface Animation extends AnimationSpec {
-  name: AnimationName
+  name: AnimationCollectionName
   frames: Array<SpriteName>
+}
+
+export type AnimationCollection = {
+  name: AnimationCollectionName
+  default: Animation
+  animations: Map<AnimationName, Animation>
+}
+
+const animationCollections = {
+  [AnimationCollectionName.MARIO]: [AnimationName.MARIO_RUN],
+  [AnimationCollectionName.KOOPA]: [
+    AnimationName.KOOPA_WAKE,
+    AnimationName.KOOPA_WALK,
+  ],
+  [AnimationCollectionName.GOOMBA]: [AnimationName.GOOMBA_WALK],
+  [AnimationCollectionName.BULLET]: [AnimationName.BULLET],
+  [AnimationCollectionName.COIN]: [AnimationName.OVERWORLD_COIN],
+  [AnimationCollectionName.CHANCE]: [AnimationName.OVERWORLD_CHANCE],
+}
+export function getAnimationNames(
+  name: AnimationCollectionName,
+): Readonly<Array<AnimationName>> {
+  return animationCollections[name]
 }
 
 export function resolveFrame(

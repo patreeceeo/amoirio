@@ -16,6 +16,7 @@ import {
   ComponentName,
   createNamedEntity,
 } from '../EntityFunctions'
+import { AnimationCollectionName } from '../AnimationFunctions'
 
 const FAST_DRAG = 1 / 5000
 const SLOW_DRAG = 1 / 1000
@@ -82,7 +83,10 @@ export async function loadMario(audioContext: AudioContext) {
     loadAudioBoard('mario', audioContext),
   ])
 
-  const runAnimation = sprites.getAnimation('run')
+  // const runAnimation = sprites.getAnimation('run')
+  const animations = sprites.getAnimationCollection(
+    AnimationCollectionName.MARIO,
+  )
 
   return function createMario(): [Entity, DeprecatedEntity] {
     const de = new Mario(sprites, audioBoard) //, runAnimation)
@@ -93,7 +97,7 @@ export async function loadMario(audioContext: AudioContext) {
       [ComponentName.SIZE]: de.size,
       [ComponentName.VELOCITY]: de.vel,
       [ComponentName.SPRITE_SHEET]: sprites,
-      [ComponentName.ANIMATION]: runAnimation,
+      [ComponentName.ANIMATION]: animations,
       [ComponentName.POSITION]: de.pos,
       [ComponentName.JUMP]: de.jump,
       [ComponentName.GO]: de.go,
