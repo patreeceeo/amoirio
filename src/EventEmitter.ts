@@ -37,7 +37,7 @@ export class EventEmitter {
     this.listeners.push({ name, callback })
   }
 
-  emit<N extends EventName>(name: N, ...args: EventArgs['input']) {
+  emit<N extends EventName>(name: N, ...args: EventArgs[N]) {
     this.listeners
       .filter((it) => it.name === name)
       .forEach((it) => it.callback(...args))
