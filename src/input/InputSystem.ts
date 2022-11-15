@@ -34,9 +34,9 @@ export const InputSystem: CreateSystemFunctionType = async (world) => {
       ? ControlSignalState.STARTED
       : ControlSignalState.ENDED
 
-    if (receivers.length > 0) {
+    if (receivers.length > 0 && signalType !== undefined) {
       world.events.emit(EventName.INPUT, receivers, signalType, signalState)
-    } else {
+    } else if (signalType !== undefined) {
       console.warn('Zero input receivers')
     }
   })
