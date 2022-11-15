@@ -157,13 +157,9 @@ export function hasComponent(entity: Entity, name: ComponentName) {
 
 export function checkComponent(entity: Entity, name: ComponentName) {
   if (!hasComponent(entity, name)) {
-    const entityName = getComponent(entity, ComponentName.NAME) || entity
+    const entityName = getComponent(entity, ComponentName.NAME)
     raise(
-      'CHECK FAILED: entity ' +
-        entityName +
-        ' does not have a ' +
-        name +
-        ' component',
+      `CHECK FAILED: entity ${entityName}(${entity}) does not have a ${name} component`,
     )
   }
 }
