@@ -55,17 +55,15 @@ export const TraitSystem: CreateSystemFunctionType = async (world) => {
   world.events.listen(EventName.WORLD_INIT, () => {
     for (const entity of queryAll()) {
       setSpawnInfo(entity, world.fixedElapsedSeconds)
+      if (hasComponent(entity, ComponentName.TILE_MATRIX)) {
+        const matrix = getComponent(entity, ComponentName.TILE_MATRIX)
+        tileCollider.addGrid(matrix)
+      }
     }
   })
 
   world.events.listen(EventName.WORLD_FIXED_STEP, () => {
     for (const entity of queryAll()) {
-      setSpawnInfo(entity, world.fixedElapsedSeconds)
-      if (hasNewComponent(entity, ComponentName.TILE_MATRIX)) {
-        const matrix = getComponent(entity, ComponentName.TILE_MATRIX)
-        tileCollider.addGrid(matrix)
-      }
-
       if (hasComponent(entity, ComponentName.PHYSICS)) {
         checkComponent(entity, ComponentName.POSITION)
         const pos = getComponent(entity, ComponentName.POSITION)

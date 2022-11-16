@@ -1,5 +1,4 @@
 import { DeprecatedEntity } from '../Entity'
-import { GameContext } from '../GameContext'
 import { loadSpriteSheet } from '../loaders/sprite'
 import { SpriteSheet } from '../SpriteSheet'
 import { Trait } from '../Trait'
@@ -20,9 +19,9 @@ import { AnimationCollectionName } from '../AnimationFunctions'
 import { World } from '../World'
 
 export enum KoopaState {
-  walking,
-  hiding,
-  panic,
+  walking = 'walking',
+  hiding = 'hiding',
+  panic = 'panic',
 }
 
 export class KoopaBehavior extends Trait {
@@ -53,7 +52,7 @@ export class KoopaBehavior extends Trait {
       checkComponent(them, ComponentName.VELOCITY)
       const velThem = getComponent(them, ComponentName.VELOCITY)
 
-      if (velThem.y > velUs.y) {
+      if (velThem.y > 100) {
         this.handleStomp(us, them)
       } else {
         this.handleNudge(us, them)
@@ -62,8 +61,13 @@ export class KoopaBehavior extends Trait {
   }
 
   handleStomp(us: Entity, them: Entity) {
+    checkComponent(them, ComponentName.VELOCITY)
+    const velThem = getComponent(them, ComponentName.VELOCITY)
+
+    console.log('koopa state', this.state)
     if (this.state === KoopaState.walking || this.state === KoopaState.panic) {
       this.hide(us)
+      velThem.y = -300
     } else if (this.state === KoopaState.hiding) {
       // us.useTrait(Killable, (it) => it.kill())
       checkComponent(us, ComponentName.KILLABLE)
@@ -71,9 +75,6 @@ export class KoopaBehavior extends Trait {
 
       checkComponent(us, ComponentName.VELOCITY)
       const velUs = getComponent(us, ComponentName.VELOCITY)
-
-      checkComponent(them, ComponentName.VELOCITY)
-      const velThem = getComponent(them, ComponentName.VELOCITY)
 
       velUs.set(100 * Math.sign(velThem.x), -200)
       getComponent(us, ComponentName.SOLID).obstructs = false
