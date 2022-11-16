@@ -1,4 +1,4 @@
-export type KeyListener = (keyCode: string, keyState: number) => void
+export type KeyListener = (keyCode: string, keyState: number) => boolean
 
 export class Keyboard {
   private constructor(private target: EventTarget) {
@@ -27,8 +27,9 @@ export class Keyboard {
     for (const listener of this.listeners) {
       const keyState = event.type === 'keydown' ? 1 : 0
       this.keyStates.set(event.code, keyState)
-      event.preventDefault()
-      listener(event.code, keyState)
+      if (listener(event.code, keyState)) {
+        event.preventDefault()
+      }
     }
   }
 }
