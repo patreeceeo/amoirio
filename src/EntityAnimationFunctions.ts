@@ -53,19 +53,20 @@ const _animators: AnimatorDict = Object.freeze({
     checkComponent(entity, ComponentName.KOOPA_BEHAV)
     const behavior = getComponent(entity, ComponentName.KOOPA_BEHAV)
 
-    const walkAnim = getComponent(
-      entity,
-      ComponentName.ANIMATION,
-    ).animations.get(AnimationName.KOOPA_WALK)
+    const animations = getComponent(entity, ComponentName.ANIMATION).animations
+    const walkAnim = animations.get(AnimationName.KOOPA_WALK)
+    const wakeAnim = animations.get(AnimationName.KOOPA_WAKE)
 
     const spawnTime = getComponent(entity, ComponentName.SPAWN).spawnTime || 0
 
-    if (!walkAnim) {
-      console.warn('Where Koopa walk animation tho?')
-      return SpriteName.KOOPA_HIDING_WITH_LEGS
-    }
-
     if (behavior.state === KoopaState.hiding) {
+      if (behavior.hideTime > 3) {
+        if (!wakeAnim) {
+          console.warn('Where Koopa wake animation tho?')
+          return SpriteName.KOOPA_HIDING_WITH_LEGS
+        }
+        return resolveFrame(wakeAnim, behavior.hideTime)
+      }
       return SpriteName.KOOPA_HIDING
     }
 
@@ -73,6 +74,10 @@ const _animators: AnimatorDict = Object.freeze({
       return SpriteName.KOOPA_HIDING_WITH_LEGS
     }
 
+    if (!walkAnim) {
+      console.warn('Where Koopa walk animation tho?')
+      return SpriteName.KOOPA_HIDING_WITH_LEGS
+    }
     return resolveFrame(walkAnim, elapsedTime - spawnTime)
   },
 })
