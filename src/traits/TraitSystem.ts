@@ -124,10 +124,10 @@ export const TraitSystem: CreateSystemFunctionType = async (world) => {
 
         // Wrap around donut-shaped world
         if (pos.x > SCREEN_WIDTH + bounds.size.x && vel.x > 0) {
-          pos.x = -bounds.size.x
+          pos.x = 0
         }
 
-        if (pos.x < -bounds.size.x && vel.x < 0) {
+        if (pos.x <= 1 && vel.x < 0) {
           pos.x = SCREEN_WIDTH + bounds.size.x
         }
       }
