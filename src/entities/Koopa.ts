@@ -52,7 +52,7 @@ export class KoopaBehavior extends Trait {
       checkComponent(them, ComponentName.VELOCITY)
       const velThem = getComponent(them, ComponentName.VELOCITY)
 
-      if (velThem.y > 100) {
+      if (velThem.y > velUs.y) {
         this.handleStomp(us, them)
       } else {
         this.handleNudge(us, them)
@@ -64,10 +64,9 @@ export class KoopaBehavior extends Trait {
     checkComponent(them, ComponentName.VELOCITY)
     const velThem = getComponent(them, ComponentName.VELOCITY)
 
-    console.log('koopa state', this.state)
-    if (this.state === KoopaState.walking || this.state === KoopaState.panic) {
+    velThem.y = -300
+    if (this.state === KoopaState.walking) {
       this.hide(us)
-      velThem.y = -300
     } else if (this.state === KoopaState.hiding) {
       // us.useTrait(Killable, (it) => it.kill())
       checkComponent(us, ComponentName.KILLABLE)
@@ -88,9 +87,11 @@ export class KoopaBehavior extends Trait {
       }
     }
 
+    const velThem = getComponent(them, ComponentName.VELOCITY)
+
     if (this.state === KoopaState.walking) {
       kill()
-    } else if (this.state === KoopaState.hiding) {
+    } else if (this.state === KoopaState.hiding && Math.abs(velThem.x) > 0) {
       this.panic(us, them)
     } else if (this.state === KoopaState.panic) {
       checkComponent(us, ComponentName.VELOCITY)

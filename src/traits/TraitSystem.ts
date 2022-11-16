@@ -104,6 +104,15 @@ export const TraitSystem: CreateSystemFunctionType = async (world) => {
 
         pos.x += vel.x * world.fixedDeltaSeconds
 
+        // Wrap around donut-shaped world
+        if (pos.x > SCREEN_WIDTH + bounds.size.x && vel.x > 0) {
+          pos.x = 0
+        }
+
+        if (pos.x <= 1 && vel.x < 0) {
+          pos.x = SCREEN_WIDTH + bounds.size.x
+        }
+
         for (const match of tileCollider.checkX(entity)) {
           const handler = xCollisionHandlersByTileType[match.tile.type]
           if (handler) {
@@ -112,23 +121,13 @@ export const TraitSystem: CreateSystemFunctionType = async (world) => {
         }
 
         pos.y += vel.y * world.fixedDeltaSeconds
+        vel.y += GRAVITY * world.fixedDeltaSeconds
 
         for (const match of tileCollider.checkY(entity)) {
           const handler = yCollisionHandlersByTileType[match.tile.type]
           if (handler) {
             handler!(entity, match, world)
           }
-        }
-
-        vel.y += GRAVITY * world.fixedDeltaSeconds
-
-        // Wrap around donut-shaped world
-        if (pos.x > SCREEN_WIDTH + bounds.size.x && vel.x > 0) {
-          pos.x = 0
-        }
-
-        if (pos.x <= 1 && vel.x < 0) {
-          pos.x = SCREEN_WIDTH + bounds.size.x
         }
       }
 
@@ -261,7 +260,8 @@ export const TraitSystem: CreateSystemFunctionType = async (world) => {
       if (hasComponent(entity, ComponentName.JUMP)) {
         const jump = getComponent(entity, ComponentName.JUMP)
         if (side === Side.bottom) {
-          jump.ready = 1
+          // TODO Why does mario only trigger obstruct every other frame when standing on the ground?
+          jump.ready = 2
         } else if (side === Side.top) {
           jump.engageTime = 0
           jump.requestTime = 0

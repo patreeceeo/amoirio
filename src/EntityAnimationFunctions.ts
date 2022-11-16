@@ -35,7 +35,7 @@ const _animators: AnimatorDict = Object.freeze({
       return SpriteName.MARIO_DEAD
     }
 
-    if (jump.falling) {
+    if (jump.engageTime > 0 || jump.falling) {
       return SpriteName.MARIO_JUMP
     }
 
