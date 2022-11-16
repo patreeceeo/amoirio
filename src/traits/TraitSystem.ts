@@ -64,6 +64,34 @@ export const TraitSystem: CreateSystemFunctionType = async (world) => {
 
   world.events.listen(EventName.WORLD_FIXED_STEP, () => {
     for (const entity of queryAll()) {
+      if (hasComponent(entity, ComponentName.KILLABLE)) {
+        const killable = getComponent(entity, ComponentName.KILLABLE)
+        if (killable.dead) {
+          if (killable.deadTime === 0) {
+            world.bigMomemtTimer += killable.removeAfter / 2
+            getComponent(entity, ComponentName.VELOCITY).set(0, 0)
+          }
+          if (
+            killable.deadTime > killable.removeAfter / 2 &&
+            !killable.kicked
+          ) {
+            killable.kicked = true
+            getComponent(entity, ComponentName.SOLID).obstructs = false
+            getComponent(entity, ComponentName.VELOCITY).set(0, -400)
+          }
+
+          killable.deadTime += world.fixedDeltaSeconds
+          if (killable.deadTime >= killable.removeAfter) {
+            console.log(`KILLED ${getComponent(entity, ComponentName.NAME)}`)
+            deleteEntity(entity)
+          }
+        }
+      }
+
+      if (world.bigMomemtTimer > 0) {
+        return
+      }
+
       if (hasComponent(entity, ComponentName.PHYSICS)) {
         checkComponent(entity, ComponentName.POSITION)
         const pos = getComponent(entity, ComponentName.POSITION)
@@ -195,17 +223,6 @@ export const TraitSystem: CreateSystemFunctionType = async (world) => {
             if (bounds.overlaps(candidateBounds)) {
               world.events.emit(EventName.COLLIDE, entity, candidate)
             }
-          }
-        }
-      }
-
-      if (hasComponent(entity, ComponentName.KILLABLE)) {
-        const killable = getComponent(entity, ComponentName.KILLABLE)
-        if (killable.dead) {
-          killable.deadTime += world.fixedDeltaSeconds
-          if (killable.deadTime > killable.removeAfter) {
-            console.log(`KILLED ${getComponent(entity, ComponentName.NAME)}`)
-            deleteEntity(entity)
           }
         }
       }

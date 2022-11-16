@@ -15,6 +15,8 @@ import { getCurrentSpriteNameForEntity } from '../EntityAnimationFunctions'
 import { createEditorLayer } from '../layers/editor'
 import { loadFont } from '../loaders/font'
 
+let previousBigMomentTimer = 0
+
 export const VideoSystem: CreateSystemFunctionType = async (world) => {
   const context = getVideoContext()!
   const compositor = new Compositor()
@@ -46,6 +48,11 @@ export const VideoSystem: CreateSystemFunctionType = async (world) => {
   })
 
   world.events.listen(EventName.WORLD_FIXED_STEP, () => {
+    // draw one more frame before stopping
+    if (world.bigMomemtTimer > 0 && previousBigMomentTimer > 0) {
+      return
+    }
+    previousBigMomentTimer = world.bigMomemtTimer
     // Actually draw the layers added to the compositor
     compositor.draw(context, camera)
   })

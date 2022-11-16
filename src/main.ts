@@ -62,6 +62,12 @@ async function createLoop(
 
   timer.onFixedStep = function update(deltaTime) {
     if (!document.hasFocus() || world.state === WorldState.PAUSE) return
+    if (world.bigMomemtTimer > 0) {
+      world.bigMomemtTimer = Math.max(
+        0,
+        world.bigMomemtTimer - world.fixedDeltaSeconds,
+      )
+    }
 
     const gameContext: GameContext = {
       deltaTime,

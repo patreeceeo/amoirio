@@ -31,6 +31,10 @@ const _animators: AnimatorDict = Object.freeze({
     checkComponent(entity, ComponentName.KILLABLE)
     const killable = getComponent(entity, ComponentName.KILLABLE)
 
+    if (killable.dead) {
+      return SpriteName.MARIO_DEAD
+    }
+
     if (jump.falling) {
       return SpriteName.MARIO_JUMP
     }
@@ -41,10 +45,6 @@ const _animators: AnimatorDict = Object.freeze({
       }
 
       return defaultAnimator(entity, go.distance)
-    }
-
-    if (killable.dead) {
-      return SpriteName.MARIO_DEAD
     }
 
     return SpriteName.MARIO_IDLE
@@ -66,14 +66,11 @@ const _animators: AnimatorDict = Object.freeze({
     }
 
     if (behavior.state === KoopaState.hiding) {
-      if (behavior.hideTime > 3) {
-        return resolveFrame(walkAnim, behavior.hideTime)
-      }
       return SpriteName.KOOPA_HIDING
     }
 
     if (behavior.state === KoopaState.panic) {
-      return SpriteName.KOOPA_HIDING
+      return SpriteName.KOOPA_HIDING_WITH_LEGS
     }
 
     return resolveFrame(walkAnim, elapsedTime - spawnTime)

@@ -12,4 +12,5 @@ export class World {
   events = new EventEmitter()
   prefabs?: EntityFactoryDict
   state = WorldState.PAUSE
+  bigMomemtTimer = 0
 }

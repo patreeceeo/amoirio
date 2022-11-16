@@ -6,6 +6,7 @@ export class Killable extends Trait {
   dead = false
   deadTime = 0
   removeAfter = 2
+  kicked = false
 
   kill() {
     this.queue(() => {
