@@ -210,6 +210,7 @@ export async function loadKoopa() {
       [ComponentName.BOUNDING_BOX]: de.bounds,
       [ComponentName.SOLID]: new Solid(),
       [ComponentName.KOOPA_BEHAV]: de.behavior,
+      [ComponentName.PENDULUM_MOVE]: new PendulumMove(),
     })
 
     return [entity, de]
