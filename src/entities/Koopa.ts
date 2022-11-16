@@ -31,12 +31,20 @@ export class KoopaBehavior extends Trait {
   hideDuration = 5
   panicSpeed = 300
   walkSpeed?: number
+  lastCollisionTime = -Infinity
 
-  collides(us: Entity, them: Entity) {
+  collides(us: Entity, them: Entity, world: World) {
     checkComponent(us, ComponentName.KILLABLE)
     if (getComponent(us, ComponentName.KILLABLE).dead) {
       return
     }
+    checkComponent(them, ComponentName.KILLABLE)
+    if (getComponent(them, ComponentName.KILLABLE).dead) {
+      return
+    }
+
+    if (world.fixedElapsedSeconds - this.lastCollisionTime <= 1) return
+    this.lastCollisionTime = world.fixedElapsedSeconds
 
     if (hasComponent(them, ComponentName.STOMPER)) {
       checkComponent(us, ComponentName.VELOCITY)
@@ -54,7 +62,7 @@ export class KoopaBehavior extends Trait {
   }
 
   handleStomp(us: Entity, them: Entity) {
-    if (this.state === KoopaState.walking) {
+    if (this.state === KoopaState.walking || this.state === KoopaState.panic) {
       this.hide(us)
     } else if (this.state === KoopaState.hiding) {
       // us.useTrait(Killable, (it) => it.kill())
@@ -64,10 +72,11 @@ export class KoopaBehavior extends Trait {
       checkComponent(us, ComponentName.VELOCITY)
       const velUs = getComponent(us, ComponentName.VELOCITY)
 
-      velUs.set(100, -200)
+      checkComponent(them, ComponentName.VELOCITY)
+      const velThem = getComponent(them, ComponentName.VELOCITY)
+
+      velUs.set(100 * Math.sign(velThem.x), -200)
       getComponent(us, ComponentName.SOLID).obstructs = false
-    } else if (this.state === KoopaState.panic) {
-      this.hide(us)
     }
   }
 
@@ -211,6 +220,7 @@ export async function loadKoopa() {
       [ComponentName.SOLID]: new Solid(),
       [ComponentName.KOOPA_BEHAV]: de.behavior,
       [ComponentName.PENDULUM_MOVE]: new PendulumMove(),
+      [ComponentName.KILLABLE]: new Killable(),
     })
 
     return [entity, de]

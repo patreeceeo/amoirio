@@ -13,6 +13,7 @@ export enum EventName {
   /** TODO delete? */
   TIMER_OK = 'timer/ok',
   OBSTRUCT = 'obstruct',
+  COLLIDE = 'collide',
   INPUT = 'input',
 }
 
@@ -25,6 +26,7 @@ export type EventArgs = {
   [EventName.WORLD_PLAY]: []
   [EventName.TIMER_OK]: []
   [EventName.TIMER_HURRY]: []
+  [EventName.COLLIDE]: [Entity, Entity]
 }
 
 type Callback = (...args: any[]) => void

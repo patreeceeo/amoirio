@@ -39,5 +39,5 @@ export abstract class Trait {
 
   update(entity: Entity, world: World) {}
   obstruct(entity: Entity, side: Side, match: TileResolverMatch) {}
-  collides(us: Entity, them: Entity) {}
+  collides(us: Entity, them: Entity, world?: World) {}
 }

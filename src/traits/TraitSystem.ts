@@ -1,5 +1,5 @@
 import { CreateSystemFunctionType, Dict } from '../types'
-import { EventName } from '../EventEmitter'
+import { EventName, EventEmitter } from '../EventEmitter'
 import {
   queryAll,
   ComponentName,
@@ -9,6 +9,7 @@ import {
   hasNewComponent,
   Entity,
   updateEntity,
+  deleteEntity,
 } from '../EntityFunctions'
 import { TileCollider, TileColliderHandler } from '../TileCollider'
 // TODO reorganize/refactor handlers
@@ -105,7 +106,10 @@ export const TraitSystem: CreateSystemFunctionType = async (world) => {
         }
       }
 
-      if (hasComponent(entity, ComponentName.GO)) {
+      if (
+        hasComponent(entity, ComponentName.GO) &&
+        !getComponent(entity, ComponentName.KILLABLE)?.dead
+      ) {
         const go = getComponent(entity, ComponentName.GO)
 
         checkComponent(entity, ComponentName.VELOCITY)
@@ -175,6 +179,38 @@ export const TraitSystem: CreateSystemFunctionType = async (world) => {
       if (hasComponent(entity, ComponentName.KOOPA_BEHAV)) {
         getComponent(entity, ComponentName.KOOPA_BEHAV).update(entity, world)
       }
+
+      if (
+        hasComponent(entity, ComponentName.BOUNDING_BOX) &&
+        hasComponent(entity, ComponentName.VELOCITY)
+      ) {
+        for (const candidate of queryAll()) {
+          if (hasComponent(candidate, ComponentName.BOUNDING_BOX)) {
+            if (entity === candidate) continue
+
+            const bounds = getComponent(entity, ComponentName.BOUNDING_BOX)
+            const candidateBounds = getComponent(
+              candidate,
+              ComponentName.BOUNDING_BOX,
+            )
+
+            if (bounds.overlaps(candidateBounds)) {
+              world.events.emit(EventName.COLLIDE, entity, candidate)
+            }
+          }
+        }
+      }
+
+      if (hasComponent(entity, ComponentName.KILLABLE)) {
+        const killable = getComponent(entity, ComponentName.KILLABLE)
+        if (killable.dead) {
+          killable.deadTime += world.fixedDeltaSeconds
+          if (killable.deadTime > killable.removeAfter) {
+            console.log(`KILLED ${getComponent(entity, ComponentName.NAME)}`)
+            deleteEntity(entity)
+          }
+        }
+      }
     }
   })
 
@@ -227,6 +263,13 @@ export const TraitSystem: CreateSystemFunctionType = async (world) => {
       }
     },
   )
+
+  world.events.listen(EventName.COLLIDE, (us, them) => {
+    if (hasComponent(us, ComponentName.KOOPA_BEHAV)) {
+      const behavior = getComponent(us, ComponentName.KOOPA_BEHAV)
+      behavior.collides(us, them, world)
+    }
+  })
 
   // handle input
 

@@ -28,6 +28,9 @@ const _animators: AnimatorDict = Object.freeze({
     checkComponent(entity, ComponentName.VELOCITY)
     const vel = getComponent(entity, ComponentName.VELOCITY)
 
+    checkComponent(entity, ComponentName.KILLABLE)
+    const killable = getComponent(entity, ComponentName.KILLABLE)
+
     if (jump.falling) {
       return SpriteName.MARIO_JUMP
     }
@@ -39,6 +42,11 @@ const _animators: AnimatorDict = Object.freeze({
 
       return defaultAnimator(entity, go.distance)
     }
+
+    if (killable.dead) {
+      return SpriteName.MARIO_DEAD
+    }
+
     return SpriteName.MARIO_IDLE
   },
   [AnimationCollectionName.KOOPA]: (entity, elapsedTime) => {

@@ -1,11 +1,12 @@
 import { DeprecatedEntity, Side } from '../Entity'
 import { TileResolverMatch } from '../TileResolver'
 import { Trait } from '../Trait'
+import { Entity } from '../EntityFunctions'
 
 export class Solid extends Trait {
   obstructs = true
 
-  obstruct(entity: DeprecatedEntity, side: Side, match: TileResolverMatch) {
+  obstruct(entity: Entity, side: Side, match: TileResolverMatch) {
     // if (!this.obstructs) return
     // if (side === Side.bottom) {
     //   entity.bounds.bottom = match.y1

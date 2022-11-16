@@ -14,6 +14,7 @@ export enum SpriteName {
   MARIO_BRAKE = 'brake',
   MARIO_JUMP = 'jump',
   MARIO_IDLE = 'idle',
+  MARIO_DEAD = 'dead',
   GOOMBA_WALK_1 = 'walk-1',
   GOOMBA_WALK_2 = 'walk-2',
   KOOPA_WALK_1 = 'walk-1',

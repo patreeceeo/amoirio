@@ -1,17 +1,18 @@
-import { DeprecatedEntity, Side } from '../Entity'
+import { Side } from '../Entity'
 import { Trait } from '../Trait'
+import { Entity } from '../EntityFunctions'
 
 export class PendulumMove extends Trait {
   speed = -30
   enabled = true
 
-  update(ent: DeprecatedEntity) {
+  update(ent: Entity) {
     // if (this.enabled) {
     //   ent.vel.x = this.speed
     // }
   }
 
-  obstruct(ent: DeprecatedEntity, side: Side) {
+  obstruct(ent: Entity, side: Side) {
     // if (side === Side.left) {
     //   this.speed = Math.abs(this.speed)
     // } else if (side === Side.right) {

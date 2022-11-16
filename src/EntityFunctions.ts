@@ -151,6 +151,11 @@ export function updateEntity(
   }
 }
 
+export function deleteEntity(entity: Entity) {
+  const index = _allEntities.indexOf(entity)
+  _allEntities.splice(index, 1)
+}
+
 export function hasNewComponent<Name extends ComponentName>(
   entity: Entity,
   name: Name,

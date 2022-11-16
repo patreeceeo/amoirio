@@ -1,7 +1,6 @@
-import { DeprecatedEntity } from '../Entity'
-import { GameContext } from '../GameContext'
-import { Level } from '../Level'
 import { Trait } from '../Trait'
+import { World } from '../World'
+import { Entity } from '../EntityFunctions'
 
 export class Killable extends Trait {
   dead = false
@@ -19,14 +18,14 @@ export class Killable extends Trait {
     this.deadTime = 0
   }
 
-  update(entity: DeprecatedEntity, { deltaTime }: GameContext, level: Level) {
-    if (this.dead) {
-      this.deadTime += deltaTime
-      if (this.deadTime > this.removeAfter) {
-        this.queue(() => {
-          level.entities.delete(entity)
-        })
-      }
-    }
+  update(entity: Entity, world: World) {
+    // if (this.dead) {
+    //   this.deadTime += deltaTime
+    //   if (this.deadTime > this.removeAfter) {
+    //     this.queue(() => {
+    //       level.entities.delete(entity)
+    //     })
+    //   }
+    // }
   }
 }

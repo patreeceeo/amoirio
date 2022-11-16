@@ -80,6 +80,7 @@ export async function loadGoomba() {
       [ComponentName.BOUNDING_BOX]: de.bounds,
       [ComponentName.PHYSICS]: true,
       [ComponentName.SOLID]: new Solid(),
+      [ComponentName.KILLABLE]: new Killable(),
     })
     return [entity, de]
   }

@@ -104,6 +104,8 @@ export async function loadMario(audioContext: AudioContext) {
       [ComponentName.PHYSICS]: true,
       [ComponentName.BOUNDING_BOX]: de.bounds,
       [ComponentName.SOLID]: new Solid(),
+      [ComponentName.KILLABLE]: new Killable(),
+      [ComponentName.STOMPER]: new Stomper(),
     })
 
     return [entity, de]
