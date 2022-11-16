@@ -24,7 +24,7 @@ export class TileResolver {
   *toIndexRange(pos1: number, pos2: number) {
     const pMax = Math.ceil(pos2 / this.tileSize) * this.tileSize
 
-    for (let pos = pos1; pos < pMax - 1; pos += this.tileSize) {
+    for (let pos = pos1; pos < pMax; pos += this.tileSize) {
       yield this.toIndex(pos)
     }
   }
