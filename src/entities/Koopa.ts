@@ -7,36 +7,45 @@ import { Killable } from '../traits/Killable'
 import { PendulumMove } from '../traits/PendulumMove'
 import { Physics } from '../traits/Physics'
 import { Solid } from '../traits/Solid'
-import { Stomper } from '../traits/Stomper'
 import {
   Entity,
   createNamedEntity,
   updateEntity,
   ComponentName,
+  getComponent,
+  checkComponent,
+  hasComponent,
 } from '../EntityFunctions'
 import { AnimationCollectionName } from '../AnimationFunctions'
+import { World } from '../World'
 
-enum KoopaState {
+export enum KoopaState {
   walking,
   hiding,
   panic,
 }
 
-class KoopaBehavior extends Trait {
+export class KoopaBehavior extends Trait {
   state = KoopaState.walking
   hideTime = 0
   hideDuration = 5
   panicSpeed = 300
   walkSpeed?: number
 
-  collides(us: DeprecatedEntity, them: DeprecatedEntity) {
-    if (us.getTrait(Killable)?.dead) {
+  collides(us: Entity, them: Entity) {
+    checkComponent(us, ComponentName.KILLABLE)
+    if (getComponent(us, ComponentName.KILLABLE).dead) {
       return
     }
 
-    const stomper = them.getTrait(Stomper)
-    if (stomper) {
-      if (them.vel.y > us.vel.y) {
+    if (hasComponent(them, ComponentName.STOMPER)) {
+      checkComponent(us, ComponentName.VELOCITY)
+      const velUs = getComponent(us, ComponentName.VELOCITY)
+
+      checkComponent(them, ComponentName.VELOCITY)
+      const velThem = getComponent(them, ComponentName.VELOCITY)
+
+      if (velThem.y > velUs.y) {
         this.handleStomp(us, them)
       } else {
         this.handleNudge(us, them)
@@ -44,23 +53,28 @@ class KoopaBehavior extends Trait {
     }
   }
 
-  handleStomp(us: DeprecatedEntity, them: DeprecatedEntity) {
+  handleStomp(us: Entity, them: Entity) {
     if (this.state === KoopaState.walking) {
       this.hide(us)
     } else if (this.state === KoopaState.hiding) {
-      us.useTrait(Killable, (it) => it.kill())
-      us.vel.set(100, -200)
-      us.useTrait(Solid, (s) => (s.obstructs = false))
+      // us.useTrait(Killable, (it) => it.kill())
+      checkComponent(us, ComponentName.KILLABLE)
+      getComponent(us, ComponentName.KILLABLE).dead = true
+
+      checkComponent(us, ComponentName.VELOCITY)
+      const velUs = getComponent(us, ComponentName.VELOCITY)
+
+      velUs.set(100, -200)
+      getComponent(us, ComponentName.SOLID).obstructs = false
     } else if (this.state === KoopaState.panic) {
       this.hide(us)
     }
   }
 
-  handleNudge(us: DeprecatedEntity, them: DeprecatedEntity) {
+  handleNudge(us: Entity, them: Entity) {
     const kill = () => {
-      const killable = them.getTrait(Killable)
-      if (killable) {
-        killable.kill()
+      if (hasComponent(them, ComponentName.KILLABLE)) {
+        getComponent(them, ComponentName.KILLABLE).dead = true
       }
     }
 
@@ -69,47 +83,68 @@ class KoopaBehavior extends Trait {
     } else if (this.state === KoopaState.hiding) {
       this.panic(us, them)
     } else if (this.state === KoopaState.panic) {
-      const travelDir = Math.sign(us.vel.x)
-      const impactDir = Math.sign(us.pos.x - them.pos.x)
+      checkComponent(us, ComponentName.VELOCITY)
+      const vel = getComponent(us, ComponentName.VELOCITY)
+
+      checkComponent(us, ComponentName.POSITION)
+      const posUs = getComponent(us, ComponentName.POSITION)
+
+      checkComponent(them, ComponentName.POSITION)
+      const posThem = getComponent(them, ComponentName.POSITION)
+
+      const travelDir = Math.sign(vel.x)
+      const impactDir = Math.sign(posUs.x - posThem.x)
       if (travelDir !== 0 && travelDir !== impactDir) {
         kill()
       }
     }
   }
 
-  hide(us: DeprecatedEntity) {
-    us.useTrait(PendulumMove, (walk) => {
-      us.vel.x = 0
-      walk.enabled = false
+  hide(us: Entity) {
+    checkComponent(us, ComponentName.PENDULUM_MOVE)
+    const walk = getComponent(us, ComponentName.PENDULUM_MOVE)
 
-      if (!this.walkSpeed) {
-        this.walkSpeed = walk.speed
-      }
+    checkComponent(us, ComponentName.VELOCITY)
+    const vel = getComponent(us, ComponentName.VELOCITY)
 
-      this.state = KoopaState.hiding
-      this.hideTime = 0
-    })
+    vel.x = 0
+    walk.enabled = false
+
+    if (!this.walkSpeed) {
+      this.walkSpeed = walk.speed
+    }
+
+    this.state = KoopaState.hiding
+    this.hideTime = 0
   }
 
-  unhide(us: DeprecatedEntity) {
-    us.useTrait(PendulumMove, (walk) => {
-      walk.enabled = true
-      if (this.walkSpeed != null) walk.speed = this.walkSpeed
-      this.state = KoopaState.walking
-    })
+  unhide(us: Entity) {
+    checkComponent(us, ComponentName.PENDULUM_MOVE)
+    const walk = getComponent(us, ComponentName.PENDULUM_MOVE)
+
+    walk.enabled = true
+
+    if (this.walkSpeed != null) walk.speed = this.walkSpeed
+
+    this.state = KoopaState.walking
   }
 
-  panic(us: DeprecatedEntity, them: DeprecatedEntity) {
-    us.useTrait(PendulumMove, (pm) => {
-      pm.speed = this.panicSpeed * Math.sign(them.vel.x)
-      pm.enabled = true
-    })
+  panic(us: Entity, them: Entity) {
+    checkComponent(us, ComponentName.PENDULUM_MOVE)
+    const walk = getComponent(us, ComponentName.PENDULUM_MOVE)
+
+    checkComponent(them, ComponentName.VELOCITY)
+    const themVel = getComponent(them, ComponentName.VELOCITY)
+
+    walk.speed = this.panicSpeed * Math.sign(themVel.x)
+    walk.enabled = true
+
     this.state = KoopaState.panic
   }
 
-  update(us: DeprecatedEntity, { deltaTime }: GameContext) {
+  update(us: Entity, world: World) {
     if (this.state === KoopaState.hiding) {
-      this.hideTime += deltaTime
+      this.hideTime += world.fixedDeltaSeconds
 
       if (this.hideTime > this.hideDuration) {
         this.unhide(us)
@@ -174,6 +209,7 @@ export async function loadKoopa() {
       [ComponentName.PHYSICS]: true,
       [ComponentName.BOUNDING_BOX]: de.bounds,
       [ComponentName.SOLID]: new Solid(),
+      [ComponentName.KOOPA_BEHAV]: de.behavior,
     })
 
     return [entity, de]

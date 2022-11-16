@@ -8,6 +8,7 @@ import {
   checkComponent,
   hasNewComponent,
   Entity,
+  updateEntity,
 } from '../EntityFunctions'
 import { TileCollider, TileColliderHandler } from '../TileCollider'
 // TODO reorganize/refactor handlers
@@ -41,9 +42,24 @@ const yCollisionHandlersByTileType: Dict<TileColliderHandler> = {
   [TileType.GROUND]: groundHandlers[1],
 }
 
+function setSpawnInfo(entity: Entity, spawnTime: number) {
+  if (!hasComponent(entity, ComponentName.SPAWN)) {
+    updateEntity(entity, {
+      [ComponentName.SPAWN]: { spawnTime },
+    })
+  }
+}
+
 export const TraitSystem: CreateSystemFunctionType = async (world) => {
+  world.events.listen(EventName.WORLD_INIT, () => {
+    for (const entity of queryAll()) {
+      setSpawnInfo(entity, world.fixedElapsedSeconds)
+    }
+  })
+
   world.events.listen(EventName.WORLD_FIXED_STEP, () => {
     for (const entity of queryAll()) {
+      setSpawnInfo(entity, world.fixedElapsedSeconds)
       if (hasNewComponent(entity, ComponentName.TILE_MATRIX)) {
         const matrix = getComponent(entity, ComponentName.TILE_MATRIX)
         tileCollider.addGrid(matrix)
@@ -154,6 +170,10 @@ export const TraitSystem: CreateSystemFunctionType = async (world) => {
         if (move.enabled) {
           vel.x = move.speed
         }
+      }
+
+      if (hasComponent(entity, ComponentName.KOOPA_BEHAV)) {
+        getComponent(entity, ComponentName.KOOPA_BEHAV).update(entity, world)
       }
     }
   })

@@ -52,8 +52,8 @@ async function createLoop(
 
   await TimerSystem(world)
   await AudioSystem(world)
-  await VideoSystem(world)
   await TraitSystem(world)
+  await VideoSystem(world)
   await InputSystem(world)
 
   world.fixedDeltaSeconds = timer.deltaTimeTarget

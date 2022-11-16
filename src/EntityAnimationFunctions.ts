@@ -1,4 +1,8 @@
-import { resolveFrame, AnimationCollectionName } from './AnimationFunctions'
+import {
+  resolveFrame,
+  AnimationCollectionName,
+  AnimationName,
+} from './AnimationFunctions'
 import {
   Entity,
   ComponentName,
@@ -7,8 +11,9 @@ import {
 } from './EntityFunctions'
 import { SpriteName } from './SpriteSheet'
 import { Dict } from './types'
+import { KoopaState } from './entities/Koopa'
 
-type Animator = (entity: Entity, elapsedTime: number) => SpriteName
+type Animator = (entity: Entity, timeOrDistance: number) => SpriteName
 
 type AnimatorDict = Dict<Animator>
 
@@ -35,6 +40,35 @@ const _animators: AnimatorDict = Object.freeze({
       return defaultAnimator(entity, go.distance)
     }
     return SpriteName.MARIO_IDLE
+  },
+  [AnimationCollectionName.KOOPA]: (entity, elapsedTime) => {
+    checkComponent(entity, ComponentName.KOOPA_BEHAV)
+    const behavior = getComponent(entity, ComponentName.KOOPA_BEHAV)
+
+    const walkAnim = getComponent(
+      entity,
+      ComponentName.ANIMATION,
+    ).animations.get(AnimationName.KOOPA_WALK)
+
+    const spawnTime = getComponent(entity, ComponentName.SPAWN).spawnTime || 0
+
+    if (!walkAnim) {
+      console.warn('Where Koopa walk animation tho?')
+      return SpriteName.KOOPA_HIDING_WITH_LEGS
+    }
+
+    if (behavior.state === KoopaState.hiding) {
+      if (behavior.hideTime > 3) {
+        return resolveFrame(walkAnim, behavior.hideTime)
+      }
+      return SpriteName.KOOPA_HIDING
+    }
+
+    if (behavior.state === KoopaState.panic) {
+      return SpriteName.KOOPA_HIDING
+    }
+
+    return resolveFrame(walkAnim, elapsedTime - spawnTime)
   },
 })
 

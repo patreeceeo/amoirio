@@ -2,7 +2,7 @@ import { TileResolverMatrix } from './TileResolver'
 import { raise } from './raise'
 import { SpriteSheet } from './SpriteSheet'
 import { Vec2 } from './math'
-import { Dict } from './types'
+import { Dict, SpawnInfo } from './types'
 import { AnimationCollection } from './AnimationFunctions'
 import { Jump } from './traits/Jump'
 import { Go } from './traits/Go'
@@ -10,6 +10,9 @@ import { BoundingBox } from './BoundingBox'
 import { Player } from './traits/Player'
 import { Solid } from './traits/Solid'
 import { PendulumMove } from './traits/PendulumMove'
+import { Killable } from './traits/Killable'
+import { Stomper } from './traits/Stomper'
+import { KoopaBehavior } from './entities/Koopa'
 
 export type Entity = number
 
@@ -29,6 +32,10 @@ export enum ComponentName {
   PHYSICS = 'physics',
   SOLID = 'solid',
   PENDULUM_MOVE = 'pendulum_move',
+  KILLABLE = 'killable',
+  STOMPER = 'stomper',
+  KOOPA_BEHAV = 'koopa_behav',
+  SPAWN = 'spawn',
 }
 
 type ComponentType = {
@@ -47,6 +54,10 @@ type ComponentType = {
   [ComponentName.PHYSICS]: true
   [ComponentName.SOLID]: Solid
   [ComponentName.PENDULUM_MOVE]: PendulumMove
+  [ComponentName.KILLABLE]: Killable
+  [ComponentName.STOMPER]: Stomper
+  [ComponentName.KOOPA_BEHAV]: KoopaBehavior
+  [ComponentName.SPAWN]: SpawnInfo
 }
 
 type ComponentData<
@@ -159,7 +170,7 @@ export function checkComponent(entity: Entity, name: ComponentName) {
   if (!hasComponent(entity, name)) {
     const entityName = getComponent(entity, ComponentName.NAME)
     raise(
-      `CHECK FAILED: entity ${entityName}(${entity}) does not have a ${name} component`,
+      `CHECK FAILED: ${entityName}(${entity}) entity does not have a ${name} component`,
     )
   }
 }

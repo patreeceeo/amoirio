@@ -1,5 +1,6 @@
 import { DeprecatedEntity } from './Entity'
 
+// TODO collider system
 export class EntityCollider {
   constructor(public entities: Set<DeprecatedEntity>) {}
 

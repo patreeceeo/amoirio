@@ -1,7 +1,7 @@
 import { DeprecatedEntity, Side } from './Entity'
-import { GameContext } from './GameContext'
-import { Level } from './Level'
 import { TileResolverMatch } from './TileResolver'
+import { Entity } from './EntityFunctions'
+import { World } from './World'
 
 type TraitTask = (...args: any[]) => void
 
@@ -37,7 +37,7 @@ export abstract class Trait {
     this.listeners = this.listeners.filter((listener) => listener.count > 0)
   }
 
-  update(entity: DeprecatedEntity, gameContext: GameContext, level: Level) {}
-  obstruct(entity: DeprecatedEntity, side: Side, match: TileResolverMatch) {}
-  collides(us: DeprecatedEntity, them: DeprecatedEntity) {}
+  update(entity: Entity, world: World) {}
+  obstruct(entity: Entity, side: Side, match: TileResolverMatch) {}
+  collides(us: Entity, them: Entity) {}
 }
