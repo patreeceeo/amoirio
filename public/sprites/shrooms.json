@@ -1,0 +1,10 @@
+
+{
+  "imageURL": "images/shrooms.png",
+  "frames": [
+    {
+      "name": "red",
+      "rect": [0, 0, 16, 16]
+    }
+  ]
+}

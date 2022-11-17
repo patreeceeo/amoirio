@@ -1,6 +1,6 @@
 import { TileResolverMatrix } from './TileResolver'
 import { raise } from './raise'
-import { SpriteSheet } from './SpriteSheet'
+import { SpriteSheet, SpriteName } from './SpriteSheet'
 import { Vec2 } from './math'
 import { Dict, SpawnInfo } from './types'
 import { AnimationCollection } from './AnimationFunctions'
@@ -15,6 +15,7 @@ import { Stomper } from './traits/Stomper'
 import { KoopaBehavior } from './entities/Koopa'
 import { Spawner } from './Spawner'
 import { ScoreKeeper } from './ScoreKeeper'
+import { Collectable } from './Collectable'
 
 export type Entity = number
 
@@ -23,6 +24,7 @@ export enum ComponentName {
   INPUT_RECEIVER = 'input_receiver',
   TILE_MATRIX = 'tile_matrix',
   SPRITE_SHEET = 'sprite_sheet',
+  SPRITE = 'sprite',
   POSITION = 'position',
   VELOCITY = 'velocity',
   SIZE = 'size',
@@ -42,6 +44,7 @@ export enum ComponentName {
   IS_A = 'is_a',
   IS_B = 'is_b',
   SCORE = 'score',
+  COLLECTABLE = 'collectable',
 }
 
 type ComponentType = {
@@ -49,8 +52,10 @@ type ComponentType = {
   [ComponentName.INPUT_RECEIVER]: true
   [ComponentName.IS_A]: true
   [ComponentName.IS_B]: true
+  [ComponentName.COLLECTABLE]: Collectable
   [ComponentName.TILE_MATRIX]: TileResolverMatrix
   [ComponentName.SPRITE_SHEET]: SpriteSheet
+  [ComponentName.SPRITE]: SpriteName
   [ComponentName.SIZE]: Vec2
   [ComponentName.POSITION]: Vec2
   [ComponentName.VELOCITY]: Vec2

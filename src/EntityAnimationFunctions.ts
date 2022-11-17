@@ -8,6 +8,7 @@ import {
   ComponentName,
   getComponent,
   checkComponent,
+  hasComponent,
 } from './EntityFunctions'
 import { SpriteName } from './SpriteSheet'
 import { Dict } from './types'
@@ -99,9 +100,12 @@ export function getCurrentSpriteNameForEntity(
   entity: Entity,
   elapsedTime: number,
 ): SpriteName {
-  checkComponent(entity, ComponentName.ANIMATION)
-
-  const animations = getComponent(entity, ComponentName.ANIMATION)
-  const animator = _animators[animations.name] || defaultAnimator
-  return animator(entity, elapsedTime)
+  if (hasComponent(entity, ComponentName.ANIMATION)) {
+    const animations = getComponent(entity, ComponentName.ANIMATION)
+    const animator = _animators[animations.name] || defaultAnimator
+    return animator(entity, elapsedTime)
+  } else {
+    checkComponent(entity, ComponentName.SPRITE)
+    return getComponent(entity, ComponentName.SPRITE)
+  }
 }

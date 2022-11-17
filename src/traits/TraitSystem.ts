@@ -10,6 +10,7 @@ import {
   Entity,
   updateEntity,
   deleteEntity,
+  query,
 } from '../EntityFunctions'
 import { TileCollider, TileColliderHandler } from '../TileCollider'
 // TODO reorganize/refactor handlers
@@ -286,6 +287,7 @@ export const TraitSystem: CreateSystemFunctionType = async (world) => {
   )
 
   world.events.listen(EventName.COLLIDE, (us, them) => {
+    const scoreKeeper = query([ComponentName.SCORE])[0]
     if (hasComponent(us, ComponentName.KOOPA_BEHAV)) {
       const behavior = getComponent(us, ComponentName.KOOPA_BEHAV)
       behavior.collides(us, them, world)
@@ -297,6 +299,17 @@ export const TraitSystem: CreateSystemFunctionType = async (world) => {
     ) {
       checkComponent(them, ComponentName.KILLABLE)
       getComponent(them, ComponentName.KILLABLE).dead = true
+    }
+
+    if (
+      hasComponent(us, ComponentName.COLLECTABLE) &&
+      hasComponent(them, ComponentName.IS_A) &&
+      !getComponent(them, ComponentName.KILLABLE).dead
+    ) {
+      const collectable = getComponent(us, ComponentName.COLLECTABLE)
+      deleteEntity(us)
+      getComponent(scoreKeeper, ComponentName.SCORE).revenue +=
+        collectable.value
     }
   })
 

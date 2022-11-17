@@ -101,7 +101,12 @@ function setupEntities(
   levelSpec.entities.forEach(({ name, pos: [x, y] }) => {
     const spawnerEntity = createEntity()
     updateEntity(spawnerEntity, {
-      [ComponentName.SPAWNER]: new Spawner(name, 1, []),
+      [ComponentName.SPAWNER]: new Spawner(
+        name,
+        name === 'shroom' ? 3 : 1,
+        [],
+        name === 'shroom' ? 4 : 2,
+      ),
       [ComponentName.POSITION]: new Vec2(x, y),
     })
   })

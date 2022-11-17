@@ -65,7 +65,6 @@ export const VideoSystem: CreateSystemFunctionType = async (world) => {
     for (const entity of queryAll()) {
       if (
         hasComponent(entity, ComponentName.SPRITE_SHEET) &&
-        hasComponent(entity, ComponentName.ANIMATION) &&
         hasComponent(entity, ComponentName.SIZE) &&
         hasComponent(entity, ComponentName.POSITION)
       ) {

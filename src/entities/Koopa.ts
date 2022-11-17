@@ -33,12 +33,10 @@ export class KoopaBehavior extends Trait {
   lastCollisionTime = -Infinity
 
   collides(us: Entity, them: Entity, world: World) {
-    checkComponent(us, ComponentName.KILLABLE)
-    if (getComponent(us, ComponentName.KILLABLE).dead) {
+    if (getComponent(us, ComponentName.KILLABLE)?.dead) {
       return
     }
-    checkComponent(them, ComponentName.KILLABLE)
-    if (getComponent(them, ComponentName.KILLABLE).dead) {
+    if (getComponent(them, ComponentName.KILLABLE)?.dead) {
       return
     }
 
