@@ -14,6 +14,7 @@ import {
   getComponent,
   checkComponent,
   hasComponent,
+  query,
 } from '../EntityFunctions'
 import { AnimationCollectionName } from '../AnimationFunctions'
 import { World } from '../World'
@@ -79,9 +80,11 @@ export class KoopaBehavior extends Trait {
   }
 
   handleNudge(us: Entity, them: Entity) {
+    const scoreKeeper = query([ComponentName.SCORE])[0]
     const kill = () => {
       if (hasComponent(them, ComponentName.KILLABLE)) {
         getComponent(them, ComponentName.KILLABLE).dead = true
+        getComponent(scoreKeeper, ComponentName.SCORE).expenses += 200
       }
     }
 

@@ -299,6 +299,7 @@ export const TraitSystem: CreateSystemFunctionType = async (world) => {
     ) {
       checkComponent(them, ComponentName.KILLABLE)
       getComponent(them, ComponentName.KILLABLE).dead = true
+      getComponent(scoreKeeper, ComponentName.SCORE).expenses += 200
     }
 
     if (
