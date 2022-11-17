@@ -1,15 +1,9 @@
-// import { Animation } from '../animation'
-import { AudioBoard } from '../AudioBoard'
 import { DeprecatedEntity } from '../Entity'
-import { loadAudioBoard } from '../loaders/audio'
 import { loadSpriteSheet } from '../loaders/sprite'
-import { SpriteSheet } from '../SpriteSheet'
 import { Go } from '../traits/Go'
 import { Jump } from '../traits/Jump'
 import { Killable } from '../traits/Killable'
-import { Physics } from '../traits/Physics'
 import { Solid } from '../traits/Solid'
-import { Stomper } from '../traits/Stomper'
 import {
   Entity,
   updateEntity,
@@ -20,7 +14,7 @@ import { AnimationCollectionName } from '../AnimationFunctions'
 import { Vec2 } from '../math'
 import { BoundingBox } from '../BoundingBox'
 
-export async function loadBowser(audioContext: AudioContext) {
+export async function loadBowser(_audioContext: AudioContext) {
   const sprites = await loadSpriteSheet('bowser')
   const animations = sprites.getAnimationCollection(
     AnimationCollectionName.BOWSER,
