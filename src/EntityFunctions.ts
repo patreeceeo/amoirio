@@ -14,6 +14,7 @@ import { Killable } from './traits/Killable'
 import { Stomper } from './traits/Stomper'
 import { KoopaBehavior } from './entities/Koopa'
 import { Spawner } from './Spawner'
+import { ScoreKeeper } from './ScoreKeeper'
 
 export type Entity = number
 
@@ -40,6 +41,7 @@ export enum ComponentName {
   SPAWNER = 'spawner',
   IS_A = 'is_a',
   IS_B = 'is_b',
+  SCORE = 'score',
 }
 
 type ComponentType = {
@@ -65,6 +67,7 @@ type ComponentType = {
   [ComponentName.KOOPA_BEHAV]: KoopaBehavior
   [ComponentName.SPAWN]: SpawnInfo
   [ComponentName.SPAWNER]: Spawner
+  [ComponentName.SCORE]: ScoreKeeper
 }
 
 type ComponentData<

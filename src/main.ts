@@ -19,12 +19,18 @@ import { AudioSystem } from './audio/AudioSystem'
 import { runTests } from './test'
 import { EventName } from './EventEmitter'
 import { VideoSystem } from './video/VideoSystem'
-import { clearFlags } from './EntityFunctions'
+import {
+  clearFlags,
+  createEntity,
+  updateEntity,
+  ComponentName,
+} from './EntityFunctions'
 import { TraitSystem } from './traits/TraitSystem'
 import { InputSystem } from './input/InputSystem'
 import { TimerSystem } from './TimerSystem'
 import { loadFont } from './loaders/font'
 import { SpawnSystem } from './SpawnSystem'
+import { ScoreKeeper } from './ScoreKeeper'
 
 /** @deprecated */
 function getVideoContext(canvas: HTMLCanvasElement): CanvasRenderingContext2D {
@@ -166,6 +172,10 @@ async function startEditor(canvas: HTMLCanvasElement) {
 
   const level = await loadLevel('antario-1')
 
+  const scoreKeeper = createEntity()
+  updateEntity(scoreKeeper, {
+    [ComponentName.SCORE]: new ScoreKeeper(),
+  })
   // const editor = new Editor(level, world)
 
   // const [_, mario] = entityFactory.mario?.() || raise('where mario tho')

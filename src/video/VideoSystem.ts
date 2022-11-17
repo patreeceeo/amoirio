@@ -12,7 +12,7 @@ import {
 import { createBackgroundLayer } from '../layers/background'
 import { V2_0 } from '../math'
 import { getCurrentSpriteNameForEntity } from '../EntityAnimationFunctions'
-import { createEditorLayer } from '../layers/editor'
+import { createScoreboardLayer } from '../layers/scoreboard'
 import { loadFont } from '../loaders/font'
 
 let previousBigMomentTimer = 0
@@ -23,7 +23,7 @@ export const VideoSystem: CreateSystemFunctionType = async (world) => {
   const camera = new Camera()
 
   const font = await loadFont()
-  const editorLayer = createEditorLayer(font, '1-1')
+  // const editorLayer = createEditorLayer(font, '1-1')
 
   world.events.listen(EventName.WORLD_INIT, () => {
     // Shift camera to the right one tile to facilitate donut-shaped world
@@ -39,9 +39,13 @@ export const VideoSystem: CreateSystemFunctionType = async (world) => {
         const layer = createBackgroundLayer(world, tiles, sprites)
         compositor.layers.push(layer)
       }
+
+      if (hasComponent(entity, ComponentName.SCORE)) {
+        const scoreLayer = createScoreboardLayer(font, entity)
+        compositor.layers.push(scoreLayer)
+      }
     }
     compositor.layers.push(drawSpriteLayer)
-    compositor.layers.push(editorLayer)
 
     // Actually draw the layers added to the compositor
     compositor.draw(context, camera)
