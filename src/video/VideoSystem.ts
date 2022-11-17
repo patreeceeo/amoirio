@@ -14,6 +14,7 @@ import { V2_0 } from '../math'
 import { getCurrentSpriteNameForEntity } from '../EntityAnimationFunctions'
 import { createScoreboardLayer } from '../layers/scoreboard'
 import { loadFont } from '../loaders/font'
+import { WorldState } from '../World'
 
 let previousBigMomentTimer = 0
 
@@ -23,7 +24,6 @@ export const VideoSystem: CreateSystemFunctionType = async (world) => {
   const camera = new Camera()
 
   const font = await loadFont()
-  // const editorLayer = createEditorLayer(font, '1-1')
 
   world.events.listen(EventName.WORLD_INIT, () => {
     // Shift camera to the right one tile to facilitate donut-shaped world
@@ -46,6 +46,7 @@ export const VideoSystem: CreateSystemFunctionType = async (world) => {
       }
     }
     compositor.layers.push(drawSpriteLayer)
+    compositor.layers.push(pauseStatusLayer)
 
     // Actually draw the layers added to the compositor
     compositor.draw(context, camera)
@@ -53,6 +54,7 @@ export const VideoSystem: CreateSystemFunctionType = async (world) => {
 
   world.events.listen(EventName.WORLD_FIXED_STEP, () => {
     // draw one more frame before stopping
+    // TODO use WORLD_PAUSE event
     if (world.bigMomemtTimer > 0 && previousBigMomentTimer > 0) {
       return
     }
@@ -60,6 +62,16 @@ export const VideoSystem: CreateSystemFunctionType = async (world) => {
     // Actually draw the layers added to the compositor
     compositor.draw(context, camera)
   })
+
+  world.events.listen(EventName.WORLD_PAUSE, () => {
+    compositor.draw(context, camera)
+  })
+
+  function pauseStatusLayer() {
+    if (world.state === WorldState.PAUSE) {
+      font.print('PAUSE', context, font.size * 26, font.size)
+    }
+  }
 
   function drawSpriteLayer() {
     for (const entity of queryAll()) {
