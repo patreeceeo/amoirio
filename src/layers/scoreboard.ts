@@ -15,7 +15,7 @@ export function createScoreboardLayer(font: Font, scoreKeeperEntity: Entity) {
     font.print(
       `$${Math.floor(score.revenue - score.expenses)} profit`,
       context,
-      2,
+      line1,
       line1,
     )
   }
