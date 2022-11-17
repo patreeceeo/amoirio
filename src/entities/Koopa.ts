@@ -41,6 +41,7 @@ export class KoopaBehavior extends Trait {
       return
     }
     if (world.fixedElapsedSeconds - this.lastCollisionTime <= 1) return
+    this.lastCollisionTime = world.fixedElapsedSeconds
 
     checkComponent(us, ComponentName.VELOCITY)
     const velUs = getComponent(us, ComponentName.VELOCITY)
@@ -49,7 +50,6 @@ export class KoopaBehavior extends Trait {
     const velThem = getComponent(them, ComponentName.VELOCITY)
 
     if (velThem.y - velUs.y > 25 && hasComponent(them, ComponentName.STOMPER)) {
-      this.lastCollisionTime = world.fixedElapsedSeconds
       this.handleStomp(us, them)
     } else {
       this.handleNudge(us, them)
