@@ -1,12 +1,11 @@
 import { CreateSystemFunctionType, Dict } from '../types'
-import { EventName, EventEmitter } from '../EventEmitter'
+import { EventName } from '../EventEmitter'
 import {
   queryAll,
   ComponentName,
   hasComponent,
   getComponent,
   checkComponent,
-  hasNewComponent,
   Entity,
   updateEntity,
   deleteEntity,
@@ -293,14 +292,15 @@ export const TraitSystem: CreateSystemFunctionType = async (world) => {
       behavior.collides(us, them, world)
     }
 
-    if (
-      hasComponent(us, ComponentName.IS_B) &&
-      hasComponent(them, ComponentName.IS_A)
-    ) {
-      checkComponent(them, ComponentName.KILLABLE)
-      getComponent(them, ComponentName.KILLABLE).dead = true
-      getComponent(scoreKeeper, ComponentName.SCORE).expenses += 200
-    }
+    // TODO should bowser's mere touch be deadly?
+    // if (
+    //   hasComponent(us, ComponentName.IS_B) &&
+    //   hasComponent(them, ComponentName.IS_A)
+    // ) {
+    //   checkComponent(them, ComponentName.KILLABLE)
+    //   getComponent(them, ComponentName.KILLABLE).dead = true
+    //   getComponent(scoreKeeper, ComponentName.SCORE).expenses += 200
+    // }
 
     if (
       hasComponent(us, ComponentName.COLLECTABLE) &&

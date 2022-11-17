@@ -28,6 +28,8 @@ export async function loadBowser(_audioContext: AudioContext) {
     const jump = new Jump()
     jump.velocity = 100
     jump.duration = 0.15
+    const go = new Go()
+    go.acceleration = 66.6
     updateEntity(entity, {
       [ComponentName.INPUT_RECEIVER]: true,
       [ComponentName.IS_B]: true,
@@ -37,7 +39,7 @@ export async function loadBowser(_audioContext: AudioContext) {
       [ComponentName.ANIMATION]: animations,
       [ComponentName.POSITION]: pos,
       [ComponentName.JUMP]: jump,
-      [ComponentName.GO]: new Go(),
+      [ComponentName.GO]: go,
       [ComponentName.PHYSICS]: true,
       [ComponentName.BOUNDING_BOX]: new BoundingBox(pos, size, new Vec2()),
       [ComponentName.SOLID]: new Solid(),

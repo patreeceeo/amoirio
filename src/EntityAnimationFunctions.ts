@@ -54,6 +54,13 @@ const _animators: AnimatorDict = Object.freeze({
     checkComponent(entity, ComponentName.GO)
     const go = getComponent(entity, ComponentName.GO)
 
+    checkComponent(entity, ComponentName.KILLABLE)
+    const killable = getComponent(entity, ComponentName.KILLABLE)
+
+    if (killable.dead) {
+      return SpriteName.BOWSER_DEAD
+    }
+
     if (go.distance > 0) {
       return defaultAnimator(entity, go.distance)
     }

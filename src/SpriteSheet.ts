@@ -18,6 +18,7 @@ export enum SpriteName {
   BOWSER_RUN_1 = 'run-1',
   BOWSER_RUN_2 = 'run-2',
   BOWSER_RUN_3 = 'run-3',
+  BOWSER_DEAD = 'dead',
   BOWSER_IDLE = 'idle',
   GOOMBA_WALK_1 = 'walk-1',
   GOOMBA_WALK_2 = 'walk-2',

@@ -40,22 +40,19 @@ export class KoopaBehavior extends Trait {
     if (getComponent(them, ComponentName.KILLABLE)?.dead) {
       return
     }
-
     if (world.fixedElapsedSeconds - this.lastCollisionTime <= 1) return
-    this.lastCollisionTime = world.fixedElapsedSeconds
 
-    if (hasComponent(them, ComponentName.STOMPER)) {
-      checkComponent(us, ComponentName.VELOCITY)
-      const velUs = getComponent(us, ComponentName.VELOCITY)
+    checkComponent(us, ComponentName.VELOCITY)
+    const velUs = getComponent(us, ComponentName.VELOCITY)
 
-      checkComponent(them, ComponentName.VELOCITY)
-      const velThem = getComponent(them, ComponentName.VELOCITY)
+    checkComponent(them, ComponentName.VELOCITY)
+    const velThem = getComponent(them, ComponentName.VELOCITY)
 
-      if (velThem.y - velUs.y > 25) {
-        this.handleStomp(us, them)
-      } else {
-        this.handleNudge(us, them)
-      }
+    if (velThem.y - velUs.y > 25 && hasComponent(them, ComponentName.STOMPER)) {
+      this.lastCollisionTime = world.fixedElapsedSeconds
+      this.handleStomp(us, them)
+    } else {
+      this.handleNudge(us, them)
     }
   }
 
@@ -80,11 +77,18 @@ export class KoopaBehavior extends Trait {
   }
 
   handleNudge(us: Entity, them: Entity) {
-    const scoreKeeper = query([ComponentName.SCORE])[0]
     const kill = () => {
       if (hasComponent(them, ComponentName.KILLABLE)) {
-        getComponent(them, ComponentName.KILLABLE).dead = true
-        getComponent(scoreKeeper, ComponentName.SCORE).expenses += 200
+        if (
+          hasComponent(them, ComponentName.IS_A) ||
+          this.state === KoopaState.panic
+        ) {
+          getComponent(them, ComponentName.KILLABLE).dead = true
+        }
+        if (hasComponent(them, ComponentName.IS_A)) {
+          const scoreKeeper = query([ComponentName.SCORE])[0]
+          getComponent(scoreKeeper, ComponentName.SCORE).expenses += 200
+        }
       }
     }
 
