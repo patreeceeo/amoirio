@@ -69,13 +69,16 @@ export const TraitSystem: CreateSystemFunctionType = async (world) => {
         if (killable.dead) {
           if (killable.deadTime === 0) {
             world.bigMomemtTimer += killable.removeAfter / 2
-            getComponent(entity, ComponentName.VELOCITY).set(0, 0)
+            updateEntity(entity, {}, [ComponentName.PHYSICS])
           }
           if (
             killable.deadTime > killable.removeAfter / 2 &&
             !killable.kicked
           ) {
             killable.kicked = true
+            updateEntity(entity, {
+              [ComponentName.PHYSICS]: true,
+            })
             getComponent(entity, ComponentName.SOLID).obstructs = false
             getComponent(entity, ComponentName.VELOCITY).set(0, -400)
           }
