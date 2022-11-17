@@ -4,9 +4,12 @@ import { EventName } from '../EventEmitter'
 import { query, ComponentName } from '../EntityFunctions'
 
 export enum ControlSignalType {
-  GO_LEFT = 'go-left',
-  GO_RIGHT = 'go-right',
-  JUMP = 'jump',
+  MARIO_LEFT = 'mario-left',
+  MARIO_RIGHT = 'mario-right',
+  MARIO_JUMP = 'jump',
+  BOWSER_LEFT = 'bowser-left',
+  BOWSER_RIGHT = 'bowser-right',
+  BOWSER_JUMP = 'bowser-jump',
   TURBO = 'turbo',
   PLAY_PAUSE = 'play/pause',
 }
@@ -19,9 +22,12 @@ export enum ControlSignalState {
 const KeyboardControlMap: Dict<ControlSignalType> = Object.freeze({
   Space: ControlSignalType.PLAY_PAUSE,
   KeyX: ControlSignalType.TURBO,
-  KeyZ: ControlSignalType.JUMP,
-  ArrowLeft: ControlSignalType.GO_LEFT,
-  ArrowRight: ControlSignalType.GO_RIGHT,
+  Numpad8: ControlSignalType.MARIO_JUMP,
+  Numpad4: ControlSignalType.MARIO_LEFT,
+  Numpad6: ControlSignalType.MARIO_RIGHT,
+  KeyA: ControlSignalType.BOWSER_LEFT,
+  KeyD: ControlSignalType.BOWSER_RIGHT,
+  KeyW: ControlSignalType.BOWSER_JUMP,
 })
 
 export const InputSystem: CreateSystemFunctionType = async (world) => {

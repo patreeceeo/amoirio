@@ -36,11 +36,15 @@ export enum ComponentName {
   STOMPER = 'stomper',
   KOOPA_BEHAV = 'koopa_behav',
   SPAWN = 'spawn',
+  IS_A = 'is_a',
+  IS_B = 'is_b',
 }
 
 type ComponentType = {
   [ComponentName.NAME]: string
   [ComponentName.INPUT_RECEIVER]: true
+  [ComponentName.IS_A]: true
+  [ComponentName.IS_B]: true
   [ComponentName.TILE_MATRIX]: TileResolverMatrix
   [ComponentName.SPRITE_SHEET]: SpriteSheet
   [ComponentName.SIZE]: Vec2

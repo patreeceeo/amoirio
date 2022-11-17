@@ -10,6 +10,8 @@ export enum AnimationName {
   OVERWORLD_CHANCE = 'chance',
   OVERWORLD_COIN = 'coin',
   BULLET = 'bullet',
+  BOWSER_IDLE = 'idle',
+  BOWSER_RUN = 'run',
 }
 
 export enum AnimationCollectionName {
@@ -19,6 +21,7 @@ export enum AnimationCollectionName {
   BULLET = 'bullet',
   CHANCE = 'chance',
   COIN = 'coin',
+  BOWSER = 'bowser',
 }
 
 export interface Animation extends AnimationSpec {
@@ -42,6 +45,7 @@ const animationCollections = {
   [AnimationCollectionName.BULLET]: [AnimationName.BULLET],
   [AnimationCollectionName.COIN]: [AnimationName.OVERWORLD_COIN],
   [AnimationCollectionName.CHANCE]: [AnimationName.OVERWORLD_CHANCE],
+  [AnimationCollectionName.BOWSER]: [AnimationName.BOWSER_RUN],
 }
 export function getAnimationNames(
   name: AnimationCollectionName,

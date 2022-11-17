@@ -49,6 +49,15 @@ const _animators: AnimatorDict = Object.freeze({
 
     return SpriteName.MARIO_IDLE
   },
+  [AnimationCollectionName.BOWSER]: (entity, _time) => {
+    checkComponent(entity, ComponentName.GO)
+    const go = getComponent(entity, ComponentName.GO)
+
+    if (go.distance > 0) {
+      return defaultAnimator(entity, go.distance)
+    }
+    return SpriteName.BOWSER_IDLE
+  },
   [AnimationCollectionName.KOOPA]: (entity, elapsedTime) => {
     checkComponent(entity, ComponentName.KOOPA_BEHAV)
     const behavior = getComponent(entity, ComponentName.KOOPA_BEHAV)

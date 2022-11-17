@@ -36,7 +36,7 @@ function getVideoContext(canvas: HTMLCanvasElement): CanvasRenderingContext2D {
 }
 
 function spawnMario(mario: DeprecatedEntity, level: Level) {
-  mario.pos.set(16, 0)
+  mario.pos.set(220, 0)
   mario.vel.set(0, 0)
   level.entities.add(mario)
 }
@@ -103,8 +103,8 @@ async function startGame(canvas: HTMLCanvasElement) {
 
   const sceneRunner = new SceneRunner()
 
-  const [_, mario] = entityFactory.mario?.() || raise('where mario tho')
-  makePlayer(mario, 'MARIO')
+  // const [_, mario] = entityFactory.mario?.() || raise('where mario tho')
+  // makePlayer(mario, 'MARIO')
 
   // const inputRouter = setupKeyboard(window)
   // inputRouter.addReceiver(mario)
@@ -122,7 +122,7 @@ async function startGame(canvas: HTMLCanvasElement) {
   const playerProgressLayer = createPlayerProgressLayer(font, level)
   const dashboardLayer = createDashboardLayer(font, level)
 
-  spawnMario(mario, level)
+  // spawnMario(mario, level)
 
   const playerEnv = createPlayerEnv(mario)
   level.entities.add(playerEnv)
@@ -166,8 +166,8 @@ async function startEditor(canvas: HTMLCanvasElement) {
 
   // const editor = new Editor(level, world)
 
-  const [_, mario] = entityFactory.mario?.() || raise('where mario tho')
-  makePlayer(mario, 'MARIO')
+  // const [_, mario] = entityFactory.mario?.() || raise('where mario tho')
+  // makePlayer(mario, 'MARIO')
 
   // const [__, bullet] = entityFactory.goomba?.() || raise('where bullet tho')
   // bullet.pos.set(24, 12)
@@ -177,10 +177,10 @@ async function startEditor(canvas: HTMLCanvasElement) {
   // inputRouter.addReceiver(mario)
   // inputRouter.addReceiver(editor)
 
-  spawnMario(mario, level)
+  // spawnMario(mario, level)
 
-  const playerEnv = createPlayerEnv(mario)
-  level.entities.add(playerEnv)
+  // const playerEnv = createPlayerEnv(mario)
+  // level.entities.add(playerEnv)
 
   // TODO add hot key to toggle this
   // level.comp.layers.push(createCollisionLayer(level))

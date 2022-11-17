@@ -17,6 +17,8 @@ import {
   updateEntity,
   ComponentName,
   createEntity,
+  checkComponent,
+  getComponent,
 } from '../EntityFunctions'
 
 function createTimer() {
@@ -101,12 +103,11 @@ function setupEntities(
       throw new Error(`Could not find factory function for entity "${name}"`)
     }
 
-    const [entity, deprecatedEntity] = createEntityPrefab()
-    deprecatedEntity.pos.set(x, y)
-    updateEntity(entity, {
-      [ComponentName.POSITION]: deprecatedEntity.pos,
-    })
-    level.entities.add(deprecatedEntity)
+    const [entity] = createEntityPrefab()
+    if (entity === -1) debugger
+    checkComponent(entity, ComponentName.POSITION)
+    const pos = getComponent(entity, ComponentName.POSITION)
+    pos.set(x, y)
   })
 
   // const spriteLayer = createSpriteLayer(level.entities)

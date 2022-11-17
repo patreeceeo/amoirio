@@ -94,6 +94,7 @@ export async function loadMario(audioContext: AudioContext) {
 
     updateEntity(entity, {
       [ComponentName.INPUT_RECEIVER]: true,
+      [ComponentName.IS_A]: true,
       [ComponentName.SIZE]: de.size,
       [ComponentName.VELOCITY]: de.vel,
       [ComponentName.SPRITE_SHEET]: sprites,

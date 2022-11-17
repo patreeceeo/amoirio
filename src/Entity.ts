@@ -8,10 +8,10 @@ import { TileResolverMatch } from './TileResolver'
 import { Trait } from './Trait'
 
 export enum Side {
-  top,
-  bottom,
-  left,
-  right,
+  top = 'top',
+  bottom = 'bottom',
+  left = 'left',
+  right = 'right',
 }
 
 type TraitConstructor<T extends Trait> = new (...args: any[]) => T

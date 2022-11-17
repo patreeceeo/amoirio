@@ -27,7 +27,7 @@ const tileCollider = new TileCollider()
 
 const GRAVITY = 1500
 
-const SCREEN_WIDTH = 256
+const SCREEN_SIZE = 256
 
 let leftState = 0
 let rightState = 0
@@ -108,12 +108,12 @@ export const TraitSystem: CreateSystemFunctionType = async (world) => {
         pos.x += vel.x * world.fixedDeltaSeconds
 
         // Wrap around donut-shaped world
-        if (pos.x > SCREEN_WIDTH + bounds.size.x && vel.x > 0) {
+        if (pos.x > SCREEN_SIZE + bounds.size.x && vel.x > 0) {
           pos.x = 0
         }
 
         if (pos.x <= 1 && vel.x < 0) {
-          pos.x = SCREEN_WIDTH + bounds.size.x
+          pos.x = SCREEN_SIZE + bounds.size.x
         }
 
         for (const match of tileCollider.checkX(entity)) {
@@ -125,6 +125,18 @@ export const TraitSystem: CreateSystemFunctionType = async (world) => {
 
         pos.y += vel.y * world.fixedDeltaSeconds
         vel.y += GRAVITY * world.fixedDeltaSeconds
+
+        if (
+          pos.y > SCREEN_SIZE + bounds.size.x &&
+          vel.y > 0 &&
+          !getComponent(entity, ComponentName.KILLABLE)?.dead
+        ) {
+          pos.y = 0
+        }
+
+        if (pos.y <= 1 && vel.y < 0) {
+          pos.y = SCREEN_SIZE + bounds.size.y
+        }
 
         for (const match of tileCollider.checkY(entity)) {
           const handler = yCollisionHandlersByTileType[match.tile.type]
@@ -287,6 +299,14 @@ export const TraitSystem: CreateSystemFunctionType = async (world) => {
       const behavior = getComponent(us, ComponentName.KOOPA_BEHAV)
       behavior.collides(us, them, world)
     }
+
+    if (
+      hasComponent(us, ComponentName.IS_B) &&
+      hasComponent(them, ComponentName.IS_A)
+    ) {
+      checkComponent(them, ComponentName.KILLABLE)
+      getComponent(them, ComponentName.KILLABLE).dead = true
+    }
   })
 
   // handle input
@@ -300,16 +320,27 @@ export const TraitSystem: CreateSystemFunctionType = async (world) => {
     ) => {
       for (let entity of receivers) {
         const go = getComponent(entity, ComponentName.GO)
+        let leftSignal, rightSignal, jumpSignal
+        if (hasComponent(entity, ComponentName.IS_A)) {
+          leftSignal = ControlSignalType.MARIO_LEFT
+          rightSignal = ControlSignalType.MARIO_RIGHT
+          jumpSignal = ControlSignalType.MARIO_JUMP
+        }
+        if (hasComponent(entity, ComponentName.IS_B)) {
+          leftSignal = ControlSignalType.BOWSER_LEFT
+          rightSignal = ControlSignalType.BOWSER_RIGHT
+          jumpSignal = ControlSignalType.BOWSER_JUMP
+        }
         switch (signalType) {
-          case ControlSignalType.GO_LEFT:
+          case leftSignal:
             leftState = signalState === ControlSignalState.STARTED ? 1 : 0
             go.dir = rightState - leftState
             break
-          case ControlSignalType.GO_RIGHT:
+          case rightSignal:
             rightState = signalState === ControlSignalState.STARTED ? 1 : 0
             go.dir = rightState - leftState
             break
-          case ControlSignalType.JUMP:
+          case jumpSignal:
             const jump = getComponent(entity, ComponentName.JUMP)
             if (signalState === ControlSignalState.STARTED) {
               jump.requestTime = jump.gracePeriod

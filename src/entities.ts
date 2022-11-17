@@ -6,6 +6,7 @@ import { loadMario } from './entities/Mario'
 import { DeprecatedEntity } from './Entity'
 import { Dict } from './types'
 import { Entity } from './EntityFunctions'
+import { loadBowser } from './entities/Bowser'
 
 export type EntityFactory = () => [Entity, DeprecatedEntity]
 
@@ -26,6 +27,7 @@ export async function loadEntities(
     loadKoopa().then(addAs('koopa')),
     loadBullet().then(addAs('bullet')),
     loadCannon(audioContext).then(addAs('cannon')),
+    loadBowser(audioContext).then(addAs('bowser')),
   ])
 
   return factories
