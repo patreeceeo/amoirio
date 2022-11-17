@@ -52,7 +52,7 @@ export class KoopaBehavior extends Trait {
       checkComponent(them, ComponentName.VELOCITY)
       const velThem = getComponent(them, ComponentName.VELOCITY)
 
-      if (velThem.y > velUs.y) {
+      if (velThem.y - velUs.y > 25) {
         this.handleStomp(us, them)
       } else {
         this.handleNudge(us, them)
@@ -97,15 +97,21 @@ export class KoopaBehavior extends Trait {
       checkComponent(us, ComponentName.VELOCITY)
       const vel = getComponent(us, ComponentName.VELOCITY)
 
+      checkComponent(them, ComponentName.VELOCITY)
+      const velThem = getComponent(them, ComponentName.VELOCITY)
+
       checkComponent(us, ComponentName.POSITION)
       const posUs = getComponent(us, ComponentName.POSITION)
 
       checkComponent(them, ComponentName.POSITION)
       const posThem = getComponent(them, ComponentName.POSITION)
 
-      const travelDir = Math.sign(vel.x)
-      const impactDir = Math.sign(posUs.x - posThem.x)
-      if (travelDir !== 0 && travelDir !== impactDir) {
+      // const isMoving = Math.sign(vel.x) !== 0
+      const impactDir = posThem.x - posUs.x
+      if (
+        Math.abs(vel.x) > Math.abs(velThem.x) &&
+        Math.sign(impactDir) === Math.sign(vel.x)
+      ) {
         kill()
       }
     }
