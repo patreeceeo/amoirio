@@ -14,6 +14,7 @@
     "ci": "npm-run-all --parallel --print-label lint typecheck build"
   },
   "devDependencies": {
+    "@types/lodash": "^4.14.189",
     "@typescript-eslint/eslint-plugin": "2.30.0",
     "@typescript-eslint/parser": "2.30.0",
     "eslint": "6.8.0",
@@ -32,5 +33,8 @@
     "*.{ts}": [
       "prettier --write"
     ]
+  },
+  "dependencies": {
+    "shuffle": "^0.2.5"
   }
 }
