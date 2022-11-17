@@ -81,7 +81,7 @@ export const VideoSystem: CreateSystemFunctionType = async (world) => {
           context,
           position.x - camera.pos.x,
           position.y - camera.pos.y,
-          velocity.x < 0,
+          velocity.x === 0 ? position.x > 128 : velocity.x < 0,
         )
       }
     }
