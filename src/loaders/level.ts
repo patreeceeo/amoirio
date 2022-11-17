@@ -20,6 +20,7 @@ import {
   checkComponent,
   getComponent,
 } from '../EntityFunctions'
+import { Spawner } from '../Spawner'
 
 function createTimer() {
   const timer = new DeprecatedEntity()
@@ -98,16 +99,11 @@ function setupEntities(
   entityFactory: EntityFactoryDict,
 ) {
   levelSpec.entities.forEach(({ name, pos: [x, y] }) => {
-    const createEntityPrefab = entityFactory[name]
-    if (!createEntityPrefab) {
-      throw new Error(`Could not find factory function for entity "${name}"`)
-    }
-
-    const [entity] = createEntityPrefab()
-    if (entity === -1) debugger
-    checkComponent(entity, ComponentName.POSITION)
-    const pos = getComponent(entity, ComponentName.POSITION)
-    pos.set(x, y)
+    const spawnerEntity = createEntity()
+    updateEntity(spawnerEntity, {
+      [ComponentName.SPAWNER]: new Spawner(name, 1, []),
+      [ComponentName.POSITION]: new Vec2(x, y),
+    })
   })
 
   // const spriteLayer = createSpriteLayer(level.entities)

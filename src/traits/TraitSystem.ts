@@ -43,18 +43,9 @@ const yCollisionHandlersByTileType: Dict<TileColliderHandler> = {
   [TileType.GROUND]: groundHandlers[1],
 }
 
-function setSpawnInfo(entity: Entity, spawnTime: number) {
-  if (!hasComponent(entity, ComponentName.SPAWN)) {
-    updateEntity(entity, {
-      [ComponentName.SPAWN]: { spawnTime },
-    })
-  }
-}
-
 export const TraitSystem: CreateSystemFunctionType = async (world) => {
   world.events.listen(EventName.WORLD_INIT, () => {
     for (const entity of queryAll()) {
-      setSpawnInfo(entity, world.fixedElapsedSeconds)
       if (hasComponent(entity, ComponentName.TILE_MATRIX)) {
         const matrix = getComponent(entity, ComponentName.TILE_MATRIX)
         tileCollider.addGrid(matrix)

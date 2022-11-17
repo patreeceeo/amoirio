@@ -24,6 +24,7 @@ import { TraitSystem } from './traits/TraitSystem'
 import { InputSystem } from './input/InputSystem'
 import { TimerSystem } from './TimerSystem'
 import { loadFont } from './loaders/font'
+import { SpawnSystem } from './SpawnSystem'
 
 /** @deprecated */
 function getVideoContext(canvas: HTMLCanvasElement): CanvasRenderingContext2D {
@@ -50,6 +51,7 @@ async function createLoop(
 ): Promise<Timer> {
   const timer = new Timer()
 
+  await SpawnSystem(world)
   await TimerSystem(world)
   await AudioSystem(world)
   await TraitSystem(world)

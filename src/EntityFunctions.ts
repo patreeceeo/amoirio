@@ -13,6 +13,7 @@ import { PendulumMove } from './traits/PendulumMove'
 import { Killable } from './traits/Killable'
 import { Stomper } from './traits/Stomper'
 import { KoopaBehavior } from './entities/Koopa'
+import { Spawner } from './Spawner'
 
 export type Entity = number
 
@@ -36,6 +37,7 @@ export enum ComponentName {
   STOMPER = 'stomper',
   KOOPA_BEHAV = 'koopa_behav',
   SPAWN = 'spawn',
+  SPAWNER = 'spawner',
   IS_A = 'is_a',
   IS_B = 'is_b',
 }
@@ -62,6 +64,7 @@ type ComponentType = {
   [ComponentName.STOMPER]: Stomper
   [ComponentName.KOOPA_BEHAV]: KoopaBehavior
   [ComponentName.SPAWN]: SpawnInfo
+  [ComponentName.SPAWNER]: Spawner
 }
 
 type ComponentData<
@@ -91,6 +94,10 @@ export function createEntity() {
   _allEntities.push(created)
   _nextEntity++
   return created
+}
+
+export function isEntity(candidate: Entity) {
+  return _allEntities.includes(candidate)
 }
 
 function clearObject(o: object) {
