@@ -86,13 +86,18 @@ export class KoopaBehavior extends Trait {
   handleNudge(us: Entity, them: Entity) {
     const kill = () => {
       if (hasComponent(them, ComponentName.KILLABLE)) {
+        const killable = getComponent(them, ComponentName.KILLABLE)
         if (hasComponent(them, ComponentName.IS_A)) {
           const scoreKeeper = query([ComponentName.SCORE])[0]
           const score = getComponent(scoreKeeper, ComponentName.SCORE)
           if (!isBig(score)) {
-            getComponent(them, ComponentName.KILLABLE).dead = true
+            killable.dead = true
           }
           score.expenses += 100
+        }
+
+        if (hasComponent(them, ComponentName.IS_B)) {
+          killable.dead = true
         }
       }
     }
