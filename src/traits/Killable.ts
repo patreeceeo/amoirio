@@ -5,7 +5,8 @@ import { Entity } from '../EntityFunctions'
 export class Killable extends Trait {
   dead = false
   deadTime = 0
-  removeAfter = 2
+  hurtTime = 0
+  removeAfter = 1.5
   kicked = false
 
   kill() {

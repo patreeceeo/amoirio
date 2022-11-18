@@ -89,6 +89,11 @@ export const TraitSystem: CreateSystemFunctionType = async (world) => {
             deleteEntity(entity)
           }
         }
+
+        killable.hurtTime = Math.max(
+          0,
+          killable.hurtTime - world.fixedDeltaSeconds,
+        )
       }
 
       if (world.bigMomentTimer > 0) {
@@ -148,7 +153,8 @@ export const TraitSystem: CreateSystemFunctionType = async (world) => {
 
       if (
         hasComponent(entity, ComponentName.GO) &&
-        !getComponent(entity, ComponentName.KILLABLE)?.dead
+        !getComponent(entity, ComponentName.KILLABLE)?.dead &&
+        getComponent(entity, ComponentName.KILLABLE)?.hurtTime === 0
       ) {
         const go = getComponent(entity, ComponentName.GO)
 

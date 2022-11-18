@@ -92,6 +92,8 @@ export class KoopaBehavior extends Trait {
           const score = getComponent(scoreKeeper, ComponentName.SCORE)
           if (!isBig(score)) {
             killable.dead = true
+          } else {
+            killable.hurtTime = 0.75
           }
           score.expenses += 100
         }

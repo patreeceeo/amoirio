@@ -32,6 +32,10 @@ const _animators: AnimatorDict = Object.freeze({
     checkComponent(entity, ComponentName.KILLABLE)
     const killable = getComponent(entity, ComponentName.KILLABLE)
 
+    if (killable.hurtTime > 0) {
+      return SpriteName.MARIO_DEAD
+    }
+
     if (killable.dead) {
       return SpriteName.MARIO_DEAD
     }
