@@ -6,7 +6,7 @@ import { EventName } from '../EventEmitter'
 const handleX: TileColliderHandler = (entity, match, world) => {
   const vel = getComponent(entity, ComponentName.VELOCITY)
   const bounds = getComponent(entity, ComponentName.BOUNDING_BOX)
-  if (vel.y > 1500 * world.fixedDeltaSeconds) {
+  if (vel.y >= 1500 * world.fixedDeltaSeconds && bounds.bottom <= match.y1) {
     if (vel.x > 0) {
       if (bounds.right > match.x1) {
         // entity.obstruct(Side.right, match)
