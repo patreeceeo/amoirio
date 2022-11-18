@@ -42,7 +42,7 @@ export class KoopaBehavior extends Trait {
       return
     }
     if (hasComponent(them, ComponentName.KILLABLE)) {
-      if (world.fixedElapsedSeconds - this.lastCollisionTime <= 1) return
+      if (world.fixedElapsedSeconds - this.lastCollisionTime <= 0.5) return
 
       this.lastCollisionTime = world.fixedElapsedSeconds
     }
