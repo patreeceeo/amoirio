@@ -24,7 +24,7 @@ export type LevelSpecPatterns = {
 }
 
 export enum TileType {
-  BRICK = 'brick',
+  BRICK = 'bricks',
   COIN = 'coin',
   GROUND = 'ground',
   PLANT = 'plant',

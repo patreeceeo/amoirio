@@ -13,7 +13,6 @@ import {
 } from '../EntityFunctions'
 import { TileCollider, TileColliderHandler } from '../TileCollider'
 // TODO reorganize/refactor handlers
-import { coin as coinHandlers } from '../tiles/coin'
 import { brick as brickHandlers } from '../tiles/brick'
 import { ground as groundHandlers } from '../tiles/ground'
 import { TileType } from '../loaders/types'
@@ -39,12 +38,10 @@ const SCREEN_SIZE = 256
 
 const xCollisionHandlersByTileType: Dict<TileColliderHandler> = {
   [TileType.BRICK]: brickHandlers[0],
-  [TileType.COIN]: coinHandlers[0],
   [TileType.GROUND]: groundHandlers[0],
 }
 const yCollisionHandlersByTileType: Dict<TileColliderHandler> = {
   [TileType.BRICK]: brickHandlers[1],
-  [TileType.COIN]: coinHandlers[1],
   [TileType.GROUND]: groundHandlers[1],
 }
 
