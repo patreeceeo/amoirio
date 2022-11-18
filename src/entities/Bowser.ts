@@ -27,11 +27,11 @@ export async function loadBowser(_audioContext: AudioContext) {
     const pos = new Vec2()
     const size = new Vec2(20, 32)
     const jump = new Jump()
-    jump.velocity = 175
-    jump.duration = 0.15
+    jump.velocity = 188
+    jump.duration = 0.18
     const go = new Go()
     go.acceleration = 120
-    go.deceleration = 70
+    go.deceleration = 90
     go.offsetLeft = 10
     updateEntity(entity, {
       [ComponentName.INPUT_RECEIVER]: true,
