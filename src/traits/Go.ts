@@ -45,14 +45,17 @@ export class Go extends Trait {
 }
 
 export function isFacingLeft(entity: Entity) {
-  const hasVelocity = hasComponent(entity, ComponentName.VELOCITY)
-  const velocity = hasVelocity
-    ? getComponent(entity, ComponentName.VELOCITY)
-    : V2_0
-  checkComponent(entity, ComponentName.POSITION)
-  const position = getComponent(entity, ComponentName.POSITION)
+  if (hasComponent(entity, ComponentName.GO)) {
+    const go = getComponent(entity, ComponentName.GO)
 
-  return velocity.x === 0 ? position.x > 128 : velocity.x < 0
+    return go.heading < 0
+  }
+  if (hasComponent(entity, ComponentName.PENDULUM_MOVE)) {
+    const go = getComponent(entity, ComponentName.PENDULUM_MOVE)
+
+    return go.speed < 0
+  }
+  return true
 }
 
 export function getDir(go: Go) {

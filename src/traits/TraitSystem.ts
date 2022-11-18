@@ -21,7 +21,7 @@ import { Side } from '../Entity'
 import { TileResolverMatch } from '../TileResolver'
 import { ControlSignalState, ControlSignalType } from '../input/InputSystem'
 import { CollectableType } from '../Collectable'
-import { isFacingLeft, getDir } from './Go'
+import { getDir } from './Go'
 import {
   ShroomState,
   ShroomStateSprite,
