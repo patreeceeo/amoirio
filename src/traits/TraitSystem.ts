@@ -413,10 +413,15 @@ export const TraitSystem: CreateSystemFunctionType = async (world) => {
             break
           case ControlSignalType.BOWSER_SHROOM:
             if (hasComponent(entity, ComponentName.IS_B)) {
+              const scoreKeeper = query([ComponentName.SCORE])[0]
+              const score = getComponent(scoreKeeper, ComponentName.SCORE)
               checkComponent(entity, ComponentName.SPAWNER)
               const spawner = getComponent(entity, ComponentName.SPAWNER)
 
-              if (signalState === ControlSignalState.STARTED) {
+              if (
+                signalState === ControlSignalState.STARTED &&
+                score.shroomForecast > 0
+              ) {
                 spawner.countLimit = 8
               }
               if (signalState === ControlSignalState.ENDED) {
