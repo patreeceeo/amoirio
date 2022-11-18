@@ -18,6 +18,7 @@ import {
 } from '../EntityFunctions'
 import { AnimationCollectionName } from '../AnimationFunctions'
 import { World } from '../World'
+import { V2_0 } from '../math'
 
 export enum KoopaState {
   walking = 'walking',
@@ -46,15 +47,14 @@ export class KoopaBehavior extends Trait {
     checkComponent(us, ComponentName.VELOCITY)
     const velUs = getComponent(us, ComponentName.VELOCITY)
 
-    if (hasComponent(them, ComponentName.STOMPER)) {
-      checkComponent(them, ComponentName.VELOCITY)
-      const velThem = getComponent(them, ComponentName.VELOCITY)
+    const velThem = getComponent(them, ComponentName.VELOCITY) || V2_0
 
-      if (velThem.y - velUs.y > 25) {
+    if (velThem.y - velUs.y > 25) {
+      if (hasComponent(them, ComponentName.STOMPER)) {
         this.handleStomp(us, them)
-      } else {
-        this.handleNudge(us, them)
       }
+    } else {
+      this.handleNudge(us, them)
     }
   }
 
