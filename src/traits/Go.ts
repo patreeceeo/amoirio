@@ -8,6 +8,7 @@ import {
 } from '../EntityFunctions'
 import { World } from '../World'
 import { V2_0 } from '../math'
+import { ControlSignalState } from '../input/InputSystem'
 
 export class Go extends Trait {
   dir = 0
@@ -16,6 +17,8 @@ export class Go extends Trait {
   heading = 1
   dragFactor = 1 / 5000
   deceleration = 300
+  leftState = ControlSignalState.ENDED
+  rightState = ControlSignalState.ENDED
 
   update(entity: Entity, world: World) {
     // const absX = Math.abs(entity.vel.x)
@@ -50,4 +53,10 @@ export function isFacingLeft(entity: Entity) {
   const position = getComponent(entity, ComponentName.POSITION)
 
   return velocity.x === 0 ? position.x > 128 : velocity.x < 0
+}
+
+export function getDir(go: Go) {
+  const leftState = go.leftState === ControlSignalState.STARTED ? 1 : 0
+  const rightState = go.rightState === ControlSignalState.STARTED ? 1 : 0
+  return rightState - leftState
 }

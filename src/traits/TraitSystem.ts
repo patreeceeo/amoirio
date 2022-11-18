@@ -21,7 +21,7 @@ import { Side } from '../Entity'
 import { TileResolverMatch } from '../TileResolver'
 import { ControlSignalState, ControlSignalType } from '../input/InputSystem'
 import { CollectableType } from '../Collectable'
-import { isFacingLeft } from './Go'
+import { isFacingLeft, getDir } from './Go'
 import {
   ShroomState,
   ShroomStateSprite,
@@ -35,9 +35,6 @@ const tileCollider = new TileCollider()
 const GRAVITY = 1500
 
 const SCREEN_SIZE = 256
-
-let leftState = 0
-let rightState = 0
 
 const xCollisionHandlersByTileType: Dict<TileColliderHandler> = {
   [TileType.BRICK]: brickHandlers[0],
@@ -395,12 +392,12 @@ export const TraitSystem: CreateSystemFunctionType = async (world) => {
         }
         switch (signalType) {
           case leftSignal:
-            leftState = signalState === ControlSignalState.STARTED ? 1 : 0
-            go.dir = rightState - leftState
+            go.leftState = signalState
+            go.dir = getDir(go)
             break
           case rightSignal:
-            rightState = signalState === ControlSignalState.STARTED ? 1 : 0
-            go.dir = rightState - leftState
+            go.rightState = signalState
+            go.dir = getDir(go)
             break
           case jumpSignal:
             const jump = getComponent(entity, ComponentName.JUMP)
