@@ -1,3 +1,10 @@
+export enum CollectableType {
+  SHROOM = 'shroom',
+  PLANT = 'plant',
+}
 export class Collectable {
-  value = 50
+  constructor(
+    public readonly value: number,
+    public readonly type: CollectableType,
+  ) {}
 }

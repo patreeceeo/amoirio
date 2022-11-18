@@ -11,7 +11,7 @@ import { Vec2 } from '../math'
 import { BoundingBox } from '../BoundingBox'
 import { PendulumMove } from '../traits/PendulumMove'
 import { SpriteName } from '../SpriteSheet'
-import { Collectable } from '../Collectable'
+import { Collectable, CollectableType } from '../Collectable'
 
 export async function loadShroom(_audioContext: AudioContext) {
   const sprites = await loadSpriteSheet('shrooms')
@@ -33,7 +33,7 @@ export async function loadShroom(_audioContext: AudioContext) {
       [ComponentName.BOUNDING_BOX]: new BoundingBox(pos, size, new Vec2()),
       [ComponentName.SOLID]: new Solid(),
       [ComponentName.PENDULUM_MOVE]: move,
-      [ComponentName.COLLECTABLE]: new Collectable(),
+      [ComponentName.COLLECTABLE]: new Collectable(50, CollectableType.SHROOM),
     })
 
     return [entity, null!]

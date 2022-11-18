@@ -69,7 +69,7 @@ export const VideoSystem: CreateSystemFunctionType = async (world) => {
 
   function pauseStatusLayer() {
     if (world.state === WorldState.PAUSE) {
-      font.print('PAUSE', context, font.size * 26, font.size)
+      font.print('PAUSE', context, font.size * (16 - 2.5), font.size)
     }
   }
 

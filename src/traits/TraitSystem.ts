@@ -20,6 +20,7 @@ import { TileType } from '../loaders/types'
 import { Side } from '../Entity'
 import { TileResolverMatch } from '../TileResolver'
 import { ControlSignalState, ControlSignalType } from '../input/InputSystem'
+import { CollectableType } from '../Collectable'
 
 // TODO this should probably broken up into multiple more focused systems
 
@@ -303,14 +304,24 @@ export const TraitSystem: CreateSystemFunctionType = async (world) => {
     // }
 
     if (
-      hasComponent(us, ComponentName.COLLECTABLE) &&
-      hasComponent(them, ComponentName.IS_A) &&
-      !getComponent(them, ComponentName.KILLABLE).dead
+      hasComponent(them, ComponentName.COLLECTABLE) &&
+      !getComponent(us, ComponentName.KILLABLE).dead
     ) {
-      const collectable = getComponent(us, ComponentName.COLLECTABLE)
-      deleteEntity(us)
-      getComponent(scoreKeeper, ComponentName.SCORE).revenue +=
-        collectable.value
+      const collectable = getComponent(them, ComponentName.COLLECTABLE)
+      deleteEntity(them)
+      switch (collectable.type) {
+        case CollectableType.SHROOM:
+          if (hasComponent(us, ComponentName.IS_A)) {
+            getComponent(scoreKeeper, ComponentName.SCORE).revenue +=
+              collectable.value
+          }
+          break
+        case CollectableType.PLANT:
+          if (hasComponent(us, ComponentName.IS_B)) {
+            getComponent(scoreKeeper, ComponentName.SCORE).shroomForecast +=
+              collectable.value
+          }
+      }
     }
   })
 

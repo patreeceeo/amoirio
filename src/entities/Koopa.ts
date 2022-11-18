@@ -46,13 +46,15 @@ export class KoopaBehavior extends Trait {
     checkComponent(us, ComponentName.VELOCITY)
     const velUs = getComponent(us, ComponentName.VELOCITY)
 
-    checkComponent(them, ComponentName.VELOCITY)
-    const velThem = getComponent(them, ComponentName.VELOCITY)
+    if (hasComponent(them, ComponentName.STOMPER)) {
+      checkComponent(them, ComponentName.VELOCITY)
+      const velThem = getComponent(them, ComponentName.VELOCITY)
 
-    if (velThem.y - velUs.y > 25 && hasComponent(them, ComponentName.STOMPER)) {
-      this.handleStomp(us, them)
-    } else {
-      this.handleNudge(us, them)
+      if (velThem.y - velUs.y > 25) {
+        this.handleStomp(us, them)
+      } else {
+        this.handleNudge(us, them)
+      }
     }
   }
 

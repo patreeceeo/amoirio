@@ -27,6 +27,7 @@ export enum TileType {
   BRICK = 'brick',
   COIN = 'coin',
   GROUND = 'ground',
+  PLANT = 'plant',
 }
 
 export type LevelSpecTile = {

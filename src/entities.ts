@@ -8,6 +8,7 @@ import { Dict } from './types'
 import { Entity } from './EntityFunctions'
 import { loadBowser } from './entities/Bowser'
 import { loadShroom } from './entities/Shroom'
+import { loadPlant } from './entities/Plant'
 
 export type EntityFactory = () => [Entity, DeprecatedEntity]
 
@@ -30,6 +31,7 @@ export async function loadEntities(
     loadCannon(audioContext).then(addAs('cannon')),
     loadBowser(audioContext).then(addAs('bowser')),
     loadShroom(audioContext).then(addAs('shroom')),
+    loadPlant(audioContext).then(addAs('plant')),
   ])
 
   return factories
