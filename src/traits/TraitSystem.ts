@@ -22,6 +22,11 @@ import { TileResolverMatch } from '../TileResolver'
 import { ControlSignalState, ControlSignalType } from '../input/InputSystem'
 import { CollectableType } from '../Collectable'
 import { isFacingLeft } from './Go'
+import {
+  ShroomState,
+  ShroomStateSprite,
+  ShroomStateValue,
+} from '../entities/Shroom'
 
 // TODO this should probably broken up into multiple more focused systems
 
@@ -247,6 +252,22 @@ export const TraitSystem: CreateSystemFunctionType = async (world) => {
           spawner.countLimit = 0
         }
       }
+      if (hasComponent(entity, ComponentName.SHROOM)) {
+        const spawnInfo = getComponent(entity, ComponentName.SPAWN)
+        const shroom = getComponent(entity, ComponentName.SHROOM)
+        if (shroom < ShroomState.RED) {
+          const newState = Math.min(
+            ShroomState.RED,
+            Math.floor((world.fixedElapsedSeconds - spawnInfo.spawnTime) / 5),
+          )
+          updateEntity(entity, {
+            [ComponentName.SHROOM]: newState,
+            [ComponentName.SPRITE]: ShroomStateSprite[newState],
+          })
+          getComponent(entity, ComponentName.COLLECTABLE).value =
+            ShroomStateValue[newState]
+        }
+      }
     }
   }) // WORLD_FIXED_STEP
 
@@ -338,6 +359,15 @@ export const TraitSystem: CreateSystemFunctionType = async (world) => {
               collectable.value
           }
       }
+    }
+
+    if (
+      hasComponent(them, ComponentName.SHROOM) &&
+      getComponent(them, ComponentName.SHROOM) === ShroomState.DEATH &&
+      getComponent(us, ComponentName.IS_A)
+    ) {
+      checkComponent(us, ComponentName.KILLABLE)
+      getComponent(us, ComponentName.KILLABLE).dead = true
     }
   })
 

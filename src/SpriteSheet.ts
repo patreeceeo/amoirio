@@ -33,6 +33,10 @@ export enum SpriteName {
   OVERWORLD_COIN_2 = 'coin-2',
   OVERWORLD_COIN_3 = 'coin-3',
   SHROOM_RED = 'red',
+  SHROOM_GREEN = 'green',
+  SHROOM_DEATH = 'death',
+  SHROOM_BLUE = 'blue',
+  PLANT = 'idle',
 }
 
 export class SpriteSheet {

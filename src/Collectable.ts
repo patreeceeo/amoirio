@@ -3,8 +3,5 @@ export enum CollectableType {
   PLANT = 'plant',
 }
 export class Collectable {
-  constructor(
-    public readonly value: number,
-    public readonly type: CollectableType,
-  ) {}
+  constructor(public value: number, public readonly type: CollectableType) {}
 }

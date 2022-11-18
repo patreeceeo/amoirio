@@ -16,6 +16,7 @@ import { KoopaBehavior } from './entities/Koopa'
 import { Spawner } from './Spawner'
 import { ScoreKeeper } from './ScoreKeeper'
 import { Collectable } from './Collectable'
+import { ShroomState } from './entities/Shroom'
 
 export type Entity = number
 
@@ -45,6 +46,7 @@ export enum ComponentName {
   IS_B = 'is_b',
   SCORE = 'score',
   COLLECTABLE = 'collectable',
+  SHROOM = 'shroom',
 }
 
 type ComponentType = {
@@ -73,6 +75,7 @@ type ComponentType = {
   [ComponentName.SPAWN]: SpawnInfo
   [ComponentName.SPAWNER]: Spawner
   [ComponentName.SCORE]: ScoreKeeper
+  [ComponentName.SHROOM]: ShroomState
 }
 
 type ComponentData<
