@@ -299,7 +299,7 @@ export const TraitSystem: CreateSystemFunctionType = async (world) => {
                 const otherVel = getComponent(candidate, ComponentName.VELOCITY)
 
                 if (otherSolid.isGrounded > 0) {
-                  otherVel.y = -1 * vel.y
+                  otherVel.y = (-1 * vel.y) / 4
                 }
               }
 
