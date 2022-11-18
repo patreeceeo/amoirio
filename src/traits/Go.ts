@@ -19,6 +19,8 @@ export class Go extends Trait {
   deceleration = 300
   leftState = ControlSignalState.ENDED
   rightState = ControlSignalState.ENDED
+  offsetLeft = 0
+  offsetRight = 0
 
   update(entity: Entity, world: World) {
     // const absX = Math.abs(entity.vel.x)

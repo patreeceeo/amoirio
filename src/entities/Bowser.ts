@@ -25,13 +25,14 @@ export async function loadBowser(_audioContext: AudioContext) {
     const entity = createNamedEntity('BOWSER')
 
     const pos = new Vec2()
-    const size = new Vec2(32, 32)
+    const size = new Vec2(20, 32)
     const jump = new Jump()
-    jump.velocity = 100
+    jump.velocity = 175
     jump.duration = 0.15
     const go = new Go()
     go.acceleration = 120
     go.deceleration = 70
+    go.offsetLeft = 10
     updateEntity(entity, {
       [ComponentName.INPUT_RECEIVER]: true,
       [ComponentName.IS_B]: true,

@@ -21,7 +21,7 @@ import { Side } from '../Entity'
 import { TileResolverMatch } from '../TileResolver'
 import { ControlSignalState, ControlSignalType } from '../input/InputSystem'
 import { CollectableType } from '../Collectable'
-import { getDir } from './Go'
+import { getDir, isFacingLeft } from './Go'
 import {
   ShroomState,
   ShroomStateSprite,
@@ -176,6 +176,10 @@ export const TraitSystem: CreateSystemFunctionType = async (world) => {
         vel.x -= drag
 
         go.distance += absX * world.fixedDeltaSeconds
+
+        checkComponent(entity, ComponentName.BOUNDING_BOX)
+        const offset = getComponent(entity, ComponentName.BOUNDING_BOX).offset
+        offset.x = isFacingLeft(entity) ? go.offsetLeft : go.offsetRight
       }
 
       if (hasComponent(entity, ComponentName.JUMP)) {
