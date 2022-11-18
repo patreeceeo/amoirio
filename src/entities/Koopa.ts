@@ -93,7 +93,7 @@ export class KoopaBehavior extends Trait {
       }
     }
 
-    const velThem = getComponent(them, ComponentName.VELOCITY)
+    const velThem = getComponent(them, ComponentName.VELOCITY) || V2_0
 
     if (this.state === KoopaState.walking) {
       if (hasComponent(them, ComponentName.IS_A)) {
