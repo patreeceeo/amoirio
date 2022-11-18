@@ -31,6 +31,8 @@ export class KoopaBehavior extends Trait {
   hideTime = 0
   hideDuration = 5
   panicSpeed = 150
+  panicTime = 0
+  panicDuration = 15
   walkSpeed?: number
   lastCollisionTime = -Infinity
 
@@ -144,6 +146,7 @@ export class KoopaBehavior extends Trait {
     walk.enabled = true
 
     this.state = KoopaState.panic
+    this.panicTime = 0
   }
 
   update(us: Entity, world: World) {
@@ -151,6 +154,13 @@ export class KoopaBehavior extends Trait {
       this.hideTime += world.fixedDeltaSeconds
 
       if (this.hideTime > this.hideDuration) {
+        this.unhide(us)
+      }
+    }
+    if (this.state === KoopaState.panic) {
+      this.panicTime += world.fixedDeltaSeconds
+
+      if (this.panicTime > this.panicDuration) {
         this.unhide(us)
       }
     }
