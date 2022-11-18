@@ -27,6 +27,8 @@ import {
   ShroomStateValue,
 } from '../entities/Shroom'
 import { KoopaState } from '../entities/Koopa'
+import { isBig } from '../ScoreKeeper'
+import { AnimationCollectionName } from '../AnimationFunctions'
 
 // TODO this should probably broken up into multiple more focused systems
 
@@ -245,10 +247,9 @@ export const TraitSystem: CreateSystemFunctionType = async (world) => {
 
       // Prevent spawning more shrooms than the score allows for
 
+      const scoreKeeper = query([ComponentName.SCORE])[0]
+      const score = getComponent(scoreKeeper, ComponentName.SCORE)
       if (hasComponent(entity, ComponentName.IS_B)) {
-        const scoreKeeper = query([ComponentName.SCORE])[0]
-        const score = getComponent(scoreKeeper, ComponentName.SCORE)
-
         checkComponent(entity, ComponentName.SPAWNER)
         const spawner = getComponent(entity, ComponentName.SPAWNER)
 

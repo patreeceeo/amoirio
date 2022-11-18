@@ -19,6 +19,7 @@ import {
 import { AnimationCollectionName } from '../AnimationFunctions'
 import { World } from '../World'
 import { V2_0 } from '../math'
+import { isBig } from '../ScoreKeeper'
 
 export enum KoopaState {
   walking = 'walking',
@@ -88,7 +89,7 @@ export class KoopaBehavior extends Trait {
         if (hasComponent(them, ComponentName.IS_A)) {
           const scoreKeeper = query([ComponentName.SCORE])[0]
           const score = getComponent(scoreKeeper, ComponentName.SCORE)
-          if (score.revenue - score.expenses < 50) {
+          if (!isBig(score)) {
             getComponent(them, ComponentName.KILLABLE).dead = true
           }
           score.expenses += 100

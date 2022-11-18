@@ -7,6 +7,7 @@ export enum AnimationName {
   KOOPA_WALK = 'walk',
   KOOPA_WAKE = 'wake',
   MARIO_RUN = 'run',
+  MARIO_RUN_BIG = 'run-big',
   OVERWORLD_CHANCE = 'chance',
   OVERWORLD_COIN = 'coin',
   BULLET = 'bullet',
@@ -16,6 +17,7 @@ export enum AnimationName {
 
 export enum AnimationCollectionName {
   MARIO = 'mario',
+  MARIO_BIG = 'mario-big',
   KOOPA = 'koopa',
   GOOMBA = 'goomba',
   BULLET = 'bullet',
@@ -37,6 +39,7 @@ export type AnimationCollection = {
 
 const animationCollections = {
   [AnimationCollectionName.MARIO]: [AnimationName.MARIO_RUN],
+  [AnimationCollectionName.MARIO_BIG]: [AnimationName.MARIO_RUN_BIG],
   [AnimationCollectionName.KOOPA]: [
     AnimationName.KOOPA_WAKE,
     AnimationName.KOOPA_WALK,

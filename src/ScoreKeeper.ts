@@ -3,3 +3,7 @@ export class ScoreKeeper {
   expenses = 0
   shroomForecast = 0
 }
+
+export function isBig(score: ScoreKeeper) {
+  return score.revenue - score.expenses >= 50
+}

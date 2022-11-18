@@ -50,6 +50,30 @@ const _animators: AnimatorDict = Object.freeze({
 
     return SpriteName.MARIO_IDLE
   },
+  [AnimationCollectionName.MARIO_BIG]: (entity, _time) => {
+    checkComponent(entity, ComponentName.JUMP)
+    const jump = getComponent(entity, ComponentName.JUMP)
+
+    checkComponent(entity, ComponentName.GO)
+    const go = getComponent(entity, ComponentName.GO)
+
+    checkComponent(entity, ComponentName.VELOCITY)
+    const vel = getComponent(entity, ComponentName.VELOCITY)
+
+    if (jump.engageTime > 0 || jump.falling) {
+      return SpriteName.MARIO_JUMP_BIG
+    }
+
+    if (go.distance > 0) {
+      if ((vel.x > 0 && go.dir < 0) || (vel.x < 0 && go.dir > 0)) {
+        return SpriteName.MARIO_BRAKE_BIG
+      }
+
+      return defaultAnimator(entity, go.distance)
+    }
+
+    return SpriteName.MARIO_IDLE_BIG
+  },
   [AnimationCollectionName.BOWSER]: (entity, _time) => {
     checkComponent(entity, ComponentName.GO)
     const go = getComponent(entity, ComponentName.GO)
