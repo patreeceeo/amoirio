@@ -9,8 +9,10 @@ import {
   getComponent,
   checkComponent,
   isEntity,
+  query,
 } from './EntityFunctions'
 import { shuffle } from 'lodash'
+import { isFacingLeft } from './traits/Go'
 
 function countLivingEntities(ents: Array<Entity>) {
   return ents.filter(isEntity).length
@@ -25,17 +27,21 @@ export const SpawnSystem: CreateSystemFunctionType = async (world) => {
         const spawner = getComponent(entity, ComponentName.SPAWNER)
 
         if (
-          countLivingEntities(broods[spawner.prefab] || []) < spawner.minCount
+          countLivingEntities(broods[spawner.prefab] || []) < spawner.countLimit
         ) {
           spawner.timer += world.fixedDeltaSeconds
 
-          if (spawner.timer >= spawner.respawnDelay) {
+          if (
+            spawner.timer >= spawner.throttle ||
+            (spawner.leadingEdge && !spawner.hasSpawned)
+          ) {
             spawner.timer = 0
+            spawner.hasSpawned = true
 
             const createEntityPrefab = world.prefabs![spawner.prefab]
             if (!createEntityPrefab) {
               throw new Error(
-                `Could not find factory function for entity "${name}"`,
+                `Could not find factory function for entity "${spawner.prefab}"`,
               )
             }
 
@@ -54,6 +60,21 @@ export const SpawnSystem: CreateSystemFunctionType = async (world) => {
               // [ComponentName.POSITION]: new Vec2(pos.x, pos.y),
               [ComponentName.SPAWN]: { spawnTime: world.fixedElapsedSeconds },
             })
+
+            // Update score
+            if (spawner.prefab === 'shroom') {
+              const scoreKeeper = query([ComponentName.SCORE])[0]
+              const score = getComponent(scoreKeeper, ComponentName.SCORE)
+
+              score.shroomForecast -= 1
+
+              const bowser = query([ComponentName.IS_B])[0]
+
+              getComponent(
+                spawnedEntity,
+                ComponentName.PENDULUM_MOVE,
+              ).speed *= isFacingLeft(bowser) ? -1 : 1
+            }
           }
         }
       }

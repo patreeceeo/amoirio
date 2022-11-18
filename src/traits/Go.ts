@@ -1,6 +1,13 @@
 import { Trait } from '../Trait'
-import { Entity } from '../EntityFunctions'
+import {
+  Entity,
+  hasComponent,
+  ComponentName,
+  checkComponent,
+  getComponent,
+} from '../EntityFunctions'
 import { World } from '../World'
+import { V2_0 } from '../math'
 
 export class Go extends Trait {
   dir = 0
@@ -32,4 +39,15 @@ export class Go extends Trait {
     // entity.vel.x -= drag
     // this.distance += absX * deltaTime
   }
+}
+
+export function isFacingLeft(entity: Entity) {
+  const hasVelocity = hasComponent(entity, ComponentName.VELOCITY)
+  const velocity = hasVelocity
+    ? getComponent(entity, ComponentName.VELOCITY)
+    : V2_0
+  checkComponent(entity, ComponentName.POSITION)
+  const position = getComponent(entity, ComponentName.POSITION)
+
+  return velocity.x === 0 ? position.x > 128 : velocity.x < 0
 }

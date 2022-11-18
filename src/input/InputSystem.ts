@@ -10,6 +10,7 @@ export enum ControlSignalType {
   BOWSER_LEFT = 'bowser-left',
   BOWSER_RIGHT = 'bowser-right',
   BOWSER_JUMP = 'bowser-jump',
+  BOWSER_SHROOM = 'bowser-shroom',
   TURBO = 'turbo',
   PLAY_PAUSE = 'play/pause',
 }
@@ -28,6 +29,7 @@ const KeyboardControlMap: Dict<ControlSignalType> = Object.freeze({
   KeyA: ControlSignalType.BOWSER_LEFT,
   KeyD: ControlSignalType.BOWSER_RIGHT,
   KeyW: ControlSignalType.BOWSER_JUMP,
+  KeyS: ControlSignalType.BOWSER_SHROOM,
 })
 
 export const InputSystem: CreateSystemFunctionType = async (world) => {

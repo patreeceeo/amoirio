@@ -13,6 +13,7 @@ import {
 import { AnimationCollectionName } from '../AnimationFunctions'
 import { Vec2 } from '../math'
 import { BoundingBox } from '../BoundingBox'
+import { Spawner } from '../Spawner'
 
 export async function loadBowser(_audioContext: AudioContext) {
   const sprites = await loadSpriteSheet('bowser')
@@ -44,6 +45,7 @@ export async function loadBowser(_audioContext: AudioContext) {
       [ComponentName.BOUNDING_BOX]: new BoundingBox(pos, size, new Vec2()),
       [ComponentName.SOLID]: new Solid(),
       [ComponentName.KILLABLE]: new Killable(),
+      [ComponentName.SPAWNER]: new Spawner('shroom', 0, [], 1),
     })
 
     return [entity, null!]

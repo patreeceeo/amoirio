@@ -3,7 +3,7 @@ import { Trait } from '../Trait'
 import { Entity } from '../EntityFunctions'
 
 export class PendulumMove extends Trait {
-  speed = -30
+  speed = 30
   enabled = true
 
   update(ent: Entity) {

@@ -21,6 +21,7 @@ import { Side } from '../Entity'
 import { TileResolverMatch } from '../TileResolver'
 import { ControlSignalState, ControlSignalType } from '../input/InputSystem'
 import { CollectableType } from '../Collectable'
+import { isFacingLeft } from './Go'
 
 // TODO this should probably broken up into multiple more focused systems
 
@@ -232,8 +233,22 @@ export const TraitSystem: CreateSystemFunctionType = async (world) => {
           }
         }
       }
+
+      // Prevent spawning more shrooms than the score allows for
+
+      if (hasComponent(entity, ComponentName.IS_B)) {
+        const scoreKeeper = query([ComponentName.SCORE])[0]
+        const score = getComponent(scoreKeeper, ComponentName.SCORE)
+
+        checkComponent(entity, ComponentName.SPAWNER)
+        const spawner = getComponent(entity, ComponentName.SPAWNER)
+
+        if (score.shroomForecast <= 0) {
+          spawner.countLimit = 0
+        }
+      }
     }
-  })
+  }) // WORLD_FIXED_STEP
 
   world.events.listen(
     EventName.OBSTRUCT,
@@ -305,19 +320,20 @@ export const TraitSystem: CreateSystemFunctionType = async (world) => {
 
     if (
       hasComponent(them, ComponentName.COLLECTABLE) &&
-      !getComponent(us, ComponentName.KILLABLE).dead
+      !getComponent(us, ComponentName.KILLABLE)?.dead
     ) {
       const collectable = getComponent(them, ComponentName.COLLECTABLE)
-      deleteEntity(them)
       switch (collectable.type) {
         case CollectableType.SHROOM:
           if (hasComponent(us, ComponentName.IS_A)) {
+            deleteEntity(them)
             getComponent(scoreKeeper, ComponentName.SCORE).revenue +=
               collectable.value
           }
           break
         case CollectableType.PLANT:
           if (hasComponent(us, ComponentName.IS_B)) {
+            deleteEntity(them)
             getComponent(scoreKeeper, ComponentName.SCORE).shroomForecast +=
               collectable.value
           }
@@ -365,7 +381,20 @@ export const TraitSystem: CreateSystemFunctionType = async (world) => {
               jump.requestTime = 0
             }
             break
-          // case ControlSignalType.TURBO: TODO?
+          case ControlSignalType.BOWSER_SHROOM:
+            if (hasComponent(entity, ComponentName.IS_B)) {
+              checkComponent(entity, ComponentName.SPAWNER)
+              const spawner = getComponent(entity, ComponentName.SPAWNER)
+
+              if (signalState === ControlSignalState.STARTED) {
+                spawner.countLimit = 8
+              }
+              if (signalState === ControlSignalState.ENDED) {
+                spawner.countLimit = 0
+                // make it spawn immediately again
+                spawner.hasSpawned = false
+              }
+            }
         }
       }
     },

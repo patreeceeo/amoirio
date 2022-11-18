@@ -8,13 +8,14 @@ import {
   ComponentName,
   getComponent,
   hasComponent,
+  checkComponent,
 } from '../EntityFunctions'
 import { createBackgroundLayer } from '../layers/background'
-import { V2_0 } from '../math'
 import { getCurrentSpriteNameForEntity } from '../EntityAnimationFunctions'
 import { createScoreboardLayer } from '../layers/scoreboard'
 import { loadFont } from '../loaders/font'
 import { WorldState } from '../World'
+import { isFacingLeft } from '../traits/Go'
 
 let previousBigMomentTimer = 0
 
@@ -85,10 +86,7 @@ export const VideoSystem: CreateSystemFunctionType = async (world) => {
           world.fixedElapsedSeconds,
         )
         const sprites = getComponent(entity, ComponentName.SPRITE_SHEET)
-        const hasVelocity = hasComponent(entity, ComponentName.VELOCITY)
-        const velocity = hasVelocity
-          ? getComponent(entity, ComponentName.VELOCITY)
-          : V2_0
+        checkComponent(entity, ComponentName.POSITION)
         const position = getComponent(entity, ComponentName.POSITION)
 
         sprites.draw(
@@ -96,7 +94,7 @@ export const VideoSystem: CreateSystemFunctionType = async (world) => {
           context,
           position.x - camera.pos.x,
           position.y - camera.pos.y,
-          velocity.x === 0 ? position.x > 128 : velocity.x < 0,
+          isFacingLeft(entity),
         )
       }
     }
