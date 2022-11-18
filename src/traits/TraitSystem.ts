@@ -60,20 +60,25 @@ export const TraitSystem: CreateSystemFunctionType = async (world) => {
       if (hasComponent(entity, ComponentName.KILLABLE)) {
         const killable = getComponent(entity, ComponentName.KILLABLE)
         if (killable.dead) {
-          if (killable.deadTime === 0) {
-            world.bigMomemtTimer += killable.removeAfter / 2
-            updateEntity(entity, {}, [ComponentName.PHYSICS])
-          }
           if (
-            killable.deadTime > killable.removeAfter / 2 &&
-            !killable.kicked
+            hasComponent(entity, ComponentName.IS_A) ||
+            hasComponent(entity, ComponentName.IS_B)
           ) {
-            killable.kicked = true
-            updateEntity(entity, {
-              [ComponentName.PHYSICS]: true,
-            })
-            getComponent(entity, ComponentName.SOLID).obstructs = false
-            getComponent(entity, ComponentName.VELOCITY).set(0, -400)
+            if (killable.deadTime === 0) {
+              world.bigMomentTimer = killable.removeAfter / 2
+              updateEntity(entity, {}, [ComponentName.PHYSICS])
+            }
+            if (
+              killable.deadTime > killable.removeAfter / 2 &&
+              !killable.kicked
+            ) {
+              killable.kicked = true
+              updateEntity(entity, {
+                [ComponentName.PHYSICS]: true,
+              })
+              getComponent(entity, ComponentName.SOLID).obstructs = false
+              getComponent(entity, ComponentName.VELOCITY).set(0, -400)
+            }
           }
 
           killable.deadTime += world.fixedDeltaSeconds
@@ -84,7 +89,7 @@ export const TraitSystem: CreateSystemFunctionType = async (world) => {
         }
       }
 
-      if (world.bigMomemtTimer > 0) {
+      if (world.bigMomentTimer > 0) {
         return
       }
 
