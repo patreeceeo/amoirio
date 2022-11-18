@@ -26,7 +26,7 @@ export const ShroomStateSprite = [
   SpriteName.SHROOM_RED,
   SpriteName.SHROOM_GREEN,
 ]
-export const ShroomStateValue = [0, 50, 100, 200]
+export const ShroomStateValue = [0, 200, 400, 800]
 
 export async function loadShroom(_audioContext: AudioContext) {
   const sprites = await loadSpriteSheet('shrooms')

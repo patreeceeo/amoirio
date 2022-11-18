@@ -103,9 +103,9 @@ function setupEntities(
     updateEntity(spawnerEntity, {
       [ComponentName.SPAWNER]: new Spawner(
         name,
-        name === 'koopa' ? 3 : 1,
+        name === 'koopa' ? 2 : 1,
         [],
-        name === 'koopa' ? 4 : 2,
+        name === 'koopa' ? 6 : 2,
       ),
       [ComponentName.POSITION]: new Vec2(x, y),
     })
