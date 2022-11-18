@@ -5,6 +5,7 @@ import { Entity } from '../EntityFunctions'
 
 export class Solid extends Trait {
   obstructs = true
+  isGrounded = 0
 
   obstruct(entity: Entity, side: Side, match: TileResolverMatch) {
     // if (!this.obstructs) return

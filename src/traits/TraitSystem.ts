@@ -27,6 +27,7 @@ import {
   ShroomStateSprite,
   ShroomStateValue,
 } from '../entities/Shroom'
+import { KoopaState } from '../entities/Koopa'
 
 // TODO this should probably broken up into multiple more focused systems
 
@@ -284,9 +285,44 @@ export const TraitSystem: CreateSystemFunctionType = async (world) => {
         checkComponent(entity, ComponentName.VELOCITY)
         const vel = getComponent(entity, ComponentName.VELOCITY)
 
+        // Bowser stomp!!!
+        const threshold = GRAVITY * world.fixedDeltaSeconds * 2
+        if (
+          hasComponent(entity, ComponentName.IS_B) &&
+          side === Side.bottom &&
+          vel.y > threshold
+        ) {
+          for (const candidate of queryAll()) {
+            if (entity !== candidate) {
+              if (hasComponent(candidate, ComponentName.PHYSICS)) {
+                checkComponent(candidate, ComponentName.SOLID)
+                const otherSolid = getComponent(candidate, ComponentName.SOLID)
+
+                checkComponent(candidate, ComponentName.VELOCITY)
+                const otherVel = getComponent(candidate, ComponentName.VELOCITY)
+
+                if (otherSolid.isGrounded > 0) {
+                  otherVel.y = -1 * vel.y
+                }
+              }
+
+              if (hasComponent(candidate, ComponentName.KOOPA_BEHAV)) {
+                const behavior = getComponent(
+                  candidate,
+                  ComponentName.KOOPA_BEHAV,
+                )
+                if (behavior.state === KoopaState.walking) {
+                  behavior.hide(candidate)
+                }
+              }
+            }
+          }
+        }
+
         if (solid.obstructs) {
           if (side === Side.bottom) {
             bounds.bottom = match.y1
+            solid.isGrounded = 2
             vel.y = 0
           } else if (side === Side.top) {
             bounds.top = match.y2
@@ -299,6 +335,8 @@ export const TraitSystem: CreateSystemFunctionType = async (world) => {
             vel.x = 0
           }
         }
+
+        solid.isGrounded -= 1
       }
 
       if (hasComponent(entity, ComponentName.JUMP)) {

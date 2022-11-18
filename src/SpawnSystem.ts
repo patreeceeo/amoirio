@@ -54,6 +54,7 @@ export const SpawnSystem: CreateSystemFunctionType = async (world) => {
             broods[spawner.prefab]!.push(spawnedEntity)
 
             // TODO this is a bit of a gotcha. Must update existing position NOT create one, otherwise it will get out of sync with bounding box
+            checkComponent(spawnedEntity, ComponentName.POSITION)
             getComponent(spawnedEntity, ComponentName.POSITION).copy(spawnerPos)
 
             updateEntity(spawnedEntity, {
