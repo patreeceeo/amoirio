@@ -56,10 +56,10 @@ export const VideoSystem: CreateSystemFunctionType = async (world) => {
   world.events.listen(EventName.WORLD_FIXED_STEP, () => {
     // draw one more frame before stopping
     // TODO use WORLD_PAUSE event
-    if (world.bigMomemtTimer > 0 && previousBigMomentTimer > 0) {
+    if (world.bigMomentTimer > 0 && previousBigMomentTimer > 0) {
       return
     }
-    previousBigMomentTimer = world.bigMomemtTimer
+    previousBigMomentTimer = world.bigMomentTimer
     // Actually draw the layers added to the compositor
     compositor.draw(context, camera)
   })
