@@ -30,7 +30,7 @@ export class KoopaBehavior extends Trait {
   state = KoopaState.walking
   hideTime = 0
   hideDuration = 5
-  panicSpeed = 300
+  panicSpeed = 150
   walkSpeed?: number
   lastCollisionTime = -Infinity
 
@@ -41,8 +41,11 @@ export class KoopaBehavior extends Trait {
     if (getComponent(them, ComponentName.KILLABLE)?.dead) {
       return
     }
-    if (world.fixedElapsedSeconds - this.lastCollisionTime <= 1) return
-    this.lastCollisionTime = world.fixedElapsedSeconds
+    if (hasComponent(them, ComponentName.KILLABLE)) {
+      if (world.fixedElapsedSeconds - this.lastCollisionTime <= 1) return
+
+      this.lastCollisionTime = world.fixedElapsedSeconds
+    }
 
     checkComponent(us, ComponentName.VELOCITY)
     const velUs = getComponent(us, ComponentName.VELOCITY)
@@ -66,7 +69,6 @@ export class KoopaBehavior extends Trait {
     if (this.state === KoopaState.walking) {
       this.hide(us)
     } else if (this.state === KoopaState.hiding) {
-      // us.useTrait(Killable, (it) => it.kill())
       checkComponent(us, ComponentName.KILLABLE)
       getComponent(us, ComponentName.KILLABLE).dead = true
 
@@ -81,12 +83,7 @@ export class KoopaBehavior extends Trait {
   handleNudge(us: Entity, them: Entity) {
     const kill = () => {
       if (hasComponent(them, ComponentName.KILLABLE)) {
-        if (
-          hasComponent(them, ComponentName.IS_A) ||
-          this.state === KoopaState.panic
-        ) {
-          getComponent(them, ComponentName.KILLABLE).dead = true
-        }
+        getComponent(them, ComponentName.KILLABLE).dead = true
         if (hasComponent(them, ComponentName.IS_A)) {
           const scoreKeeper = query([ComponentName.SCORE])[0]
           getComponent(scoreKeeper, ComponentName.SCORE).expenses += 200
@@ -97,30 +94,13 @@ export class KoopaBehavior extends Trait {
     const velThem = getComponent(them, ComponentName.VELOCITY)
 
     if (this.state === KoopaState.walking) {
-      kill()
+      if (hasComponent(them, ComponentName.IS_A)) {
+        kill()
+      }
     } else if (this.state === KoopaState.hiding && Math.abs(velThem.x) > 0) {
       this.panic(us, them)
     } else if (this.state === KoopaState.panic) {
-      checkComponent(us, ComponentName.VELOCITY)
-      const vel = getComponent(us, ComponentName.VELOCITY)
-
-      checkComponent(them, ComponentName.VELOCITY)
-      const velThem = getComponent(them, ComponentName.VELOCITY)
-
-      checkComponent(us, ComponentName.POSITION)
-      const posUs = getComponent(us, ComponentName.POSITION)
-
-      checkComponent(them, ComponentName.POSITION)
-      const posThem = getComponent(them, ComponentName.POSITION)
-
-      // const isMoving = Math.sign(vel.x) !== 0
-      const impactDir = posThem.x - posUs.x
-      if (
-        Math.abs(vel.x) > Math.abs(velThem.x) &&
-        Math.sign(impactDir) === Math.sign(vel.x)
-      ) {
-        kill()
-      }
+      kill()
     }
   }
 

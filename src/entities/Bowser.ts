@@ -30,7 +30,8 @@ export async function loadBowser(_audioContext: AudioContext) {
     jump.velocity = 100
     jump.duration = 0.15
     const go = new Go()
-    go.acceleration = 66.6
+    go.acceleration = 120
+    go.deceleration = 70
     updateEntity(entity, {
       [ComponentName.INPUT_RECEIVER]: true,
       [ComponentName.IS_B]: true,
