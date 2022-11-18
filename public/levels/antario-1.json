@@ -8,12 +8,12 @@
       "tiles": [
         {
           "name": "sky",
-          "ranges": [[0, 18, 0, 13]]
+          "ranges": [[0, 18, 0, 16]]
         },
         {
           "name": "ground",
           "type": "ground",
-          "ranges": [[0, 18, 13, 2]]
+          "ranges": [[0, 15, 13, 2]]
         },
         {
           "name": "sky",
@@ -65,7 +65,7 @@
       "tiles": [
         {
           "pattern": "cannon-2h",
-          "ranges": [[6, 7]]
+          "ranges": [[6, 5]]
         }
       ]
     }
@@ -73,16 +73,24 @@
 
   "entities": [
     {
+      "name": "plant",
+      "pos": [80, 192]
+    },
+    {
+      "name": "mario",
+      "pos": [60, 40]
+    },
+    {
+      "name": "mario",
+      "pos": [160, 40]
+    },
+    {
+      "name": "bowser",
+      "pos": [160, 40]
+    },
+    {
       "name": "koopa",
-      "pos": [100, 0]
-    },
-    {
-      "name": "goomba",
-      "pos": [180, 0]
-    },
-    {
-      "name": "cannon",
-      "pos": [96, 112]
+      "pos": [160, 0]
     }
   ],
 
