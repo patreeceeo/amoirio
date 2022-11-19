@@ -6,7 +6,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "poi src/index.html --serve",
-    "build": "poi src/index.html --prod",
+    "build": "poi src/index.html --prod --no-minimize",
     "typecheck": "tsc --noEmit",
     "lint": "eslint src --ext js,ts",
     "format": "prettier --write \"@(src|public)/**/*.@(ts|js|json|html)\"",
