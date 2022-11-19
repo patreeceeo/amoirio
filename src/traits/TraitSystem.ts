@@ -378,14 +378,17 @@ export const TraitSystem: CreateSystemFunctionType = async (world) => {
     }
 
     // TODO should bowser's mere touch be deadly?
-    // if (
-    //   hasComponent(us, ComponentName.IS_B) &&
-    //   hasComponent(them, ComponentName.IS_A)
-    // ) {
-    //   checkComponent(them, ComponentName.KILLABLE)
-    //   getComponent(them, ComponentName.KILLABLE).dead = true
-    //   getComponent(scoreKeeper, ComponentName.SCORE).expenses += 200
-    // }
+    if (
+      hasComponent(us, ComponentName.IS_B) &&
+      hasComponent(them, ComponentName.IS_A)
+    ) {
+      checkComponent(them, ComponentName.KILLABLE)
+      const killable = getComponent(them, ComponentName.KILLABLE)
+      if (!killable.dead) {
+        getComponent(scoreKeeper, ComponentName.SCORE).expenses += 100
+      }
+      killable.dead = true
+    }
 
     if (
       hasComponent(them, ComponentName.COLLECTABLE) &&
@@ -415,7 +418,11 @@ export const TraitSystem: CreateSystemFunctionType = async (world) => {
       getComponent(us, ComponentName.IS_A)
     ) {
       checkComponent(us, ComponentName.KILLABLE)
-      getComponent(us, ComponentName.KILLABLE).dead = true
+      const killable = getComponent(us, ComponentName.KILLABLE)
+      if (!killable.dead) {
+        getComponent(scoreKeeper, ComponentName.SCORE).expenses += 100
+      }
+      killable.dead = true
     }
   })
 

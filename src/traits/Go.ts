@@ -12,11 +12,11 @@ import { ControlSignalState } from '../input/InputSystem'
 
 export class Go extends Trait {
   dir = 0
-  acceleration = 400
+  acceleration = 500
   distance = 0
   heading = 1
-  dragFactor = 1 / 5000
-  deceleration = 300
+  dragFactor = 1 / 4000
+  deceleration = 375
   leftState = ControlSignalState.ENDED
   rightState = ControlSignalState.ENDED
   offsetLeft = 0

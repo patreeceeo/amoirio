@@ -90,12 +90,14 @@ export class KoopaBehavior extends Trait {
         if (hasComponent(them, ComponentName.IS_A)) {
           const scoreKeeper = query([ComponentName.SCORE])[0]
           const score = getComponent(scoreKeeper, ComponentName.SCORE)
+          if (!killable.dead) {
+            score.expenses += 100
+          }
           if (!isBig(score)) {
             killable.dead = true
           } else {
             killable.hurtTime = 0.75
           }
-          score.expenses += 100
         }
 
         if (hasComponent(them, ComponentName.IS_B)) {
