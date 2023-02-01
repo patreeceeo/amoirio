@@ -118,8 +118,7 @@ if (canvas instanceof HTMLCanvasElement) {
   const path = location.pathname
   if (path === '/test') {
     runTests()
-  } else if (path === '/') {
-    runTests()
+  } else {
     startGame(canvas).catch(console.error)
   }
 } else {

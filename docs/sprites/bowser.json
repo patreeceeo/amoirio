@@ -1,0 +1,33 @@
+{
+  "imageURL": "images/characters.gif",
+  "frames": [
+    {
+      "name": "idle",
+      "rect": [257, 368, 34, 32]
+    },
+    {
+      "name": "run-1",
+      "rect": [291, 368, 34, 32]
+    },
+    {
+      "name": "run-2",
+      "rect": [327, 368, 34, 32]
+    },
+    {
+      "name": "run-3",
+      "rect": [359, 368, 34, 32]
+    },
+    {
+      "name": "dead",
+      "rect": [394, 368, 34, 34]
+    }
+  ],
+
+  "animations": [
+    {
+      "name": "run",
+      "frameLength": 6,
+      "frames": ["run-1", "run-2", "run-3"]
+    }
+  ]
+}

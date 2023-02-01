@@ -1,0 +1,70 @@
+{
+  "imageURL": "images/characters.gif",
+  "frames": [
+    {
+      "name": "idle",
+      "rect": [276, 44, 16, 16]
+    },
+    {
+      "name": "run-1",
+      "rect": [290, 44, 16, 16]
+    },
+    {
+      "name": "run-2",
+      "rect": [304, 43, 16, 16]
+    },
+    {
+      "name": "run-3",
+      "rect": [321, 44, 16, 16]
+    },
+    {
+      "name": "brake",
+      "rect": [337, 44, 16, 16]
+    },
+    {
+      "name": "jump",
+      "rect": [355, 44, 16, 16]
+    },
+    {
+      "name": "dead",
+      "rect": [483, 44, 16, 16]
+    },
+    {
+      "name": "idle-big",
+      "rect": [257, 0, 18, 32]
+    },
+    {
+      "name": "run-big-1",
+      "rect": [296, 0, 18, 32]
+    },
+    {
+      "name": "run-big-2",
+      "rect": [314, 0, 16, 32]
+    },
+    {
+      "name": "run-big-3",
+      "rect": [330, 0, 16, 32]
+    },
+    {
+      "name": "brake-big",
+      "rect": [349, 0, 16, 32]
+    },
+    {
+      "name": "jump-big",
+      "rect": [368, 0, 16, 32]
+    }
+  ],
+
+  "animations": [
+    {
+      "name": "run",
+      "frameLength": 6,
+      "frames": ["run-1", "run-2", "run-3"]
+    },
+    {
+      "name": "run-big",
+      "frameLength": 12,
+      "frames": ["run-big-1", "run-big-2", "run-big-3"]
+    }
+  ]
+}

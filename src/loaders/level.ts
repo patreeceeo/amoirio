@@ -29,7 +29,7 @@ function createTimer() {
 }
 
 function loadPattern(name: string) {
-  return loadJSON<LevelSpecPatterns>(`/sprites/patterns/${name}.json`)
+  return loadJSON<LevelSpecPatterns>(`sprites/patterns/${name}.json`)
 }
 
 function setupBehavior(level: Level) {

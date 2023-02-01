@@ -13,7 +13,7 @@ export async function loadAudioBoard(name: string, audioContext: AudioContext) {
   const loadAudio = createAudioLoader(audioContext)
 
   const audioSheet = await loadJSON<{ fx: Record<string, { url: string }> }>(
-    `/sounds/${name}.json`,
+    `sounds/${name}.json`,
   )
 
   const audioBoard = new AudioBoard()

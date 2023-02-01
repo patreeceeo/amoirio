@@ -1,0 +1,9 @@
+{
+  "imageURL": "images/tiles.png",
+  "frames": [
+    {
+      "name": "idle",
+      "rect": [368, 128, 16, 16]
+    }
+  ]
+}
